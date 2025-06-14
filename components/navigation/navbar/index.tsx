@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import ThemeToggle from './theme-toggle'
 
 export default function Navbar() {
     return (
@@ -13,7 +14,7 @@ export default function Navbar() {
             </Link>
             <p>Global Search</p>
             <div className='flex-between gap-5'>
-                Theme
+                <ThemeToggle />
             </div>
         </nav>
     )
