@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function TagsPage() {
+export default function TagCard() {
     return (
         <div>
-ga
+
         </div>
     )
 }

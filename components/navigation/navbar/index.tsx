@@ -16,6 +16,7 @@ export default function Navbar() {
             <p>Global Search</p>
             <div className='flex-between gap-5'>
                 <ThemeToggle />
+                
 
                 <MobileNavigation />
             </div>
