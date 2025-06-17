@@ -45,7 +45,7 @@ const AuthForm = <T extends z.ZodType<any, any, any>>({
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 mt-10">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 mt-10">
                 {
                     Object.keys(defaultValues).map(field => (
                         <FormField
