@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 const inter = Inter({
   variable: "--font-inter",
@@ -49,7 +50,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <NuqsAdapter>{children}</NuqsAdapter>
           </ThemeProvider>
           <Toaster richColors />
         </body>

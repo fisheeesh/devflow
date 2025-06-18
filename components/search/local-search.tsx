@@ -1,71 +1,59 @@
-"use client"
+"use client";
+import Image from "next/image";
+import { useQueryState } from "nuqs";
+import React, { useEffect, useState } from "react";
 
-import React, { useEffect, useState } from 'react'
-import { Input } from '../ui/input'
-import Image from 'next/image'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { formUrlQuery, removeKeysFromQuery } from '@/lib/url'
+import { useDebounce } from "@/hooks/useDebounce";
 
-interface Props {
-    route: string,
-    imgSrc: string,
-    placeholder: string,
-    otherClasses?: string
+import { Input } from "../ui/input";
+
+interface LocalSearchProps {
+    route: string;
+    imgSrc: string;
+    placeholder: string;
+    otherClasses?: string;
 }
 
-export default function LocalSearch({ route, imgSrc, placeholder, otherClasses }: Props) {
-    const router = useRouter()
-    const pathname = usePathname()
-    const searchParams = useSearchParams()
-    const query = searchParams.get('query') || ""
+const LocalSearch = ({
+    route,
+    imgSrc,
+    placeholder,
+    otherClasses,
+}: LocalSearchProps) => {
+    const [inputValue, setInputValue] = useState("");
+    const [_, setSearchQuery] = useQueryState("query", {
+        defaultValue: "",
+        shallow: false,
+    });
 
-    const [searchQuery, setSearchQuery] = useState(query)
+    const debouncedValue = useDebounce(inputValue);
 
     useEffect(() => {
-        //* Debouncing is a way to control how often a function runs
-        //* Debounce for optimization
-        const delayDebounceFn = setTimeout(() => {
-            if (searchQuery) {
-                const newUrl = formUrlQuery({
-                    params: searchParams.toString(),
-                    key: 'query',
-                    value: searchQuery
-                })
-
-                router.push(newUrl, { scroll: false })
-            }
-            else {
-                if (pathname === route) {
-                    const newUrl = removeKeysFromQuery({
-                        params: searchParams.toString(),
-                        keysToRemove: ["query"]
-                    })
-
-                    router.push(newUrl, { scroll: false })
-                }
-            }
-        }, 300)
-
-        //* Whenever we use Timeout in useEffect we wanna make sure to put at the end
-        return () => clearTimeout(delayDebounceFn)
-    }, [searchQuery, router, route, searchParams, pathname])
+        setSearchQuery(debouncedValue);
+    }, [debouncedValue, setSearchQuery]);
 
     return (
-        <div className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}>
+        <div
+            className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
+        >
             <Image
                 src={imgSrc}
-                alt='Search'
                 width={24}
                 height={24}
-                className='cursor-pointer'
+                alt="search"
+                className="cursor-pointer"
             />
             <Input
-                type='text'
+                type="text"
                 placeholder={placeholder}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className='paragraph-regular no-focus placeholder text-dark400_light700 border-none shadow-none outline-none'
+                onChange={(e) => {
+                    setInputValue(e.target.value);
+                }}
+                value={inputValue}
+                className="dark:bg-background-light800_darkgradient paragraph-regular no-focus placeholder text-dark400_light700 border-none shadow-none outline-none"
             />
         </div>
-    )
-}
+    );
+};
+
+export default LocalSearch;

@@ -52,7 +52,7 @@ export default async function Home(props: { searchParams: Promise<{ query: strin
         <LocalSearch
           route="/"
           imgSrc='icons/search.svg'
-          placeholder="Search questions..."
+          placeholder="Search for Questions Here..."
           otherClasses="flex-1"
         />
       </section>
