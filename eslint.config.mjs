@@ -22,7 +22,7 @@ const eslintConfig = [
       parser,
       parserOptions: {
         project: "./tsconfig.json",
-        tsconfigRootDir: __dirname, 
+        tsconfigRootDir: __dirname,
       },
     },
     rules: {
@@ -34,6 +34,7 @@ const eslintConfig = [
       "@typescript-eslint/no-require-imports": "off",
       "@typescript-eslint/no-unsafe-function-type": "off",
       "@typescript-eslint/no-wrapper-object-types": "off",
+      "@typescript-eslint/no-undef": "off",
     },
   },
 ];

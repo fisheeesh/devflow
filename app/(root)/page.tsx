@@ -1,3 +1,4 @@
+import QuestionCard from "@/components/cards/question-card";
 import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/local-search";
 import { Button } from "@/components/ui/button";
@@ -8,30 +9,28 @@ const questions = [
   {
     _id: "1",
     title: "What is React.JS?",
-    description: "I am a description",
     tags: [
       { _id: "1", name: "React" },
       { _id: "2", name: "Javascript" },
     ],
-    author: { _id: '1', name: 'John Doe' },
+    author: { _id: '1', name: 'John Doe', image: "https://png.pngtree.com/png-vector/20220709/ourmid/pngtree-businessman-user-avatar-wearing-suit-with-red-tie-png-image_5809521.png" },
     upvotes: 10,
     answers: 2,
     views: 100,
-    createdAt: new Date()
+    createdAt: new Date('2021-12-12')
   },
   {
     _id: "2",
     title: "How to learn Javascript?",
-    description: "I am a description",
     tags: [
       { _id: "1", name: "Javascript" },
       { _id: "2", name: "Javascript" },
     ],
-    author: { _id: '1', name: 'John Doe' },
+    author: { _id: '1', name: 'John Doe', image: "https://png.pngtree.com/png-vector/20190710/ourmid/pngtree-user-vector-avatar-png-image_1541962.jpg" },
     upvotes: 10,
     answers: 2,
     views: 100,
-    createdAt: new Date()
+    createdAt: new Date('2021-12-12')
   },
 ]
 
@@ -67,7 +66,7 @@ export default async function Home(props: { searchParams: Promise<{ query: strin
       <div className="mt-10 flex w-full flex-col gap-6">
         {
           filterQuestion.map(question => (
-            <h1 key={question._id}>{question.title}</h1>
+            <QuestionCard key={question._id} question={question} />
           ))
         }
       </div>
