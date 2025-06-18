@@ -22,25 +22,32 @@ export default function LocalSearch({ route, imgSrc, placeholder, otherClasses }
     const [searchQuery, setSearchQuery] = useState(query)
 
     useEffect(() => {
-        if (searchQuery) {
-            const newUrl = formUrlQuery({
-                params: searchParams.toString(),
-                key: 'query',
-                value: searchQuery
-            })
-
-            router.push(newUrl, { scroll: false })
-        }
-        else {
-            if (pathname === route) {
-                const newUrl = removeKeysFromQuery({
+        //* Debouncing is a way to control how often a function runs
+        //* Debounce for optimization
+        const delayDebounceFn = setTimeout(() => {
+            if (searchQuery) {
+                const newUrl = formUrlQuery({
                     params: searchParams.toString(),
-                    keysToRemove: ["query"]
+                    key: 'query',
+                    value: searchQuery
                 })
 
                 router.push(newUrl, { scroll: false })
             }
-        }
+            else {
+                if (pathname === route) {
+                    const newUrl = removeKeysFromQuery({
+                        params: searchParams.toString(),
+                        keysToRemove: ["query"]
+                    })
+
+                    router.push(newUrl, { scroll: false })
+                }
+            }
+        }, 300)
+
+        //* Whenever we use Timeout in useEffect we wanna make sure to put at the end
+        return () => clearTimeout(delayDebounceFn)
     }, [searchQuery, router, route, searchParams, pathname])
 
     return (
