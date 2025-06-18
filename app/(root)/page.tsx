@@ -1,10 +1,12 @@
 import { auth } from "@/auth";
+import LocalSearch from "@/components/search/local-search";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
 import Link from "next/link";
 
 export default async function Home() {
   const session = await auth()
+
   return (
     <>
       <section className="w-full flex flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">
@@ -15,7 +17,12 @@ export default async function Home() {
       </section>
 
       <section className="mt-11">
-        LocalSearch
+        <LocalSearch
+          route="/"
+          imgSrc='icons/search.svg'
+          placeholder="Search questions..."
+          otherClasses="flex-1"
+        />
       </section>
 
       HomeFilter
