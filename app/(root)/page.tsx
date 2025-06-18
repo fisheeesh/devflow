@@ -1,3 +1,4 @@
+import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/local-search";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
@@ -23,7 +24,7 @@ const questions = [
     title: "How to learn Javascript?",
     description: "I am a description",
     tags: [
-      { _id: "1", name: "React" },
+      { _id: "1", name: "Javascript" },
       { _id: "2", name: "Javascript" },
     ],
     author: { _id: '1', name: 'John Doe' },
@@ -34,10 +35,14 @@ const questions = [
   },
 ]
 
-export default async function Home(props: { searchParams: Promise<{ query: string }> }) {
-  const { query = '' } = await props.searchParams
+export default async function Home(props: { searchParams: Promise<{ query: string, filter: string }> }) {
+  const { query = '', filter = "" } = await props.searchParams
 
-  const filterQuestion = questions.filter(q => q.title.toLowerCase().includes(query?.toLowerCase()))
+  const filterQuestion = questions.filter(q => {
+    const matchesQuery = q.title.toLowerCase().includes(query?.toLowerCase())
+    const matchesFilter = filter ? q.tags[0].name?.toLowerCase() === filter : true
+    return matchesQuery && matchesFilter
+  })
 
   return (
     <>
@@ -57,7 +62,7 @@ export default async function Home(props: { searchParams: Promise<{ query: strin
         />
       </section>
 
-      {/* HomeFilter */}
+      <HomeFilter />
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {
