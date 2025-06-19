@@ -67,12 +67,10 @@ const Editor = ({ value, editorRef, fieldChange, ...props }: Props) => {
                 codeBlockPlugin({ defaultCodeBlockLanguage: "" }),
                 codeMirrorPlugin({
                     codeBlockLanguages: {
+                        html: "html",
                         css: "css",
                         txt: "txt",
                         sql: "sql",
-                        html: "html",
-                        saas: "saas",
-                        scss: "scss",
                         bash: "bash",
                         json: "json",
                         js: "javascript",

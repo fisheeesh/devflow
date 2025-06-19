@@ -63,47 +63,118 @@
     background: var(--basePageBg);
 }
 
-/* Add this to your dark-editor.css or global CSS file */
-
-/* Fix for MDXEditor dropdown z-index issues */
+/* TOOLBAR BORDER RADIUS FIX - Only top corners rounded */
 .mdxeditor-toolbar {
-  position: relative;
-  z-index: 50; /* Ensure toolbar has high z-index */
+    border-radius: 7px 7px 0 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
 }
 
-/* Fix for block type select dropdown */
+/* Ensure the main editor container matches */
+.mdxeditor {
+    border-radius: 8px !important;
+}
+
+/* Make sure the content area has no top border radius */
+.mdxeditor-root-contenteditable {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+/* ENHANCED Z-INDEX FIXES FOR MDXEDITOR DROPDOWNS */
+
+/* Main editor container - ensure it doesn't clip dropdowns */
+.mdxeditor {
+    overflow: visible !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* Toolbar should have high z-index and not clip content */
+.mdxeditor-toolbar {
+    position: relative;
+    z-index: 100;
+    overflow: visible !important;
+}
+
+/* Ensure the editor content area doesn't interfere */
+.mdxeditor-root-contenteditable {
+    position: relative;
+    z-index: 1;
+}
+
+/* HIGH PRIORITY: All dropdown and popover content */
+[data-radix-select-content],
+[data-radix-dropdown-menu-content],
+[data-radix-popover-content],
+[data-radix-tooltip-content] {
+    z-index: 9999 !important;
+    position: relative;
+}
+
+/* Portal containers need maximum z-index */
+[data-radix-portal] {
+    z-index: 9999 !important;
+}
+
+/* Specific fixes for MDXEditor dropdowns */
 .mdxeditor-toolbar [data-radix-popper-content-wrapper] {
-  z-index: 9999 !important;
+    z-index: 9999 !important;
 }
 
-/* Alternative approach - target the dropdown content directly */
 .mdxeditor-toolbar .mdxeditor-select-content,
 .mdxeditor-toolbar [role="listbox"],
 .mdxeditor-toolbar [data-radix-select-content] {
-  z-index: 9999 !important;
-  position: relative;
+    z-index: 9999 !important;
+    position: relative;
 }
 
-/* For Radix UI dropdowns used by MDXEditor */
-[data-radix-select-content],
-[data-radix-dropdown-menu-content],
-[data-radix-popover-content] {
-  z-index: 9999 !important;
+/* Language selector dropdown - this is likely your main issue */
+.mdxeditor [data-editor-type="codeblock"] + * [data-radix-select-content],
+.cm-editor + [data-radix-select-content] {
+    z-index: 9999 !important;
 }
 
-/* Ensure the portal container has proper z-index */
-[data-radix-portal] {
-  z-index: 9999 !important;
+/* CodeMirror language change dropdown */
+.mdxeditor-toolbar button[title*="language"] + [data-radix-select-content],
+.mdxeditor-toolbar [data-testid*="change_code_mirror_language"] + [data-radix-select-content] {
+    z-index: 9999 !important;
 }
 
-/* Fix for code language dropdown specifically */
-.mdxeditor-toolbar .cm-editor + [data-radix-select-content] {
-  z-index: 9999 !important;
-}
-
-/* General fix for any dropdown in the editor toolbar */
+/* General dropdown menu items */
 .mdxeditor .mdxeditor-toolbar * [role="dialog"],
 .mdxeditor .mdxeditor-toolbar * [role="menu"],
-.mdxeditor .mdxeditor-toolbar * [role="listbox"] {
-  z-index: 9999 !important;
+.mdxeditor .mdxeditor-toolbar * [role="listbox"],
+.mdxeditor .mdxeditor-toolbar * [role="combobox"] {
+    z-index: 9999 !important;
+}
+
+/* Block type select dropdown */
+.mdxeditor-toolbar [data-testid="select_block_type"] [data-radix-select-content] {
+    z-index: 9999 !important;
+}
+
+/* Additional safety for any select triggers and their content */
+.mdxeditor [data-radix-select-trigger] {
+    position: relative;
+    z-index: 10;
+}
+
+.mdxeditor [data-radix-select-trigger][data-state="open"] + [data-radix-select-content] {
+    z-index: 9999 !important;
+}
+
+/* Ensure proper stacking context for editor sections */
+.mdxeditor-rich-text-editor {
+    position: relative;
+    z-index: 1;
+}
+
+/* Fix for any modals or overlays */
+.mdxeditor [data-radix-dialog-overlay] {
+    z-index: 9998 !important;
+}
+
+.mdxeditor [data-radix-dialog-content] {
+    z-index: 9999 !important;
 }
