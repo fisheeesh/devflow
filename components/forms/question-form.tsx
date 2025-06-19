@@ -2,7 +2,7 @@
 
 import { AskQuestionSchema } from '@/lib/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React from 'react'
+import React, { useRef } from 'react'
 import { ControllerRenderProps, SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -17,8 +17,17 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { MDXEditorMethods } from '@mdxeditor/editor'
+import dynamic from 'next/dynamic'
+
+//* This is the only place InitializedMDXEditor is imported directly.
+const Editor = dynamic(() => import('@/components/editor'), {
+    //! Make sure we turn SSR off
+    ssr: false
+})
 
 export default function QuestionForm() {
+    const editorRef = useRef<MDXEditorMethods>(null)
     const form = useForm<z.infer<typeof AskQuestionSchema>>({
         defaultValues: {
             title: "",
@@ -64,7 +73,11 @@ export default function QuestionForm() {
                             <FormItem className="flex flex-col w-full">
                                 <FormLabel className="paragraph-medium text-dark400_light700">Detailed explanation of your problem{" "} <span className='text-primary-500'>*</span></FormLabel>
                                 <FormControl>
-                                    Editor
+                                    <Editor
+                                        value={field.value}
+                                        editorRef={editorRef}
+                                        fieldChange={field.onChange}
+                                    />
                                 </FormControl>
                                 <FormDescription className='body-regular text-light-500 mt-2.5'>
                                     Introduce the problem and exapnd on what you&apos;ve put in the title.
