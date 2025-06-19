@@ -27,10 +27,6 @@ export default function TagCard({
     handleRemove
 }: Props) {
 
-    const handleClick = (e: React.MouseEvent) => {
-        e.preventDefault()
-    }
-
     const iconClass = getDeviconClassName(name)
 
     const Content = (
@@ -53,7 +49,7 @@ export default function TagCard({
     if (compact) {
         return isButton ?
             (
-                <button onClick={(e) => handleClick(e)} className='flex justify-between gap-2'>{Content}</button>
+                <button type='button' className='flex justify-between gap-2'>{Content}</button>
             ) :
             (
                 <Link href={ROUTES.TAGS(_id)} className='flex justify-between gap-2'>
