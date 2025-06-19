@@ -97,22 +97,48 @@ export const getTimeStamp = (createdAt: Date): string => {
   const now = new Date();
 
   const diffMilliseconds = now.getTime() - date.getTime();
-  const diffSeconds = Math.round(diffMilliseconds / 1000);
+  const diffSeconds = Math.floor(diffMilliseconds / 1000);
+
+  // Just now (less than 30 seconds)
+  if (diffSeconds < 30) {
+    return "just now";
+  }
+
+  // Less than a minute ago (30-59 seconds)
   if (diffSeconds < 60) {
-    return `${diffSeconds} seconds ago`;
+    return "less than a minute ago";
   }
 
-  const diffMinutes = Math.round(diffSeconds / 60);
+  const diffMinutes = Math.floor(diffSeconds / 60);
+
+  // Minutes
   if (diffMinutes < 60) {
-    return `${diffMinutes} mins ago`;
+    return diffMinutes === 1 ? "1 minute ago" : `${diffMinutes} minutes ago`;
   }
 
-  const diffHours = Math.round(diffMinutes / 60);
+  const diffHours = Math.floor(diffMinutes / 60);
+
+  // Hours
   if (diffHours < 24) {
-    return `${diffHours} hours ago`;
+    return diffHours === 1 ? "1 hour ago" : `${diffHours} hours ago`;
   }
 
-  const diffDays = Math.round(diffHours / 24);
+  const diffDays = Math.floor(diffHours / 24);
 
-  return `${diffDays} days ago`;
+  // Days
+  if (diffDays < 30) {
+    return diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
+  }
+
+  const diffMonths = Math.floor(diffDays / 30);
+
+  // Months
+  if (diffMonths < 12) {
+    return diffMonths === 1 ? "1 month ago" : `${diffMonths} months ago`;
+  }
+
+  const diffYears = Math.floor(diffMonths / 12);
+
+  // Years
+  return diffYears === 1 ? "1 year ago" : `${diffYears} years ago`;
 };
