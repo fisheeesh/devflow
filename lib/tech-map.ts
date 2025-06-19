@@ -1,3 +1,4 @@
+//* Dictionary mapping possible technology names to Devicon class names
 export const techMap: { [key: string]: string } = {
     'aarch64': 'devicon-aarch64-plain',
     'adonisjs': 'devicon-adonisjs-plain',
@@ -165,5 +166,8 @@ export const techMap: { [key: string]: string } = {
     'cpp': 'devicon-cplusplus-plain',
     'c#': 'devicon-csharp-plain',
     'dotnet': 'devicon-dot-net-plain',
-    'tailwind': 'devicon-tailwindcss-plain'
+    'tailwind': 'devicon-tailwindcss-plain',
+    'vue': 'devicon-vuejs-plain',
+    'vuetify': 'devicon-vuetify-plain',
+    'supabase': 'devicon-supabase-plain'
 };
