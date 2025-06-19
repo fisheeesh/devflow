@@ -7,7 +7,6 @@ import {
     thematicBreakPlugin,
     markdownShortcutPlugin,
     MDXEditor,
-    type MDXEditorMethods,
     ConditionalContents,
     ChangeCodeMirrorLanguage,
     toolbarPlugin,
@@ -28,6 +27,7 @@ import {
     codeMirrorPlugin,
     diffSourcePlugin,
     BlockTypeSelect,
+    type MDXEditorMethods,
 } from "@mdxeditor/editor";
 import { basicDark } from "cm6-theme-basic-dark";
 import { useTheme } from "next-themes";
