@@ -2,8 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  images:{
-    remotePatterns:[
+  serverExternalPackages: ['pino', 'pino-pretty'],
+  images: {
+    remotePatterns: [
       {
         protocol: 'https',
         hostname: "png.pngtree.com",
