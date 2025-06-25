@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import { useQueryState } from "nuqs";
 import React, { useEffect, useState } from "react";
