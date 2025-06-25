@@ -4,9 +4,11 @@ import handleError from "./error";
 import { RequestError } from "../http-error";
 
 /**
- * * As we fetch in our comp, we have to write all the different headers, opitons and config and handle errors
- * * That might seem to be boring and bolierpate code
- * * So to overcome that, we create a centralized reusable fetch function
+ * * This function provides a centralized and reusable wrapper around the native fetch API.
+ * $ Benefits:
+ * * - Automatically sets default headers and handles timeouts.
+ * * - Avoids repetitive boilerplate code in components or services.
+ * * - Provides consistent error handling and logging across the app.
  */
 
 interface FetchOptions extends RequestInit {
@@ -17,7 +19,7 @@ function isError(error: unknown): error is Error {
     return error instanceof Error
 }
 
-export async function fetchHanlder<T>(url: string, options: FetchOptions = {}): Promise<ActionResponse<T>> {
+export async function fetchHandler<T>(url: string, options: FetchOptions = {}): Promise<ActionResponse<T>> {
     const {
         timeout = 5000,
         headers: customHeaders = {},
@@ -30,8 +32,8 @@ export async function fetchHanlder<T>(url: string, options: FetchOptions = {}): 
     const id = setTimeout(() => controller.abort(), timeout)
 
     const defaultHeaders: HeadersInit = {
-        "Content-Type": "applicaiton/json",
-        Accept: "applicaiton/json",
+        "Content-Type": "application/json",
+        Accept: "application/json",
     }
 
     const headers: HeadersInit = { ...defaultHeaders, ...customHeaders }
