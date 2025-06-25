@@ -6,6 +6,11 @@ import { UserSchema } from "@/lib/validation";
 import { APIErrorResponse } from "@/types/global";
 import { NextResponse } from "next/server";
 
+/**
+ * * parse: Throws an error if validation fails. Use this when you have high confidence in the data’s structure and want to catch potential errors early.
+ * * safeParse: Returns a result object containing either the parsed data on success or an error object on failure. This is ideal when dealing with less predictable data, allowing you to gracefully handle validation issues.
+*/
+
 export async function POST(request: Request) {
     const body = await request.json()
     try {
