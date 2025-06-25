@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     try {
         await dbConnect();
-        const validatedData = UserSchema.pick({ email: true }).safeParse({ body })
+        const validatedData = UserSchema.pick({ email: true }).safeParse(body)
         if (validatedData.error) throw new ValidationError(validatedData.error.flatten().fieldErrors)
 
         const user = await User.findOne({ email: validatedData.data.email })
