@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/question-card";
 import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/local-search";
@@ -36,18 +37,18 @@ const questions = [
   },
 ]
 
-const test = async () => {
-  try {
-    return await api.users.getAll()
-  }
-  catch (error) {
-    return handleError(error)
-  }
-}
+// const test = async () => {
+//   try {
+//     return await api.users.getAll()
+//   }
+//   catch (error) {
+//     return handleError(error)
+//   }
+// }
 
 export default async function Home(props: { searchParams: Promise<{ query: string, filter: string }> }) {
-  const res = await test()
-  console.log(res)
+  const session = await auth()
+  console.log('Session: ', session)
   const { query = '', filter = "" } = await props.searchParams
 
   const filterQuestion = questions.filter(q => {
