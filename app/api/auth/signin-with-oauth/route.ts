@@ -6,6 +6,7 @@ import dbConnect from "@/lib/mongoose"
 import { SignInWithOAuthSchema } from "@/lib/validation"
 import { APIErrorResponse } from "@/types/global"
 import mongoose from "mongoose"
+import { NextResponse } from "next/server"
 import slugify from "slugify"
 
 export async function POST(request: Request) {
@@ -68,6 +69,8 @@ export async function POST(request: Request) {
 
         //* We made all of the changes to db atomically
         await session.commitTransaction()
+
+        return NextResponse.json({ success: true })
 
     } catch (error: unknown) {
         //* If sth went wrong, we're gonna rollback all the changes
