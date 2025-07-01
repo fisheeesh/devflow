@@ -25,7 +25,7 @@ export default async function LeftSideBar() {
                     }}>
                         <Button
                             type='submit'
-                            className='base-medium w-fit !bg-transparent px-4 py-3'
+                            className="small-medium cursor-pointer btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none"
                         >
                             <LogOut className='size-5 text-black dark:text-white' />
                             <span className='max-lg:hidden text-dark300_light900'>Logout</span>
