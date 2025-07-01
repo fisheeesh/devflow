@@ -37,15 +37,6 @@ const questions = [
   },
 ]
 
-// const test = async () => {
-//   try {
-//     return await api.users.getAll()
-//   }
-//   catch (error) {
-//     return handleError(error)
-//   }
-// }
-
 export default async function Home(props: { searchParams: Promise<{ query: string, filter: string }> }) {
   const session = await auth()
   console.log('Session: ', session)

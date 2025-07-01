@@ -3,7 +3,6 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { api } from "./lib/api";
 import { ActionResponse } from "./types/global";
-import { _success } from "zod/v4/core";
 import { IAccountDoc } from "./database/account.model";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -52,6 +51,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return true
     },
-
   }
 });
