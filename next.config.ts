@@ -9,7 +9,17 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: "png.pngtree.com",
         port: ''
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: "lh3.googleusercontent.com",
+        port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: "avatars.githubusercontent.com",
+        port: ''
+      },
     ]
   }
 };
