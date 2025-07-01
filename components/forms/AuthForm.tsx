@@ -45,8 +45,6 @@ const AuthForm = <T extends z.ZodType<any, any, any>>({
         //@TODO: Authenticate user
         const res = (await onSubmit(data)) as ActionResponse
 
-        console.log('hi', res)
-
         if (res?.success) {
             toast.success('Success', {
                 description: formType === 'SIGN_IN'
