@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         const validatedData = AccountSchema.pick({ providerAccountId: true }).safeParse(body)
         if (validatedData.error) throw new ValidationError(validatedData.error.flatten().fieldErrors)
 
-        const account = await Account.findOne({ provider: validatedData.data.providerAccountId })
+        const account = await Account.findOne({ providerAccountId: validatedData.data.providerAccountId })
         if (!account) throw new NotFoundError('Account')
 
         return NextResponse.json({ success: true, data: account }, { status: 200 })
