@@ -96,7 +96,7 @@ const AuthForm = <T extends z.ZodType<any, any, any>>({
                 <Button
                     disabled={form.formState.isSubmitting}
                     type="submit"
-                    className="primary-gradient paragraph-medium min-h-12 w-full rounded-2 px-4 py-3 font-inter !text-light-900"
+                    className="primary-gradient paragraph-medium min-h-12 w-full rounded-2 cursor-pointer px-4 py-3 font-inter !text-light-900"
                 >
                     {form.formState.isSubmitting ?
                         buttonText === 'Sign In' ? 'Signing In...' : 'Signing Up...' :

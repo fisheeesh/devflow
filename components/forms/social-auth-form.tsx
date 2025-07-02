@@ -8,7 +8,7 @@ import { signIn } from 'next-auth/react'
 import ROUTES from '@/constants/routes'
 
 export default function SocialAuthForm() {
-    const btnClass = 'background-dark400_light900 body-medium text-dark200_light800 min-h-12 flex-1 rounded-2 px-4 py-3.5'
+    const btnClass = 'background-dark400_light900 body-medium text-dark200_light800 cursor-pointer min-h-12 flex-1 rounded-2 px-4 py-3.5'
 
     const handleSignIn = async (provider: "github" | "google") => {
         try {

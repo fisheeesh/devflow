@@ -20,7 +20,7 @@ export default async function MobileNavigation() {
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Image src='/icons/hamburger.svg' alt="Menu" width={36} height={36} className="invert-colors sm:hidden" />
+                <Image src='/icons/hamburger.svg' alt="Menu" width={36} height={36} className="invert-colors sm:hidden cursor-pointer" />
             </SheetTrigger>
             <SheetContent side="left" className="background-light900_dark200 border-none p-6">
                 <SheetTitle className="hidden">Navigation</SheetTitle>
