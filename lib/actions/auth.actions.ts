@@ -3,7 +3,7 @@
 import { ActionResponse, ErrorResponse } from "@/types/global";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { SignInSchema, SignUpSchema } from "../validation";
+import { SignInSchema, SignUpSchema } from "../validations";
 import User from "@/database/user.model";
 import bcrypt from "bcryptjs"
 import mongoose from "mongoose";

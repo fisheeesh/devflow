@@ -4,7 +4,7 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { IAccountDoc } from "./database/account.model";
 import { api } from "./lib/api";
-import { SignInSchema } from "./lib/validation";
+import { SignInSchema } from "./lib/validations";
 import { ActionResponse } from "./types/global";
 import { IUserDoc } from "./database/user.model";
 import bcrypt from "bcryptjs";

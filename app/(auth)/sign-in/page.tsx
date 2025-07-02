@@ -2,7 +2,7 @@
 
 import AuthForm from '@/components/forms/AuthForm'
 import { signInWithCredentials } from '@/lib/actions/auth.actions'
-import { SignInSchema } from '@/lib/validation'
+import { SignInSchema } from '@/lib/validations'
 
 export default function SignInPage() {
     return (

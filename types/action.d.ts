@@ -21,3 +21,11 @@ interface CreateQuestionParams {
     content: string,
     tags: string[]
 }
+
+interface EditQuestionParms extends CreateQuestionParams {
+    questionId: string
+}
+
+interface GetQuestionParams {
+    questionId: string
+}

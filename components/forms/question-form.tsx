@@ -1,6 +1,6 @@
 "use client"
 
-import { AskQuestionSchema } from '@/lib/validation'
+import { AskQuestionSchema } from '@/lib/validations'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useRef, useTransition } from 'react'
 import { ControllerRenderProps, SubmitHandler, useForm } from 'react-hook-form'

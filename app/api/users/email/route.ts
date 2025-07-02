@@ -2,7 +2,7 @@ import User from "@/database/user.model";
 import handleError from "@/lib/handlers/error";
 import { NotFoundError, ValidationError } from "@/lib/http-error";
 import dbConnect from "@/lib/mongoose";
-import { UserSchema } from "@/lib/validation";
+import { UserSchema } from "@/lib/validations";
 import { APIErrorResponse } from "@/types/global";
 import { NextResponse } from "next/server";
 

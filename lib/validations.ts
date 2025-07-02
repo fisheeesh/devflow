@@ -64,6 +64,14 @@ export const AskQuestionSchema = z.object({
         .max(3, { message: "A maximum of 5 tags is allowed." }),
 })
 
+export const EditQuestionSchema = AskQuestionSchema.extend({
+    questionId: z.string().min(1, { message: "Question ID is required." })
+})
+
+export const GetQuestionSchema = z.object({
+    questionId: z.string().min(1, { message: "Question ID is required." })
+})
+
 export const UserSchema = z.object({
     name: z.string().min(1, { message: "Name is required." }),
     username: z.string().min(3, { message: "Username must be at least 3 characters long." }),
