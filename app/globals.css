@@ -347,18 +347,27 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  /* width: 3px;
+  width: 3px;
   height: 3px;
-  border-radius: 2px; */
-  display: none;
+  border-radius: 2px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: #ffffff;
 }
 
+/* Dark theme scrollbar track */
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #000000;
+}
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #cccccc;
+  border-radius: 50px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #242424;
   border-radius: 50px;
 }
 
@@ -369,12 +378,6 @@
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
 }
 
 .active-theme {
