@@ -69,13 +69,13 @@ export async function signUpWithCredentials(params: AuthCredentials): Promise<Ac
 export async function signInWithCredentials(
     params: Pick<AuthCredentials, 'email' | 'password'>
 ): Promise<ActionResponse> {
-    const validatedResult = await action({ params, schema: SignInSchema })
+    const validationResult = await action({ params, schema: SignInSchema })
 
-    if (validatedResult instanceof Error) {
-        return handleError(validatedResult) as ErrorResponse
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
     }
 
-    const { email, password } = validatedResult.params!
+    const { email, password } = validationResult.params!
 
     try {
         const existingUser = await User.findOne({ email })
