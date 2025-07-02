@@ -1,7 +1,7 @@
 "use server"
 
 import Question from "@/database/question.model";
-import { ActionResponse, ErrorResponse } from "@/types/global";
+import { ActionResponse, ErrorResponse, Question as QuestionType } from "@/types/global";
 import mongoose from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
@@ -10,7 +10,7 @@ import Tag from "@/database/tag.model";
 import TagQuestion, { ITagQuestion } from "@/database/tag-question.model";
 import { convertToPlainObject } from "../utils";
 
-export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse> {
+export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
     const validationResult = await action({ params, schema: AskQuestionSchema, authorize: true })
 
     if (validationResult instanceof Error) {

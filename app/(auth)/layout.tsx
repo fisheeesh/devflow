@@ -1,5 +1,6 @@
 import SocialAuthForm from '@/components/forms/social-auth-form'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ReactNode } from 'react'
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -11,7 +12,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
                         <h1 className='h2-bold text-dark100_light900'>Join DevFlow</h1>
                         <p className="paragraph-regulat text-dark500_light400">To get your questions answered</p>
                     </div>
-                    <Image src='/images/site-logo.svg' alt='DevFlow Logo' width={50} height={50} className='object-contain' />
+                    <Link href='/'>
+                        <Image src='/images/site-logo.svg' alt='DevFlow Logo' width={50} height={50} className='object-contain' />
+                    </Link>
                 </div>
                 {children}
                 <SocialAuthForm />

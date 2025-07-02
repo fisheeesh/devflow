@@ -2,7 +2,7 @@
 
 import { AskQuestionSchema } from '@/lib/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useRef } from 'react'
+import React, { useRef, useTransition } from 'react'
 import { ControllerRenderProps, SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -17,8 +17,13 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import ROUTES from '@/constants/routes'
+import { createQuestion } from '@/lib/actions/question.actions'
 import { MDXEditorMethods } from '@mdxeditor/editor'
+import { ReloadIcon } from '@radix-ui/react-icons'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import TagCard from '../cards/tag-card'
 
 //* This is the only place InitializedMDXEditor is imported directly.
@@ -28,6 +33,8 @@ const Editor = dynamic(() => import('@/components/editor'), {
 })
 
 export default function QuestionForm() {
+    const router = useRouter()
+    const [isPending, startTransition] = useTransition()
     const editorRef = useRef<MDXEditorMethods>(null)
     const form = useForm<z.infer<typeof AskQuestionSchema>>({
         defaultValues: {
@@ -37,6 +44,7 @@ export default function QuestionForm() {
         },
         resolver: zodResolver(AskQuestionSchema)
     })
+    const isWorking = isPending || form.formState.isSubmitting
 
     const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, field: { value: string[] }) => {
         if (e.key === 'Enter') {
@@ -76,7 +84,22 @@ export default function QuestionForm() {
     }
 
     const handleCreateQuestion: SubmitHandler<z.infer<typeof AskQuestionSchema>> = (data) => {
-        console.log(data)
+        startTransition(async () => {
+            const res = await createQuestion(data)
+
+            if (res.success) {
+                toast.success('Success', {
+                    description: 'Question created successfully'
+                })
+
+                if (res.data) router.push(ROUTES.QUESTION(res.data._id))
+
+            } else {
+                toast.error(`Error ${res.status}`, {
+                    description: res.error?.message || 'Something went wrong'
+                })
+            }
+        })
     }
 
     return (
@@ -91,6 +114,7 @@ export default function QuestionForm() {
                                 <FormLabel className="paragraph-medium text-dark400_light700">Question Title <span className='text-primary-500'>*</span></FormLabel>
                                 <FormControl>
                                     <Input
+                                        disabled={isWorking}
                                         type='text'
                                         placeholder="Title"
                                         className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
@@ -133,6 +157,7 @@ export default function QuestionForm() {
                                 <FormControl>
                                     <div>
                                         <Input
+                                            disabled={isWorking}
                                             type='text'
                                             placeholder="Add Tags..."
                                             className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
@@ -165,8 +190,18 @@ export default function QuestionForm() {
                     />
 
                     <div className='mt-16 flex justify-end'>
-                        <Button type='submit' className='primary-gradient text-light-900 w-fit'>
-                            Ask A Question
+                        <Button disabled={isWorking} type='submit' className='primary-gradient text-light-900 w-fit'>
+                            {
+                                isWorking ?
+                                    <>
+                                        <ReloadIcon className='m-2 size-4 animate-spin' />
+                                        <span>Submitting</span>
+                                    </> :
+                                    <>
+                                        Ask A Question
+                                    </>
+                            }
+                            <span className="sr-only">Ask A Question</span>
                         </Button>
                     </div>
                 </form>
