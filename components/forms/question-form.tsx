@@ -18,13 +18,14 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import ROUTES from '@/constants/routes'
-import { createQuestion } from '@/lib/actions/question.actions'
+import { createQuestion, editQuestion } from '@/lib/actions/question.actions'
 import { MDXEditorMethods } from '@mdxeditor/editor'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import TagCard from '../cards/tag-card'
+import { Question } from '@/types/global'
 
 //* This is the only place InitializedMDXEditor is imported directly.
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -32,15 +33,20 @@ const Editor = dynamic(() => import('@/components/editor'), {
     ssr: false
 })
 
-export default function QuestionForm() {
+interface Params {
+    question?: Question,
+    isEdit?: boolean
+}
+
+export default function QuestionForm({ question, isEdit = false }: Params) {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const editorRef = useRef<MDXEditorMethods>(null)
     const form = useForm<z.infer<typeof AskQuestionSchema>>({
         defaultValues: {
-            title: "",
-            content: "",
-            tags: []
+            title: question?.title || "",
+            content: question?.content || "",
+            tags: question?.tags.map(tag => tag.name) || []
         },
         resolver: zodResolver(AskQuestionSchema)
     })
@@ -83,8 +89,27 @@ export default function QuestionForm() {
         }
     }
 
-    const handleCreateQuestion: SubmitHandler<z.infer<typeof AskQuestionSchema>> = (data) => {
+    const handleOnSubmit: SubmitHandler<z.infer<typeof AskQuestionSchema>> = (data) => {
         startTransition(async () => {
+            if (isEdit && question) {
+                const res = await editQuestion({ questionId: question._id, ...data })
+
+                if (res.success) {
+                    toast.success('Success', {
+                        description: 'Question updated successfully'
+                    })
+
+                    if (res.data) router.push(ROUTES.QUESTION(res.data._id))
+
+                } else {
+                    toast.error(`Error ${res.status}`, {
+                        description: res.error?.message || 'Something went wrong'
+                    })
+                }
+
+                return
+            }
+
             const res = await createQuestion(data)
 
             if (res.success) {
@@ -105,7 +130,7 @@ export default function QuestionForm() {
     return (
         <div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleCreateQuestion)} className="flex w-full flex-col gap-10">
+                <form onSubmit={form.handleSubmit(handleOnSubmit)} className="flex w-full flex-col gap-10">
                     <FormField
                         control={form.control}
                         name="title"
@@ -198,10 +223,10 @@ export default function QuestionForm() {
                                         <span>Submitting</span>
                                     </> :
                                     <>
-                                        Ask A Question
+                                        {isEdit ? 'Edit' : 'Ask A Question'}
                                     </>
                             }
-                            <span className="sr-only">Ask A Question</span>
+                            <span className="sr-only">{isEdit ? 'Edit' : 'Ask A Question'}</span>
                         </Button>
                     </div>
                 </form>
