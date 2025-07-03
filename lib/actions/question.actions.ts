@@ -3,13 +3,14 @@
 import Question from "@/database/question.model";
 import TagQuestion, { ITagQuestion } from "@/database/tag-question.model";
 import Tag, { ITagDoc } from "@/database/tag.model";
-import { ActionResponse, ErrorResponse, Question as QuestionType } from "@/types/global";
-import mongoose from "mongoose";
+import { ActionResponse, ErrorResponse, PaginatedSearchParams, Question as QuestionType } from "@/types/global";
+import mongoose, { FilterQuery } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError, UnauthorizedError } from "../http-error";
 import { convertToPlainObject } from "../utils";
-import { AskQuestionSchema, EditQuestionSchema, GetQuestionSchema } from "../validations";
+import { AskQuestionSchema, EditQuestionSchema, GetQuestionSchema, PaginatedSearchParamsSchema } from "../validations";
+import { json } from "stream/consumers";
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
     const validationResult = await action({ params, schema: AskQuestionSchema, authorize: true })
@@ -171,6 +172,75 @@ export async function getQuestion(params: GetQuestionParams): Promise<ActionResp
         return { success: true, data: convertToPlainObject(question), status: 200 }
     }
     catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export async function getQuestions(params: PaginatedSearchParams): Promise<ActionResponse<{ questions: QuestionType[], isNext: boolean }>> {
+    const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })
+
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
+    }
+
+    const { page = 1, pageSize = 10, query, filter } = validationResult.params!
+    const skip = (Number(page) - 1) * pageSize
+    const limit = Number(pageSize)
+
+    const filterQuery: FilterQuery<typeof Question> = {}
+
+    if (filter === 'recommended') return {
+        success: true,
+        data: {
+            questions: [],
+            isNext: false
+        }
+    }
+
+    if (query) {
+        filterQuery.$or = [
+            { title: { $regex: new RegExp(query, 'i') } },
+            { content: { $regex: new RegExp(query, 'i') } }
+        ]
+    }
+
+    let sortCriteria = {}
+
+    switch (filter) {
+        case "newest":
+            sortCriteria = { createdAt: -1 }
+            break
+        case "unanswered":
+            filterQuery.answers = 0
+            sortCriteria = { createdAt: -1 }
+            break
+        case "popular":
+            sortCriteria = { upvotes: -1 }
+            break
+        default:
+            sortCriteria = { createdAt: -1 }
+            break
+    }
+
+    try {
+        const totalQuestions = await Question.countDocuments(filterQuery)
+        //* It'll convet this mongoDb doc into a plain js obj that makes it easier to work with
+        const questions = await Question.find(filterQuery)
+            .populate('tags', 'name')
+            .populate('author', 'name image')
+            .lean()
+            .sort(sortCriteria)
+            .skip(skip)
+            .limit(limit)
+
+        const isNext = totalQuestions > skip + questions.length
+
+        return {
+            success: true,
+            data: { questions: JSON.parse(JSON.stringify(questions)), isNext },
+        }
+
+    } catch (error) {
         return handleError(error) as ErrorResponse
     }
 }

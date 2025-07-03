@@ -42,6 +42,7 @@ export default function QuestionForm({ question, isEdit = false }: Params) {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const editorRef = useRef<MDXEditorMethods>(null)
+
     const form = useForm<z.infer<typeof AskQuestionSchema>>({
         defaultValues: {
             title: question?.title || "",
@@ -72,6 +73,7 @@ export default function QuestionForm({ question, isEdit = false }: Params) {
                     type: 'manual',
                     message: 'Tag already exists',
                 })
+                e.currentTarget.value = ''
             }
         }
     }
