@@ -1,8 +1,10 @@
 import QuestionCard from "@/components/cards/question-card";
+import DataRender from "@/components/data-render";
 import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/local-search";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
+import { EMPTY_QUESTION } from "@/constants/states";
 import { getQuestions } from "@/lib/actions/question.actions";
 import Link from "next/link";
 
@@ -18,12 +20,6 @@ export default async function Home(props: { searchParams: Promise<{ query: strin
 
   const { questions } = data || {}
 
-  // const filterQuestion = questions.filter(q => {
-  //   const matchesQuery = q.title.toLowerCase().includes(query?.toLowerCase())
-  //   const matchesFilter = filter ? q.tags[0].name?.toLowerCase() === filter : true
-  //   return matchesQuery && matchesFilter
-  // })
-
   return (
     <>
       <section className="w-full flex flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">
@@ -33,7 +29,7 @@ export default async function Home(props: { searchParams: Promise<{ query: strin
         </Button>
       </section>
 
-      <section className="mt-11">
+      <section className="mt-10">
         <LocalSearch
           route="/"
           imgSrc='icons/search.svg'
@@ -43,28 +39,20 @@ export default async function Home(props: { searchParams: Promise<{ query: strin
       </section>
 
       <HomeFilter />
-      {
-        success ?
-          (
-            <div className="mt-10 flex w-full flex-col gap-6">
-              {
-                questions && questions.length > 0 ?
-                  questions.map(question => (
-                    <QuestionCard key={question._id} question={question} />
-                  ))
-                  : (
-                    <div className="mt-10 flex w-full items-center justify-center">
-                      <p className="text-dark400_light700">No questions found.</p>
-                    </div>
-                  )
-              }
-            </div>
-          ) : (
-            <div className="mt-10 w-full flex items-center justify-center">
-              <p className="text-dark400_light700">{error?.message || 'Falied to fetch questions.'}</p>
-            </div>
-          )
-      }
+
+      <DataRender
+        success={success}
+        error={error}
+        data={questions}
+        empty={EMPTY_QUESTION}
+        render={(questions) => (
+          <div className="mt-10 flex w-full flex-col gap-6">
+            {questions.map(question => (
+            <QuestionCard key={question._id} question={question} />
+            ))}
+          </div>
+        )}
+      />
     </>
   );
 
