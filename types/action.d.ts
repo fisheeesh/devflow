@@ -22,7 +22,7 @@ interface CreateQuestionParams {
     tags: string[]
 }
 
-interface EditQuestionParms extends CreateQuestionParams {
+interface EditQuestionParams extends CreateQuestionParams {
     questionId: string
 }
 
