@@ -10,6 +10,7 @@ import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
 import { convertToPlainObject } from "../utils";
 import { AskQuestionSchema, EditQuestionSchema, GetQuestionSchema, PaginatedSearchParamsSchema } from "../validations";
+import { CreateQuestionParams, EditQuestionParams, GetQuestionParams } from "@/types/action";
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
     const validationResult = await action({ params, schema: AskQuestionSchema, authorize: true })
