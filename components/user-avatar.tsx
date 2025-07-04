@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import { Avatar, AvatarFallback } from './ui/avatar'
 import Image from 'next/image'
+import { getInitials } from '@/lib/utils'
 
 interface Props {
     id: string,
@@ -14,7 +15,6 @@ interface Props {
 export default function UserAvatar(
     { id, name, imageUrl, className = 'h-9 w-9' }: Props
 ) {
-    const initials = name.split(' ').map((word: string) => word[0]).join('').toUpperCase().slice(0, 2)
 
     return (
         <Link href={ROUTES.PROFILE(id)}>
@@ -31,7 +31,7 @@ export default function UserAvatar(
                         />
                     ) : (
                         <AvatarFallback className='primary-gradient font-space-grotesk font-bold tracking-wider text-white'>
-                            {initials}
+                            {getInitials(name)}
                         </AvatarFallback>
                     )
                 }

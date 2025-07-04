@@ -6,6 +6,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function getInitials(name: string) {
+  return name.split(' ').map((word: string) => word[0]).join('').toUpperCase().slice(0, 2)
+}
+
 export function convertToPlainObject<T>(value: T): T {
   return JSON.parse(JSON.stringify(value))
 }

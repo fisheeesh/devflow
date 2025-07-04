@@ -23,7 +23,7 @@ export default async function TagDetailPage({ params, searchParams }: RouteParam
     return (
         <>
             <section className="w-full flex flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">
-                <h1 className="h1-bold text-dark100_light900">Tag: <i>&quot;{tag?.name}&quot;</i></h1>
+                <h1 className="h1-bold text-dark100_light900">Tag: <i className='text-light-500'>&quot;{tag?.name}&quot;</i></h1>
             </section>
 
             <section className="mt-10">
