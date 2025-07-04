@@ -2,14 +2,14 @@ import { model, models, Schema, Types, Document } from "mongoose";
 
 export interface ITag {
     name: string
-    quesiton: number
+    questions: number
 }
 
 export interface ITagDoc extends ITag, Document { }
 
 const TagSchema = new Schema<ITag>({
     name: { type: String, required: true, unique: true },
-    quesiton: { type: Number, default: 0 },
+    questions: { type: Number, default: 0 },
 
 }, { timestamps: true });
 

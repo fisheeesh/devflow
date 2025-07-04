@@ -7,7 +7,7 @@ import { ActionResponse, ErrorResponse, PaginatedSearchParams, Question as Quest
 import mongoose, { FilterQuery } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { NotFoundError, UnauthorizedError } from "../http-error";
+import { NotFoundError } from "../http-error";
 import { convertToPlainObject } from "../utils";
 import { AskQuestionSchema, EditQuestionSchema, GetQuestionSchema, PaginatedSearchParamsSchema } from "../validations";
 
@@ -37,7 +37,7 @@ export async function createQuestion(params: CreateQuestionParams): Promise<Acti
         for (const tag of tags) {
             const existingTag = await Tag.findOneAndUpdate(
                 { name: { $regex: `^${tag}$`, $options: 'i' } },
-                { $setOnInsert: { name: tag }, $inc: { question: 1 } },
+                { $setOnInsert: { name: tag }, $inc: { questions: 1 } },
                 { upsert: true, new: true, session }
             )
 
