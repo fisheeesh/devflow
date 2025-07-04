@@ -344,3 +344,31 @@ export const techMap: { [key: string]: string } = {
     'vue': 'devicon-vuejs-plain',
     'supabase': 'devicon-supabase-plain'
 };
+
+export const techDescriptionMap: { [key: string]: string } = {
+    javascript: "JavaScript is a versatile scripting language used primarily for web development to create interactive effects within browsers.",
+    typescript: "TypeScript is a statically typed superset of JavaScript that compiles to plain JavaScript and enhances developer experience.",
+    react: "React is a JavaScript library for building user interfaces using a component-based architecture.",
+    nextjs: "Next.js is a React framework that enables server-side rendering and static site generation for building performant web apps.",
+    nodejs: "Node.js is a JavaScript runtime built on Chrome's V8 engine that allows server-side scripting and backend development.",
+    vuejs: "Vue.js is a progressive JavaScript framework for building user interfaces and single-page applications.",
+    python: "Python is a high-level, general-purpose programming language known for its readability and wide range of applications.",
+    html: "HTML (HyperText Markup Language) is the standard language for creating and structuring content on the web.",
+    css: "CSS (Cascading Style Sheets) is a stylesheet language used to describe the look and formatting of web documents.",
+    tailwind: "Tailwind CSS is a utility-first CSS framework that enables rapid UI development with low-level utility classes.",
+    bootstrap: "Bootstrap is a popular CSS framework for developing responsive and mobile-first websites quickly.",
+    git: "Git is a distributed version control system widely used for tracking code changes and collaborative software development.",
+    docker: "Docker is a platform that enables developers to package applications into containers for consistent and portable deployment.",
+    mongodb: "MongoDB is a NoSQL document-oriented database designed for scalability and flexibility.",
+    mysql: "MySQL is an open-source relational database management system based on SQL for storing structured data.",
+    postgresql: "PostgreSQL is a powerful, open-source object-relational database system known for reliability and feature robustness.",
+    aws: "Amazon Web Services (AWS) is a comprehensive cloud computing platform offering services like storage, computing, and databases.",
+};
+
+export const getTechDescription = (techName: string): string => {
+    const normalizedTechName = techName.replace(/[ .]/g, "").toLowerCase();
+    return (
+        techDescriptionMap[normalizedTechName] ??
+        `${techName} is a technology or tool widely used in software development, providing a valuable feature and capabilities.`
+    );
+};

@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getQuestions } from "@/lib/actions/question.actions";
+import { RouteParams } from "@/types/global";
 import Link from "next/link";
 
-export default async function Home(props: { searchParams: Promise<{ query: string, filter: string, page: string, pageSize: string }> }) {
-  const { page, pageSize, query, filter } = await props.searchParams
+export default async function Home({ searchParams }: RouteParams) {
+  const { page, pageSize, query, filter } = await searchParams
 
   const { success, data, error } = await getQuestions({
     page: Number(page) || 1,
@@ -31,7 +32,7 @@ export default async function Home(props: { searchParams: Promise<{ query: strin
 
       <section className="mt-10">
         <LocalSearch
-          route="/"
+          route={ROUTES.HOME}
           imgSrc='icons/search.svg'
           placeholder="Search for Questions Here..."
           otherClasses="flex-1"
@@ -48,7 +49,7 @@ export default async function Home(props: { searchParams: Promise<{ query: strin
         render={(questions) => (
           <div className="mt-10 flex w-full flex-col gap-6">
             {questions.map(question => (
-            <QuestionCard key={question._id} question={question} />
+              <QuestionCard key={question._id} question={question} />
             ))}
           </div>
         )}
