@@ -13,7 +13,7 @@ import { NotFoundError } from "../http-error"
 export const getTags = async (
     params: PaginatedSearchParams
 ): Promise<ActionResponse<{ tags: TagType[], isNext: boolean }>> => {
-    const validationResult = await action({ params, schema: PaginatedSearchParamsSchema, authorize: true })
+    const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })
 
     if (validationResult instanceof Error) {
         return handleError(validationResult) as ErrorResponse
@@ -78,8 +78,8 @@ export const getTags = async (
 
 export const getTagQuestions = async (
     params: GetTagQuestionsParams
-): Promise<ActionResponse<{ tag: TagType, question: QuestionType[], isNext: boolean }>> => {
-    const validationResult = await action({ params, schema: GetTagQuestionsSchema, authorize: true })
+): Promise<ActionResponse<{ tag: TagType, questions: QuestionType[], isNext: boolean }>> => {
+    const validationResult = await action({ params, schema: GetTagQuestionsSchema })
 
     if (validationResult instanceof Error) {
         return handleError(validationResult) as ErrorResponse
@@ -104,7 +104,7 @@ export const getTagQuestions = async (
         const totalQuestions = await Question.countDocuments(filterQuery)
 
         const questions = await Question.find(filterQuery)
-            .select('_id title views answers upvotes downvotes author createAt')
+            .select('_id title views answers upvotes downvotes author createdAt')
             .populate([
                 { path: 'author', select: 'name image' },
                 { path: 'tags', select: 'name' }
@@ -118,7 +118,7 @@ export const getTagQuestions = async (
             success: true,
             data: {
                 tag: convertToPlainObject(tag),
-                question: convertToPlainObject(questions),
+                questions: convertToPlainObject(questions),
                 isNext
             }
         }
