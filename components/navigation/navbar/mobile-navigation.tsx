@@ -12,6 +12,7 @@ import Link from "next/link"
 import NavLinks from "./nav-links"
 import { auth, signOut } from "@/auth"
 import { LogOut } from "lucide-react"
+import LogoutDialog from "@/components/logout-dialog"
 
 export default async function MobileNavigation() {
     const session = await auth()
@@ -41,18 +42,7 @@ export default async function MobileNavigation() {
                     <div className="flex flex-col gap-3">
                         {userId ? (
                             <SheetClose asChild>
-                                <form action={async () => {
-                                    "use server"
-                                    await signOut()
-                                }}>
-                                    <Button
-                                        type='submit'
-                                        className="small-medium cursor-pointer btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none"
-                                    >
-                                        <LogOut className='size-5 text-black dark:text-white' />
-                                        <span className='text-dark300_light900'>Logout</span>
-                                    </Button>
-                                </form>
+                                <LogoutDialog />
                             </SheetClose>
                         ) : (
                             <>

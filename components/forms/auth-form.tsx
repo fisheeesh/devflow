@@ -19,6 +19,8 @@ import Link from "next/link"
 import { ActionResponse } from "@/types/global"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { ReloadIcon } from "@radix-ui/react-icons"
+import Spinner from "../spinner"
 
 interface AuthFormProps<T extends z.ZodType<any, any, any>> {
     schema: T,
@@ -98,9 +100,9 @@ const AuthForm = <T extends z.ZodType<any, any, any>>({
                     type="submit"
                     className="primary-gradient paragraph-medium min-h-12 w-full rounded-2 cursor-pointer px-4 py-3 font-inter !text-light-900"
                 >
-                    {form.formState.isSubmitting ?
-                        buttonText === 'Sign In' ? 'Signing In...' : 'Signing Up...' :
-                        buttonText
+                    {form.formState.isSubmitting
+                        ? <Spinner label={buttonText === 'Sign In' ? 'Signing In' : 'Signing Up'} />
+                        : buttonText
                     }
                 </Button>
                 {

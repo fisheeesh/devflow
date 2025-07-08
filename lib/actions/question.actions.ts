@@ -218,8 +218,8 @@ export async function getQuestions(params: PaginatedSearchParams): Promise<Actio
 
     if (query) {
         filterQuery.$or = [
-            { title: { $regex: new RegExp(query, 'i') } },
-            { content: { $regex: new RegExp(query, 'i') } }
+            { title: { $regex: query, $options: 'i' } },
+            { content: { $regex: query, $options: 'i' } }
         ]
     }
 
@@ -243,7 +243,7 @@ export async function getQuestions(params: PaginatedSearchParams): Promise<Actio
 
     try {
         const totalQuestions = await Question.countDocuments(filterQuery)
-        //* It'll convet this mongoDb doc into a plain js obj that makes it easier to work with
+        //* It'll convert this mongoDb doc into a plain js obj that makes it easier to work with
         const questions = await Question.find(filterQuery)
             .populate('tags', 'name')
             .populate('author', 'name image')

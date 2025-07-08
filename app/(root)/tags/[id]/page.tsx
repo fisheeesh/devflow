@@ -1,6 +1,5 @@
 import QuestionCard from '@/components/cards/question-card'
 import DataRender from '@/components/data-render'
-import HomeFilter from '@/components/filters/HomeFilter'
 import LocalSearch from '@/components/search/local-search'
 import ROUTES from '@/constants/routes'
 import { EMPTY_QUESTION } from '@/constants/states'

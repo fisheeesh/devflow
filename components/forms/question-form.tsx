@@ -26,6 +26,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import TagCard from '../cards/tag-card'
 import { Question } from '@/types/global'
+import Spinner from '../spinner'
 
 //* This is the only place InitializedMDXEditor is imported directly.
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -101,7 +102,7 @@ export default function QuestionForm({ question, isEdit = false }: Params) {
                         description: 'Question updated successfully'
                     })
 
-                    if (res.data) router.push(ROUTES.QUESTION(res.data._id))
+                    if (res.data) router.push(ROUTES.QUESTION(String(res.data._id)))
 
                 } else {
                     toast.error(`Error ${res.status}`, {
@@ -220,10 +221,7 @@ export default function QuestionForm({ question, isEdit = false }: Params) {
                         <Button disabled={isWorking} type='submit' className='primary-gradient text-light-900 w-fit'>
                             {
                                 isWorking ?
-                                    <>
-                                        <ReloadIcon className='m-2 size-4 animate-spin' />
-                                        <span>Submitting</span>
-                                    </> :
+                                    <Spinner label='Submitting' /> :
                                     <>
                                         {isEdit ? 'Edit' : 'Ask A Question'}
                                     </>

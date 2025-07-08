@@ -102,6 +102,6 @@ export default function DataRender<T,>({
             />
         )
 
-    return <div>{render(data)}</div>
+    return <>{render(data)}</>
 }
 

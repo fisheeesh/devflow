@@ -8,7 +8,7 @@ import User from "@/database/user.model";
 import bcrypt from "bcryptjs"
 import mongoose from "mongoose";
 import Account from "@/database/account.model";
-import { signIn } from "@/auth";
+import { signOut, signIn } from "@/auth";
 import { NotFoundError } from "../http-error";
 import { AuthCredentials } from "@/types/action";
 
@@ -100,4 +100,8 @@ export async function signInWithCredentials(
     } catch (error) {
         return handleError(error) as ErrorResponse
     }
+}
+
+export async function signOutUser() {
+    await signOut()
 }
