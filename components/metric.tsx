@@ -1,4 +1,4 @@
-import { getInitials } from '@/lib/utils'
+import { cn, getInitials } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -11,11 +11,12 @@ interface Props {
     href?: string,
     textStyles: string,
     imgStyles?: string,
-    isAuthor?: boolean
+    isAuthor?: boolean,
+    titleStyles?: string
 }
 
 export default function Metric({
-    imgUrl, alt, value, title, href, textStyles, imgStyles, isAuthor
+    imgUrl, alt, value, title, href, textStyles, imgStyles, isAuthor, titleStyles
 }: Props) {
     const metricContent = (
         <>
@@ -30,7 +31,9 @@ export default function Metric({
             <p className={`${textStyles} flex items-center gap-1.5`}>
                 {value}
 
-                <span className={`small-regular line-clamp-1 ${isAuthor ? "max-sm:hidden" : ""}`}>{title}</span>
+                {title ? <span className={cn(`small-regular line-clamp-1 ${isAuthor ? "max-sm:hidden" : ""}`)}>
+                    {title}
+                </span> : null}
             </p>
         </>
     )

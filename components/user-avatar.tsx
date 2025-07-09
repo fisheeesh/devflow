@@ -3,17 +3,18 @@ import Link from 'next/link'
 import React from 'react'
 import { Avatar, AvatarFallback } from './ui/avatar'
 import Image from 'next/image'
-import { getInitials } from '@/lib/utils'
+import { cn, getInitials } from '@/lib/utils'
 
 interface Props {
     id: string,
     name: string,
     imageUrl?: string | null,
-    className?: string
+    className?: string,
+    fallbackClassName?: string
 }
 
 export default function UserAvatar(
-    { id, name, imageUrl, className = 'h-9 w-9' }: Props
+    { id, name, imageUrl, className = 'h-9 w-9', fallbackClassName }: Props
 ) {
 
     return (
@@ -30,7 +31,7 @@ export default function UserAvatar(
                             quality={100}
                         />
                     ) : (
-                        <AvatarFallback className='primary-gradient font-space-grotesk font-bold tracking-wider text-white'>
+                        <AvatarFallback className={cn(fallbackClassName, 'primary-gradient font-space-grotesk font-bold tracking-wider text-white')}>
                             {getInitials(name)}
                         </AvatarFallback>
                     )

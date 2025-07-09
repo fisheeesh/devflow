@@ -78,3 +78,13 @@ export const getTimeStamp = (createdAt: Date): string => {
   //* Years
   return diffYears === 1 ? "1 year ago" : `${diffYears} years ago`;
 };
+
+export const formatNumber = (number: number) => {
+  if (number >= 1000000) {
+    return (number / 1000000).toFixed(1) + "M"
+  } else if (number >= 1000) {
+    return (number / 1000).toFixed(1) + "K"
+  } else {
+    return number.toString()
+  }
+}
