@@ -1,4 +1,5 @@
 import TagCard from '@/components/cards/tag-card';
+import Preview from '@/components/editor/preview';
 import Metric from '@/components/metric';
 import UserAvatar from '@/components/user-avatar'
 import ROUTES from '@/constants/routes';
@@ -90,7 +91,7 @@ Looking forward to your suggestions and examples!
 export default async function QuestionDetails({ params }: RouteParams) {
     const { id } = await params
 
-    const { author, createdAt, answers, views, tags } = sampleQuestion
+    const { author, createdAt, answers, views, tags, content } = sampleQuestion
 
     return (
         <>
@@ -127,7 +128,6 @@ export default async function QuestionDetails({ params }: RouteParams) {
                     value={` Asked ${getTimeStamp(new Date(createdAt))}`}
                     title=''
                     textStyles='small-regular text-dark400_light700'
-                    titleStyles='max-sm:hidden'
                 />
                 <Metric
                     imgUrl='/icons/message.svg'
@@ -135,7 +135,6 @@ export default async function QuestionDetails({ params }: RouteParams) {
                     value={answers}
                     title=''
                     textStyles='small-regular text-dark400_light700'
-                    titleStyles='max-sm:hidden'
                 />
                 <Metric
                     imgUrl='/icons/eye.svg'
@@ -143,11 +142,10 @@ export default async function QuestionDetails({ params }: RouteParams) {
                     value={formatNumber(views)}
                     title=''
                     textStyles='small-regular text-dark400_light700'
-                    titleStyles='max-sm:hidden'
                 />
             </div>
 
-            <p>Preview Content</p>
+            <Preview content={content} />
 
             <div className="mt-8 flex flex-wrap gap-2">
                 {

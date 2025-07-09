@@ -31,7 +31,7 @@ export default function Metric({
             <p className={`${textStyles} flex items-center gap-1.5`}>
                 {value}
 
-                {title ? <span className={cn(`small-regular line-clamp-1 ${isAuthor ? "max-sm:hidden" : ""}`)}>
+                {title ? <span className={cn(`small-regular line-clamp-1`, titleStyles)}>
                     {title}
                 </span> : null}
             </p>
