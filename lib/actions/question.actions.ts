@@ -175,7 +175,7 @@ export async function editQuestion(
 }
 
 export async function getQuestion(params: GetQuestionParams): Promise<ActionResponse<QuestionType>> {
-    const validationResult = await action({ params, schema: GetQuestionSchema, authorize: true })
+    const validationResult = await action({ params, schema: GetQuestionSchema })
 
     if (validationResult instanceof Error) {
         return handleError(validationResult) as ErrorResponse
@@ -184,7 +184,9 @@ export async function getQuestion(params: GetQuestionParams): Promise<ActionResp
     const { questionId } = validationResult.params!
 
     try {
-        const question = await Question.findById(questionId).populate('tags')
+        const question = await Question.findById(questionId)
+            .populate('tags')
+            .populate("author", "_id name image")
 
         if (!question) throw new NotFoundError('Question')
 
