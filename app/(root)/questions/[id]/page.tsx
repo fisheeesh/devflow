@@ -8,15 +8,26 @@ import { formatNumber, getTimeStamp } from '@/lib/utils';
 import { RouteParams, Tag } from '@/types/global'
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { after } from 'next/server';
+
+// /**
+//  * * We can only do parallel req if a req does not depend on another
+//  * ? It can still lead to challenges like slower reqs, blocking rendering,
+//  * ? increased server load, error handling and complexity or race conditions
+//  */
+// const [_, { success, data: question }] = await Promise.all([
+//     await incrementViews({ questionId: id }),
+//     await getQuestion({ questionId: id })
+// ])
 
 export default async function QuestionDetails({ params }: RouteParams) {
     const { id } = await params
 
-    //$ We can only do parallel req if a req does not depend on another
-    const [_, { success, data: question }] = await Promise.all([
-        await incrementViews({ questionId: id }),
-        await getQuestion({ questionId: id })
-    ])
+    const { success, data: question } = await getQuestion({ questionId: id })
+
+    after(async () => {
+        await incrementViews({ questionId: id })
+    })
 
     if (!success || !question) return redirect('/404')
 
