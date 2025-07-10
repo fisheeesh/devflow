@@ -13,18 +13,21 @@ import {
     FormMessage
 } from "@/components/ui/form"
 import Spinner from "../spinner"
-import { useRef, useState } from "react"
+import { useRef, useState, useTransition } from "react"
 import { AnswerScheama } from "@/lib/validations"
 import dynamic from "next/dynamic"
 import { MDXEditorMethods } from "@mdxeditor/editor"
 import Image from "next/image"
+import { createAnswer } from "@/lib/actions/answer.actions"
+import { toast } from "sonner"
 
 const Editor = dynamic(() => import('@/components/editor'), {
     //! Make sure we turn SSR off
     ssr: false
 })
 
-const AnswerForm = () => {
+const AnswerForm = ({ questionId }: { questionId: string }) => {
+    const [isPending, startTransaction] = useTransition()
     const [isAISubmitting, setIsAISubmitting] = useState(false)
     const editorRef = useRef<MDXEditorMethods>(null)
 
@@ -33,9 +36,25 @@ const AnswerForm = () => {
         defaultValues: { content: '' }
     })
 
-    const onSubmit: SubmitHandler<z.infer<typeof AnswerScheama>> = async (data) => {
+    const isWorking = isPending || form.formState.isSubmitting
+
+    const onSubmit: SubmitHandler<z.infer<typeof AnswerScheama>> = (data) => {
         //@TODO: submit answer
-        console.log(data)
+        startTransaction(async () => {
+            const res = await createAnswer({ questionId, ...data })
+
+            if (res.success) {
+                form.reset()
+
+                toast.success('Success', {
+                    description: "Your answer has been posted successfully.",
+                })
+            } else {
+                toast.error(`Error ${res.status}`, {
+                    description: res?.error?.message
+                })
+            }
+        })
     }
 
     return (
@@ -87,9 +106,9 @@ const AnswerForm = () => {
                     />
 
                     <div className="flex justify-end">
-                        <Button disabled={form.formState.isSubmitting} type="submit" className="primary-gradient w-fit text-white">
+                        <Button disabled={isWorking} type="submit" className="primary-gradient w-fit text-white">
                             {
-                                form.formState.isSubmitting ? (
+                                isWorking ? (
                                     <Spinner label="Posting" />
                                 ) : "Post Answer"
                             }
