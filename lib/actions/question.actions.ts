@@ -3,6 +3,7 @@
 import Question, { IQuestionDoc } from "@/database/question.model";
 import TagQuestion, { ITagQuestion } from "@/database/tag-question.model";
 import Tag, { ITagDoc } from "@/database/tag.model";
+import { CreateQuestionParams, EditQuestionParams, GetQuestionParams, IncrementViewsParams } from "@/types/action";
 import { ActionResponse, ErrorResponse, PaginatedSearchParams, Question as QuestionType } from "@/types/global";
 import mongoose, { FilterQuery } from "mongoose";
 import action from "../handlers/action";
@@ -10,9 +11,6 @@ import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
 import { convertToPlainObject } from "../utils";
 import { AskQuestionSchema, EditQuestionSchema, GetQuestionSchema, IncrementViewsSchema, PaginatedSearchParamsSchema } from "../validations";
-import { CreateQuestionParams, EditQuestionParams, GetQuestionParams, IncrementViewsParams } from "@/types/action";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
     const validationResult = await action({ params, schema: AskQuestionSchema, authorize: true })

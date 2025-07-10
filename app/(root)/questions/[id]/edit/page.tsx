@@ -15,7 +15,7 @@ export default async function EditQuestionPage({ params }: RouteParams) {
     const { data: question, success } = await getQuestion({ questionId: id })
     if (!success) return notFound()
 
-    if (question?.author.toString() !== session?.user?.id) redirect(ROUTES.QUESTION(id))
+    if (question?.author._id.toString() !== session?.user?.id) redirect(ROUTES.QUESTION(id))
 
     return (
         <main>
