@@ -15,11 +15,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import ROUTES from "@/constants/routes"
-import Link from "next/link"
 import { ActionResponse } from "@/types/global"
-import { toast } from "sonner"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { ReloadIcon } from "@radix-ui/react-icons"
+import { toast } from "sonner"
 import Spinner from "../spinner"
 
 interface AuthFormProps<T extends z.ZodType<any, any, any>> {

@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input"
 import ROUTES from '@/constants/routes'
 import { createQuestion, editQuestion } from '@/lib/actions/question.actions'
 import { MDXEditorMethods } from '@mdxeditor/editor'
-import { ReloadIcon } from '@radix-ui/react-icons'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
