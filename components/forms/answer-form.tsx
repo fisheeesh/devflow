@@ -64,22 +64,16 @@ const AnswerForm = ({ questionId }: { questionId: string }) => {
                 <Button
                     className="btn light-border-2 gap-1.5 rounded-md border px-4 py-3 text-primary-500 shadow-none dark:text-primary-500"
                     disabled={isAISubmitting}>
-                    {
-                        isAISubmitting ?
-                            (
-                                <Spinner label="Generating" />
-                            ) :
-                            <>
-                                <Image
-                                    src={'/icons/stars.svg'}
-                                    alt='Generate AI answer'
-                                    width={20}
-                                    height={20}
-                                    className="object-contain"
-                                />
-                                Generate AI Answer
-                            </>
-                    }
+                    <Spinner isLoading={isAISubmitting} label="Generating...">
+                        <Image
+                            src={'/icons/stars.svg'}
+                            alt='Generate AI answer'
+                            width={20}
+                            height={20}
+                            className="object-contain"
+                        />
+                        Generate AI Answer
+                    </Spinner>
                 </Button>
             </div>
 
@@ -107,11 +101,7 @@ const AnswerForm = ({ questionId }: { questionId: string }) => {
 
                     <div className="flex justify-end">
                         <Button disabled={isWorking} type="submit" className="primary-gradient w-fit text-white">
-                            {
-                                isWorking ? (
-                                    <Spinner label="Posting" />
-                                ) : "Post Answer"
-                            }
+                            <Spinner isLoading={isWorking} label="Posting...">Post Answer</Spinner>
                         </Button>
                     </div>
                 </form>

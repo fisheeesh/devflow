@@ -218,14 +218,10 @@ export default function QuestionForm({ question, isEdit = false }: Params) {
 
                     <div className='mt-16 flex justify-end'>
                         <Button disabled={isWorking} type='submit' className='primary-gradient text-light-900 w-fit'>
-                            {
-                                isWorking ?
-                                    <Spinner label='Submitting' /> :
-                                    <>
-                                        {isEdit ? 'Edit' : 'Ask A Question'}
-                                    </>
-                            }
-                            <span className="sr-only">{isEdit ? 'Edit' : 'Ask A Question'}</span>
+                            <Spinner label='Submitting...' isLoading={isWorking}>
+                                {isEdit ? 'Edit' : 'Ask A Question'}
+                                <span className="sr-only">{isEdit ? 'Edit' : 'Ask A Question'}</span>
+                            </Spinner>
                         </Button>
                     </div>
                 </form>

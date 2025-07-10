@@ -49,7 +49,9 @@ export default function LogoutDialog() {
                         onClick={handleSignOut}
                         disabled={isPending}
                         type="submit">
-                        {isPending ? <Spinner label="Logging out" /> : 'Confirm'}
+                        <Spinner isLoading={isPending} label="Logging out...">
+                            Confirm
+                        </Spinner>
                     </Button>
                 </DialogFooter>
             </DialogContent>
