@@ -4,6 +4,7 @@ import AnswerForm from '@/components/forms/answer-form';
 import Metric from '@/components/metric';
 import UserAvatar from '@/components/user-avatar'
 import ROUTES from '@/constants/routes';
+import { getAnswers } from '@/lib/actions/answer.actions';
 import { getQuestion, incrementViews } from '@/lib/actions/question.actions';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 import { RouteParams, Tag } from '@/types/global'
@@ -31,6 +32,10 @@ export default async function QuestionDetails({ params }: RouteParams) {
     })
 
     if (!success || !question) return redirect('/404')
+
+    const { success: areAnswersLoaded, data : answersResult, error } = await getAnswers({ questionId: id, page: 1, pageSize: 10, filter: 'latest' })
+
+    console.log('Answers', answersResult)
 
     const { author, createdAt, answers, views, tags, content, title } = question
 
