@@ -37,7 +37,7 @@ interface StateSkeletonProps {
 }
 
 const StateSkeleton = ({ image, title, message, button }: StateSkeletonProps) => (
-    <div className='mt-16 flex w-full flex-col items-center justify-center sm:mt-20'>
+    <div className='my-16 flex w-full flex-col items-center justify-center sm:my-20'>
         <>
             <Image
                 alt={image.alt}

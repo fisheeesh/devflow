@@ -1,3 +1,4 @@
+import AllAnswers from '@/components/answers/all-answers';
 import TagCard from '@/components/cards/tag-card';
 import Preview from '@/components/editor/preview';
 import AnswerForm from '@/components/forms/answer-form';
@@ -33,7 +34,7 @@ export default async function QuestionDetails({ params }: RouteParams) {
 
     if (!success || !question) return redirect('/404')
 
-    const { success: areAnswersLoaded, data : answersResult, error } = await getAnswers({ questionId: id, page: 1, pageSize: 10, filter: 'latest' })
+    const { success: areAnswersLoaded, data: answersResult, error: answersError } = await getAnswers({ questionId: id, page: 1, pageSize: 10, filter: 'latest' })
 
     console.log('Answers', answersResult)
 
@@ -107,6 +108,10 @@ export default async function QuestionDetails({ params }: RouteParams) {
                     ))
                 }
             </div>
+
+            <section className="my-5">
+                <AllAnswers data={answersResult?.answers} success={areAnswersLoaded} error={answersError} totalAnswers={answersResult?.totalAnswers || 0} />
+            </section>
 
             <section className="my-5">
                 <AnswerForm questionId={question._id} />
