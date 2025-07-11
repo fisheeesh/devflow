@@ -164,7 +164,7 @@ export default function QuestionForm({ question, isEdit = false }: Params) {
                                 <FormControl>
                                     <Editor
                                         value={field.value}
-                                        editorRef={editorRef}
+                                        ref={editorRef}
                                         fieldChange={field.onChange}
                                     />
                                 </FormControl>
