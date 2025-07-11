@@ -68,11 +68,54 @@
     border-radius: 7px 7px 0 0 !important;
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
+    /* Make toolbar horizontally scrollable */
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    white-space: nowrap !important;
+    position: relative;
+    z-index: 100;
+}
+
+/* Make toolbar content not wrap */
+.mdxeditor-toolbar > div {
+    display: inline-flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: 4px;
+    min-width: max-content !important;
+}
+
+/* Ensure toolbar buttons don't shrink */
+.mdxeditor-toolbar button,
+.mdxeditor-toolbar [role="separator"],
+.mdxeditor-toolbar select {
+    flex-shrink: 0 !important;
+}
+
+/* Custom scrollbar for toolbar */
+.mdxeditor-toolbar::-webkit-scrollbar {
+    height: 6px;
+}
+
+.mdxeditor-toolbar::-webkit-scrollbar-track {
+    background: var(--baseBg);
+}
+
+.mdxeditor-toolbar::-webkit-scrollbar-thumb {
+    background: var(--baseBorder);
+    border-radius: 3px;
+}
+
+.mdxeditor-toolbar::-webkit-scrollbar-thumb:hover {
+    background: var(--baseBorderHover);
 }
 
 /* Ensure the main editor container matches */
 .mdxeditor {
     border-radius: 8px !important;
+    overflow: visible !important;
+    position: relative;
+    z-index: 1;
 }
 
 /* Make sure the content area has no top border radius */
@@ -83,22 +126,8 @@
 
 /* ENHANCED Z-INDEX FIXES FOR MDXEDITOR DROPDOWNS */
 
-/* Main editor container - ensure it doesn't clip dropdowns */
-.mdxeditor {
-    overflow: visible !important;
-    position: relative;
-    z-index: 1;
-}
-
-/* Toolbar should have high z-index and not clip content */
-.mdxeditor-toolbar {
-    position: relative;
-    z-index: 100;
-    overflow: visible !important;
-}
-
 /* Ensure the editor content area doesn't interfere */
-.mdxeditor-root-contenteditable {
+.mdxeditor-rich-text-editor {
     position: relative;
     z-index: 1;
 }
@@ -129,7 +158,7 @@
     position: relative;
 }
 
-/* Language selector dropdown - this is likely your main issue */
+/* Language selector dropdown */
 .mdxeditor [data-editor-type="codeblock"] + * [data-radix-select-content],
 .cm-editor + [data-radix-select-content] {
     z-index: 9999 !important;
@@ -162,12 +191,6 @@
 
 .mdxeditor [data-radix-select-trigger][data-state="open"] + [data-radix-select-content] {
     z-index: 9999 !important;
-}
-
-/* Ensure proper stacking context for editor sections */
-.mdxeditor-rich-text-editor {
-    position: relative;
-    z-index: 1;
 }
 
 /* Fix for any modals or overlays */

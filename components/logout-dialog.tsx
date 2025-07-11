@@ -30,7 +30,7 @@ export default function LogoutDialog() {
                     className="small-medium cursor-pointer btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none"
                 >
                     <LogOut className='size-5 text-black dark:text-white' />
-                    <span className='text-dark300_light900'>Logout</span>
+                    <span className='text-dark300_light900 max-lg:hidden'>Logout</span>
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] background-light700_dark300 border-none">

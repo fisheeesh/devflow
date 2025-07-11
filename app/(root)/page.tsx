@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/question-card";
 import DataRender from "@/components/data-render";
 import HomeFilter from "@/components/filters/HomeFilter";
@@ -10,6 +11,8 @@ import { RouteParams } from "@/types/global";
 import Link from "next/link";
 
 export default async function Home({ searchParams }: RouteParams) {
+  const session = await auth()
+  console.log(session)
   const { page, pageSize, query, filter } = await searchParams
 
   const { success, data, error } = await getQuestions({
