@@ -36,8 +36,6 @@ export default async function QuestionDetails({ params }: RouteParams) {
 
     const { success: areAnswersLoaded, data: answersResult, error: answersError } = await getAnswers({ questionId: id, page: 1, pageSize: 10, filter: 'latest' })
 
-    console.log('Answers', answersResult)
-
     const { author, createdAt, answers, views, tags, content, title } = question
 
     return (
