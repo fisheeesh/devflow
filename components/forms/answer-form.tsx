@@ -37,7 +37,7 @@ interface Props {
 const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
     const [isPending, startTransaction] = useTransition()
     const [isAISubmitting, setIsAISubmitting] = useState(false)
-    const editorRef = useRef<MDXEditorMethods>(null)
+    const editorRef = useRef<MDXEditorMethods>(null);
     const session = useSession()
 
     const form = useForm<z.infer<typeof AnswerScheama>>({
@@ -80,8 +80,10 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
 
         setIsAISubmitting(true)
 
+        const userAnswer = editorRef.current?.getMarkdown()
+
         try {
-            const { success, data, error } = await api.ai.getAnswers(questionTitle, questionContent)
+            const { success, data, error } = await api.ai.getAnswers(questionTitle, questionContent, userAnswer)
             if (!success) {
                 return toast.error('Error', {
                     description: error?.message
@@ -145,7 +147,7 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
                                 <FormControl>
                                     <Editor
                                         value={field.value}
-                                        editorRef={editorRef}
+                                        ref={editorRef}
                                         fieldChange={field.onChange}
                                     />
                                 </FormControl>

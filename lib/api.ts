@@ -53,10 +53,10 @@ export const api = {
         })
     },
     ai: {
-        getAnswers: (question: string, content: string): Promise<ActionResponse<string>> =>
+        getAnswers: (question: string, content: string, userAnswer?: string): Promise<ActionResponse<string>> =>
             fetchHandler(`${API_BASE_URL}/ai/answers`, {
                 method: "POST",
-                body: JSON.stringify({ question, content })
+                body: JSON.stringify({ question, content, userAnswer })
             })
     }
 }

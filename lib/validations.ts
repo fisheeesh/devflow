@@ -150,5 +150,6 @@ export const AIAnswerSchema = z.object({
     question: z.string()
         .min(5, { message: "Quesiton is required." })
         .max(130, { message: "Quesiton cannot exceed 130 characters." }),
-    content: z.string().min(100, { message: "Answer has to have more than 100 charaters." })
+    content: z.string().min(100, { message: "Answer has to have more than 100 charaters." }),
+    userAnswer: z.string().optional()
 })
