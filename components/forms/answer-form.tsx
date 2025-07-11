@@ -81,53 +81,20 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
         setIsAISubmitting(true)
 
         try {
-            const response = await api.ai.getAnswers(questionTitle, questionContent)
-            console.log('Full API Response:', response) // Debug log
-
-            const { success, data, error } = response
+            const { success, data, error } = await api.ai.getAnswers(questionTitle, questionContent)
             if (!success) {
-                console.error('API Error:', error) // Debug log
                 return toast.error('Error', {
                     description: error?.message
                 })
             }
 
-            console.log('Raw data:', data) // Debug log
-            console.log('Data type:', typeof data) // Debug log
+            const formattedAnswer = data?.replace(/<br>/g, " ").toString().trim()
 
-            // Handle the response properly
-            const formattedAnswer = typeof data === 'string' ? data.trim() : String(data || '').trim()
+            if (editorRef.current) {
+                editorRef.current.setMarkdown(formattedAnswer as string)
 
-            console.log('Formatted answer:', formattedAnswer) // Debug log
-            console.log('Editor ref current:', editorRef.current) // Debug log
-
-            if (formattedAnswer) {
-                // Set form value - this should automatically update the editor via the value prop
-                form.setValue('content', formattedAnswer)
-
-                // Force form to recognize the change
+                form.setValue('content', formattedAnswer as string)
                 form.trigger('content')
-
-                // Also manually trigger the field change callback to ensure editor updates
-                const contentField = form.getFieldState('content')
-                if (contentField) {
-                    // This should trigger the editor to update
-                    console.log('Triggering field change manually')
-                }
-
-                console.log('Form content value after setting:', form.getValues('content')) // Debug log
-
-                // Optional: Still try to set via ref as backup, but don't rely on it
-                if (editorRef.current) {
-                    console.log('Editor ref available, setting as backup')
-                    editorRef.current.setMarkdown(formattedAnswer)
-                }
-            } else {
-                console.warn('No formatted answer to set') // Debug log
-                toast.error('Error', {
-                    description: 'AI generated an empty response'
-                })
-                return
             }
 
             toast.success('Success', {
@@ -135,7 +102,6 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
             })
 
         } catch (error) {
-            console.error('AI Answer Generation Error:', error) // Add logging for debugging
             toast.error('Error', {
                 description: (error instanceof Error) ? error.message : 'There was a problem with your request'
             })
@@ -148,7 +114,7 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
     return (
         <div>
             <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
-                <h4 className="paragraph-semibold text-dark400_light800">Write your answer here</h4>
+                <h4 className="paragraph-semibold text-dark400_light800">Wirte your answer here</h4>
                 <Button
                     onClick={genereateAIAnswer}
                     className="btn light-border-2 gap-1.5 rounded-md border px-4 py-3 text-primary-500 shadow-none dark:text-primary-500"
