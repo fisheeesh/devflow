@@ -99,7 +99,7 @@ const AuthForm = <T extends z.ZodType<any, any, any>>({
                     type="submit"
                     className="primary-gradient paragraph-medium min-h-12 w-full rounded-2 cursor-pointer px-4 py-3 font-inter !text-light-900"
                 >
-                    <Spinner isLoading={form.formState.isSubmitting} label={buttonText === 'Sign In' ? 'Signing In' : 'Signing Up'}>{buttonText}</Spinner>
+                    <Spinner isLoading={form.formState.isSubmitting} label={buttonText === 'Sign In' ? 'Signing In...' : 'Signing Up...'}>{buttonText}</Spinner>
                 </Button>
                 {
                     formType === 'SIGN_IN' ? (
