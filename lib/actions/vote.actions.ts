@@ -9,6 +9,7 @@ import handleError from "../handlers/error";
 import { CreateVoteSchema, HasVotedSchema, UpdateVoteCountSchema } from "../validations";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constants/routes";
+import { UnauthorizedError } from "../http-error";
 
 export async function updateVoteCount(params: UpdateVoteCountParams, session?: ClientSession): Promise<ActionResponse> {
     const validationResult = await action({ params, schema: UpdateVoteCountSchema })
@@ -100,7 +101,6 @@ export async function createVote(params: CreateVoteParams): Promise<ActionRespon
 
 export async function hasVoted(params: HasVotedParams): Promise<ActionResponse<HasVotedResponse>> {
     const validationResult = await action({ params, schema: HasVotedSchema, authorize: true })
-
     if (validationResult instanceof Error) {
         return handleError(validationResult) as ErrorResponse
     }
@@ -108,7 +108,7 @@ export async function hasVoted(params: HasVotedParams): Promise<ActionResponse<H
     const { targetId, targetType } = validationResult.params!
     const userId = validationResult!.session!.user!.id
 
-    if (!userId) return handleError(new Error('Unauthorized')) as ErrorResponse
+    if (!userId) return handleError(new UnauthorizedError()) as ErrorResponse
 
     try {
         const vote = await Vote.findOne({
@@ -116,15 +116,17 @@ export async function hasVoted(params: HasVotedParams): Promise<ActionResponse<H
             actionId: targetId,
             actionType: targetType
         })
-        if (!vote) {
-            return {
-                success: false,
-                data: { hasUpvoted: false, hasDownvoted: false }
+
+        if (!vote) return {
+            success: false,
+            data: {
+                hasUpvoted: false,
+                hasDownvoted: false
             }
         }
 
         return {
-            success: true,
+            success: true, 
             data: {
                 hasUpvoted: vote.voteType === 'upvote',
                 hasDownvoted: vote.voteType === 'downvote'

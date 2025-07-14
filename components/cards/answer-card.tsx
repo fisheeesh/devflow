@@ -9,7 +9,7 @@ import UserAvatar from '../user-avatar'
 import Votes from '../votes/votes'
 
 export default function AnswerCard({ _id, author, content, createdAt, upvotes, downvotes }: Answer) {
-    const hasVotedPromise = hasVoted({targetId: _id, targetType: 'answer'})
+    const hasVotedPromise = hasVoted({ targetId: _id, targetType: 'answer' })
 
     return (
         <article className='light-border border-b py-10'>
@@ -37,7 +37,7 @@ export default function AnswerCard({ _id, author, content, createdAt, upvotes, d
                 </div>
 
                 <div className="flex justify-end">
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<div className='animate-pulse w-24 px-6 py-[10.5px] background-light700_dark300 rounded' />}>
                         <Votes
                             targetId={_id}
                             targetType='answer'

@@ -14,9 +14,14 @@ import {
 import Image from "next/image"
 
 export default function ThemeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme, theme } = useTheme()
 
-  const className = "font-bold hover:background-light900_dark300 flex items-center gap-3"
+  const getImageFilter = (themeType: string) => {
+    const isActive = theme === themeType
+    return isActive
+      ? 'brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(1352%) hue-rotate(17deg) brightness(118%) contrast(101%)'
+      : ''
+  }
 
   return (
     <DropdownMenu>
@@ -28,16 +33,43 @@ export default function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="background-light900_dark200">
-        <DropdownMenuItem onClick={() => setTheme("light")} className={className}>
-          <Image src='/icons/sun.svg' alt='sun' width={16} height={16} />
+        <DropdownMenuItem onClick={() => setTheme("light")} className="font-bold flex items-center gap-3 hover:background-light900_dark300">
+          <Image
+            src='/icons/sun.svg'
+            alt='sun'
+            width={16}
+            height={16}
+            style={{
+              filter: getImageFilter("light")
+            }}
+            className="transition-all duration-200"
+          />
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")} className={className}>
-          <Image src='/icons/moon.svg' alt='sun' width={16} height={16} />
+        <DropdownMenuItem onClick={() => setTheme("dark")} className="font-bold flex items-center gap-3 hover:background-light900_dark300">
+          <Image
+            src='/icons/moon.svg'
+            alt='moon'
+            width={16}
+            height={16}
+            style={{
+              filter: getImageFilter("dark")
+            }}
+            className="transition-all duration-200"
+          />
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")} className={className}>
-          <Image src='/icons/computer.svg' alt='sun' width={16} height={16} />
+        <DropdownMenuItem onClick={() => setTheme("system")} className="font-bold flex items-center gap-3 hover:background-light900_dark300">
+          <Image
+            src='/icons/computer.svg'
+            alt='computer'
+            width={16}
+            height={16}
+            style={{
+              filter: getImageFilter("system")
+            }}
+            className="transition-all duration-200"
+          />
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
