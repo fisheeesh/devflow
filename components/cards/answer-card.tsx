@@ -1,12 +1,16 @@
-import { Answer } from '@/types/global'
-import React from 'react'
-import UserAvatar from '../user-avatar'
-import Link from 'next/link'
 import ROUTES from '@/constants/routes'
+import { hasVoted } from '@/lib/actions/vote.actions'
 import { getTimeStamp } from '@/lib/utils'
+import { Answer } from '@/types/global'
+import Link from 'next/link'
+import { Suspense } from 'react'
 import Preview from '../editor/preview'
+import UserAvatar from '../user-avatar'
+import Votes from '../votes/votes'
 
-export default function AnswerCard({ _id, author, content, createdAt }: Answer) {
+export default function AnswerCard({ _id, author, content, createdAt, upvotes, downvotes }: Answer) {
+    const hasVotedPromise = hasVoted({targetId: _id, targetType: 'answer'})
+
     return (
         <article className='light-border border-b py-10'>
             <span id={JSON.stringify(_id)} className='hash-span' />
@@ -32,7 +36,17 @@ export default function AnswerCard({ _id, author, content, createdAt }: Answer) 
                     </Link>
                 </div>
 
-                <div className="flex justify-end">Votes</div>
+                <div className="flex justify-end">
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Votes
+                            targetId={_id}
+                            targetType='answer'
+                            upvotes={upvotes}
+                            downvotes={downvotes}
+                            hasVotedPromise={hasVotedPromise}
+                        />
+                    </Suspense>
+                </div>
             </div>
             <Preview content={content} />
         </article>

@@ -60,5 +60,7 @@ interface Answer {
     _id: string,
     author: Author,
     content: string,
-    createdAt: Date
+    createdAt: Date,
+    upvotes: number,
+    downvotes: number
 }
