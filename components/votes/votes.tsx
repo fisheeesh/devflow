@@ -1,23 +1,31 @@
 'use client'
 
+import { createVote } from "@/lib/actions/vote.actions"
 import { formatNumber } from "@/lib/utils"
+import { HasVotedResponse } from "@/types/action"
+import { ActionResponse } from "@/types/global"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
-import { useState } from "react"
+import { use, useState } from "react"
 import { toast } from "sonner"
 
 interface Params {
     upvotes: number
-    hasupVoted: boolean
     downvotes: number
-    hasdownVoted: boolean
+    targetId: string
+    targetType: 'question' | 'answer'
+    hasVotedPromise: Promise<ActionResponse<HasVotedResponse>>
 }
 
-export default function Votes({ upvotes, hasupVoted, downvotes, hasdownVoted }: Params) {
+export default function Votes({ upvotes, downvotes, targetId, targetType, hasVotedPromise }: Params) {
     const session = useSession()
     const userId = session.data?.user?.id
 
+    const { success, data } = use(hasVotedPromise)
+
     const [isLoading, setIsLoading] = useState(false)
+
+    const { hasUpvoted, hasDownvoted } = data || {}
 
     const handleVote = async (voteType: "upvote" | "downvote") => {
         if (!userId) return toast.error('Please login to vote', {
@@ -26,12 +34,22 @@ export default function Votes({ upvotes, hasupVoted, downvotes, hasdownVoted }: 
 
         setIsLoading(true)
         try {
+            const result = await createVote({
+                targetId, targetType, voteType
+            })
+
+            if (!result.success) {
+                return toast.error('Failed to vote', {
+                    description: result.error?.message
+                })
+
+            }
             const successMessage =
                 voteType === 'upvote'
-                    ? `Upvote ${!hasdownVoted ? 'added' : 'removed'} successfully`
-                    : `Downvote ${!hasupVoted ? 'added' : 'removed'} successfully`
+                    ? `Upvote ${!hasDownvoted ? 'added' : 'removed'} successfully`
+                    : `Downvote ${!hasUpvoted ? 'added' : 'removed'} successfully`
 
-            toast.success(successMessage,{
+            toast.success(successMessage, {
                 description: 'Your vote has been recorded.'
             })
         }
@@ -48,7 +66,7 @@ export default function Votes({ upvotes, hasupVoted, downvotes, hasdownVoted }: 
         <div className="flex-center gap-2.5">
             <div className="flex-center gap-1.5">
                 <Image
-                    src={hasupVoted ? '/icons/upvoted.svg' : '/icons/upvote.svg'}
+                    src={success && hasUpvoted ? '/icons/upvoted.svg' : '/icons/upvote.svg'}
                     width={18}
                     height={18}
                     alt="upvote"
@@ -65,7 +83,7 @@ export default function Votes({ upvotes, hasupVoted, downvotes, hasdownVoted }: 
 
             <div className="flex-center gap-1.5">
                 <Image
-                    src={hasdownVoted ? '/icons/downvoted.svg' : '/icons/downvote.svg'}
+                    src={success && hasDownvoted ? '/icons/downvoted.svg' : '/icons/downvote.svg'}
                     width={18}
                     height={18}
                     alt="downvote"

@@ -7,6 +7,8 @@ import mongoose, { ClientSession } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { CreateVoteSchema, HasVotedSchema, UpdateVoteCountSchema } from "../validations";
+import { revalidatePath } from "next/cache";
+import ROUTES from "@/constants/routes";
 
 export async function updateVoteCount(params: UpdateVoteCountParams, session?: ClientSession): Promise<ActionResponse> {
     const validationResult = await action({ params, schema: UpdateVoteCountSchema })
@@ -69,19 +71,21 @@ export async function createVote(params: CreateVoteParams): Promise<ActionRespon
                     { voteType },
                     { new: true, session }
                 )
-                await updateVoteCount({ targetId, targetType, voteType: existingVote.voteType, change: 1 }, session)
-                await updateVoteCount({ targetId, targetType, voteType, change: -1 }, session)
+                await updateVoteCount({ targetId, targetType, voteType: existingVote.voteType, change: -1 }, session)
+                await updateVoteCount({ targetId, targetType, voteType, change: 1 }, session)
             }
         } else {
             //* If the user has not voted yet, create a new vote
             await Vote.create(
-                [{ author: userId, actiion: targetId, actionType: targetType, voteType }]
+                [{ author: userId, actionId: targetId, actionType: targetType, voteType }]
                 , { session }
             )
             await updateVoteCount({ targetId, targetType, voteType, change: 1 }, session)
         }
 
         await session.commitTransaction()
+
+        revalidatePath(ROUTES.QUESTION(targetId))
 
         return { success: true }
 
@@ -94,7 +98,7 @@ export async function createVote(params: CreateVoteParams): Promise<ActionRespon
     }
 }
 
-export async function hasVote(params: HasVotedParams): Promise<ActionResponse<HasVotedResponse>> {
+export async function hasVoted(params: HasVotedParams): Promise<ActionResponse<HasVotedResponse>> {
     const validationResult = await action({ params, schema: HasVotedSchema, authorize: true })
 
     if (validationResult instanceof Error) {

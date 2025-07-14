@@ -8,11 +8,13 @@ import Votes from '@/components/votes/votes';
 import ROUTES from '@/constants/routes';
 import { getAnswers } from '@/lib/actions/answer.actions';
 import { getQuestion, incrementViews } from '@/lib/actions/question.actions';
+import { hasVoted } from '@/lib/actions/vote.actions';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 import { RouteParams, Tag } from '@/types/global'
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { after } from 'next/server';
+import { Suspense } from 'react';
 
 // /**
 //  * * We can only do parallel req if a req does not depend on another
@@ -37,6 +39,8 @@ export default async function QuestionDetails({ params }: RouteParams) {
 
     const { success: areAnswersLoaded, data: answersResult, error: answersError } = await getAnswers({ questionId: id, page: 1, pageSize: 10, filter: 'latest' })
 
+    const hasVotedPromise = hasVoted({ targetId: question._id, targetType: 'question' })
+
     const { author, createdAt, answers, views, tags, content, title } = question
 
     return (
@@ -60,12 +64,15 @@ export default async function QuestionDetails({ params }: RouteParams) {
                     </div>
 
                     <div className="flex justify-end">
-                        <Votes
-                            upvotes={question.upvotes}
-                            hasupVoted={true}
-                            downvotes={question.downvotes}
-                            hasdownVoted={false}
-                        />
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <Votes
+                                upvotes={question.upvotes}
+                                downvotes={question.downvotes}
+                                targetId={question._id}
+                                targetType="question"
+                                hasVotedPromise={hasVotedPromise}
+                            />
+                        </Suspense>
                     </div>
                 </div>
 
