@@ -8,7 +8,7 @@ import { FilterQuery } from "mongoose";
 import { User } from "@/database";
 import { convertToPlainObject } from "../utils";
 
-export async function getUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
+export async function getAllUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })
     if (validationResult instanceof Error) {
         return handleError(validationResult) as ErrorResponse
