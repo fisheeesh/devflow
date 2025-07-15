@@ -16,8 +16,10 @@ import {
 import { Input } from "@/components/ui/input"
 import ROUTES from "@/constants/routes"
 import { ActionResponse } from "@/types/global"
+import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { toast } from "sonner"
 import Spinner from "../spinner"
 
@@ -35,6 +37,7 @@ const AuthForm = <T extends z.ZodType<any, any, any>>({
     onSubmit
 }: AuthFormProps<T>) => {
     const router = useRouter()
+    const [showPassword, setShowPassword] = useState(false)
     type FormData = z.infer<T>
 
     const form = useForm<FormData>({
@@ -81,11 +84,25 @@ const AuthForm = <T extends z.ZodType<any, any, any>>({
                                         <span className="text-red-600">*</span>
                                     </FormLabel>
                                     <FormControl>
-                                        <Input
-                                            type={field.name === 'password' ? 'password' : 'text'}
-                                            className="paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 no-focus min-h-12 rounded-1.5 border"
-                                            {...field}
-                                        />
+                                        <div className="relative">
+                                            <Input
+                                                type={field.name === 'password' ? showPassword ? "text" : "password" : 'text'}
+                                                className="paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 no-focus min-h-12 rounded-1.5 border"
+                                                {...field}
+                                            />
+                                            {
+                                                field.name === 'password' &&
+                                                (showPassword ? <EyeOpenIcon
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className="absolute size-5 right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                                                /> : <EyeClosedIcon
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className="absolute size-5 right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                                                />)
+                                            }
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
