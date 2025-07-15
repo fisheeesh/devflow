@@ -46,8 +46,8 @@ export default function Votes({ upvotes, downvotes, targetId, targetType, hasVot
             }
             const successMessage =
                 voteType === 'upvote'
-                    ? `Upvote ${!hasDownvoted ? 'added' : 'removed'} successfully`
-                    : `Downvote ${!hasUpvoted ? 'added' : 'removed'} successfully`
+                    ? `Upvote ${!hasUpvoted ? 'added' : 'removed'} successfully`
+                    : `Downvote ${!hasDownvoted ? 'added' : 'removed'} successfully`
 
             toast.success(successMessage, {
                 description: 'Your vote has been recorded.'

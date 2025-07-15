@@ -42,7 +42,7 @@ async function action<T>({
         session = await auth()
 
         if (!session) {
-            return new UnauthorizedError()
+            return new Error('Please Login to perform this action.')
         }
     }
 
