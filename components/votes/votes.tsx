@@ -4,7 +4,6 @@ import { createVote } from "@/lib/actions/vote.actions"
 import { formatNumber } from "@/lib/utils"
 import { HasVotedResponse } from "@/types/action"
 import { ActionResponse } from "@/types/global"
-import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { use, useState } from "react"
 import { toast } from "sonner"
@@ -18,9 +17,6 @@ interface Params {
 }
 
 export default function Votes({ upvotes, downvotes, targetId, targetType, hasVotedPromise }: Params) {
-    const session = useSession()
-    const userId = session.data?.user?.id
-
     const { success, data } = use(hasVotedPromise)
 
     const [isLoading, setIsLoading] = useState(false)
@@ -28,10 +24,6 @@ export default function Votes({ upvotes, downvotes, targetId, targetType, hasVot
     const { hasUpvoted, hasDownvoted } = data || {}
 
     const handleVote = async (voteType: "upvote" | "downvote") => {
-        if (!userId) return toast.error('Please login to vote', {
-            description: 'Only logged-in users can vote.'
-        })
-
         setIsLoading(true)
         try {
             const result = await createVote({
