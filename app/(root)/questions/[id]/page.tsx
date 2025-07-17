@@ -3,6 +3,7 @@ import TagCard from '@/components/cards/tag-card';
 import Preview from '@/components/editor/preview';
 import AnswerForm from '@/components/forms/answer-form';
 import Metric from '@/components/metric';
+import SaveQuestion from '@/components/questions/save-question';
 import UserAvatar from '@/components/user-avatar'
 import Votes from '@/components/votes/votes';
 import ROUTES from '@/constants/routes';
@@ -39,7 +40,7 @@ export default async function QuestionDetails({ params }: RouteParams) {
 
     const { success: areAnswersLoaded, data: answersResult, error: answersError } = await getAnswers({ questionId: id, page: 1, pageSize: 10, filter: 'latest' })
 
-    const hasVotedPromise= hasVoted({ targetId: question._id, targetType: 'question' })
+    const hasVotedPromise = hasVoted({ targetId: question._id, targetType: 'question' })
 
     const { author, createdAt, answers, views, tags, content, title } = question
 
@@ -72,6 +73,10 @@ export default async function QuestionDetails({ params }: RouteParams) {
                                 targetType="question"
                                 hasVotedPromise={hasVotedPromise}
                             />
+                        </Suspense>
+
+                        <Suspense fallback={<div className='animate-pulse w-24 px-6 py-[10.5px] background-light700_dark300 rounded' />}>
+                            <SaveQuestion questionId={question._id} />
                         </Suspense>
                     </div>
                 </div>
