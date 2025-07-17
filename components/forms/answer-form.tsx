@@ -20,7 +20,6 @@ import { MDXEditorMethods } from "@mdxeditor/editor"
 import Image from "next/image"
 import { createAnswer } from "@/lib/actions/answer.actions"
 import { toast } from "sonner"
-import { useSession } from "next-auth/react"
 import { api } from "@/lib/api"
 
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -31,14 +30,14 @@ const Editor = dynamic(() => import('@/components/editor'), {
 interface Props {
     questionId: string
     questionTitle: string
-    questionContent: string
+    questionContent: string,
+    userId: string
 }
 
-const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
+const AnswerForm = ({ questionId, questionTitle, questionContent, userId }: Props) => {
     const [isPending, startTransaction] = useTransition()
     const [isAISubmitting, setIsAISubmitting] = useState(false)
     const editorRef = useRef<MDXEditorMethods>(null);
-    const session = useSession()
 
     const form = useForm<z.infer<typeof AnswerScheama>>({
         resolver: zodResolver(AnswerScheama),
@@ -72,7 +71,7 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
     }
 
     const genereateAIAnswer = async () => {
-        if (session.status !== 'authenticated') {
+        if (!userId) {
             return toast.error('Error', {
                 description: 'You must be logged in to generate an AI answer'
             })
@@ -119,7 +118,7 @@ const AnswerForm = ({ questionId, questionTitle, questionContent }: Props) => {
                 <h4 className="paragraph-semibold text-dark400_light800">Wirte your answer here</h4>
                 <Button
                     onClick={genereateAIAnswer}
-                    className="btn light-border-2 gap-1.5 rounded-md border px-4 py-3 text-primary-500 shadow-none dark:text-primary-500"
+                    className="btn light-border-2 cursor-pointer hover:rounded-xl gap-1.5 rounded-md border px-4 py-3 text-primary-500 shadow-none dark:text-primary-500"
                     disabled={isAISubmitting}>
                     <Spinner isLoading={isAISubmitting} label="Generating...">
                         <Image

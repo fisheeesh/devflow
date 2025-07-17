@@ -9,6 +9,7 @@ import { use, useState } from "react"
 import { toast } from "sonner"
 
 interface Params {
+    userId: string,
     upvotes: number
     downvotes: number
     targetId: string
@@ -16,7 +17,7 @@ interface Params {
     hasVotedPromise: Promise<ActionResponse<HasVotedResponse>>
 }
 
-export default function Votes({ upvotes, downvotes, targetId, targetType, hasVotedPromise }: Params) {
+export default function Votes({ userId, upvotes, downvotes, targetId, targetType, hasVotedPromise }: Params) {
     const { success, data } = use(hasVotedPromise)
 
     const [isLoading, setIsLoading] = useState(false)
@@ -24,6 +25,12 @@ export default function Votes({ upvotes, downvotes, targetId, targetType, hasVot
     const { hasUpvoted, hasDownvoted } = data || {}
 
     const handleVote = async (voteType: "upvote" | "downvote") => {
+        if (!userId) {
+            return toast.error('Error', {
+                description: 'You must be logged in to vote a question'
+            })
+        }
+
         setIsLoading(true)
         try {
             const result = await createVote({

@@ -7,11 +7,12 @@ import { use, useTransition } from "react"
 import { toast } from "sonner"
 
 interface Props {
+    userId: string
     questionId: string
     hasSavedQuestionPromise: Promise<ActionResponse<{ saved: boolean }>>
 }
 
-export default function SaveQuestion({ questionId, hasSavedQuestionPromise }: Props) {
+export default function SaveQuestion({ userId, questionId, hasSavedQuestionPromise }: Props) {
     const { data } = use(hasSavedQuestionPromise)
 
     const [isPending, startTransition] = useTransition()
@@ -19,6 +20,12 @@ export default function SaveQuestion({ questionId, hasSavedQuestionPromise }: Pr
     const { saved: hasSaved } = data || {}
 
     const handleSave = () => {
+        if (!userId) {
+            return toast.error('Error', {
+                description: 'You must be logged in to save a question'
+            })
+        }
+
         startTransition(async () => {
             const { success, data, error } = await toggleSaveQuestion({ questionId })
 

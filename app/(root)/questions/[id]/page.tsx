@@ -1,3 +1,4 @@
+import { auth } from '@/auth';
 import AllAnswers from '@/components/answers/all-answers';
 import TagCard from '@/components/cards/tag-card';
 import Preview from '@/components/editor/preview';
@@ -29,6 +30,7 @@ import { Suspense } from 'react';
 // ])
 
 export default async function QuestionDetails({ params }: RouteParams) {
+    const session = await auth()
     const { id } = await params
 
     const { success, data: question } = await getQuestion({ questionId: id })
@@ -70,6 +72,7 @@ export default async function QuestionDetails({ params }: RouteParams) {
                     <div className="flex justify-end items-center gap-4">
                         <Suspense fallback={<div className='animate-pulse w-24 px-6 py-[10.5px] background-light700_dark300 rounded' />}>
                             <Votes
+                                userId={session?.user?.id as string}
                                 upvotes={question.upvotes}
                                 downvotes={question.downvotes}
                                 targetId={question._id}
@@ -80,6 +83,7 @@ export default async function QuestionDetails({ params }: RouteParams) {
 
                         <Suspense fallback={<div className='animate-pulse w-3 px-6 py-[10.5px] background-light700_dark300 rounded' />}>
                             <SaveQuestion
+                                userId={session?.user?.id as string}
                                 questionId={question._id}
                                 hasSavedQuestionPromise={hasSavedQuestionPromise} />
                         </Suspense>
@@ -135,7 +139,7 @@ export default async function QuestionDetails({ params }: RouteParams) {
             </section>
 
             <section className="my-5">
-                <AnswerForm questionId={question._id} questionTitle={question.title} questionContent={question.content} />
+                <AnswerForm userId={session?.user?.id as string} questionId={question._id} questionTitle={question.title} questionContent={question.content} />
             </section>
         </>
     )
