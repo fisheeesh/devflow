@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/question-card";
 import DataRender from "@/components/data-render";
 import HomeFilter from "@/components/filters/HomeFilter";

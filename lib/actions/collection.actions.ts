@@ -66,7 +66,7 @@ export async function hasSavedQuestion(params: CollectionBaseParams): Promise<Ac
     }
 }
 
-export async function getSaveQuestion(params: PaginatedSearchParams): Promise<ActionResponse<{ collection: CollectionType[], isNext: boolean }>> {
+export async function getSavedQuestions(params: PaginatedSearchParams): Promise<ActionResponse<{ collection: CollectionType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema, authorize: true })
     if (validationResult instanceof Error) {
         return handleError(validationResult) as ErrorResponse
@@ -141,7 +141,7 @@ export async function getSaveQuestion(params: PaginatedSearchParams): Promise<Ac
 
         const questions = await Collection.aggregate(pipeline)
 
-        const isNext = totalCount.count > skip + questions.length
+        const isNext = totalCount?.count > skip + questions.length
 
         return{
             success: true, 
