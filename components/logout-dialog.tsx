@@ -15,8 +15,9 @@ import { signOutUser } from "@/lib/actions/auth.actions"
 import { LogOut } from "lucide-react"
 import { useTransition } from "react"
 import Spinner from "./spinner"
+import { cn } from "@/lib/utils"
 
-export default function LogoutDialog() {
+export default function LogoutDialog({ isMobileNav = false }: { isMobileNav?: boolean }) {
     const [isPending, startTrnasition] = useTransition()
     const handleSignOut = () => {
         startTrnasition(async () => await signOutUser())
@@ -27,10 +28,10 @@ export default function LogoutDialog() {
             <DialogTrigger asChild>
                 <Button
                     type="button"
-                    className="small-medium cursor-pointer btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none"
+                    className="small-medium cursor-pointer btn-secondary min-h-[42px] w-full rounded-lg p-4 shadow-none"
                 >
                     <LogOut className='size-5 text-black dark:text-white' />
-                    <span className='text-dark300_light900 max-lg:hidden'>Logout</span>
+                    <span className={cn(!isMobileNav && 'max-lg:hidden', 'text-dark300_light900')}>Logout</span>
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] background-light700_dark300 border-none">

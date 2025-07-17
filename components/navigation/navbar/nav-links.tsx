@@ -1,7 +1,7 @@
 "use client"
 
 import { SheetClose } from '@/components/ui/sheet'
-import { sidebarLinks } from '@/constants/indext'
+import { sidebarLinks } from '@/constants/index'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,14 +16,19 @@ export default function NavLinks({ isMobileNav = false, userId }: { isMobileNav?
             {sidebarLinks.map(item => {
                 const isActive = (pathname.includes(item.route) && item.route.length > 1) || pathname === item.route
 
+                let dynamicRoute = item.route
                 if (item.route === '/profile') {
-                    if (userId) item.route = `${item.route}/${userId}`
-                    else null
+                    if (userId) {
+                        dynamicRoute = `${item.route}/${userId}`
+                    }
+                    else {
+                        return null
+                    }
                 }
 
                 const LinkComponent = (
-                    <Link href={item.route} key={item.label} className={cn(isActive ? 'primary-gradient rounded-lg text-light-900' : 'text-dark300_light900',
-                        "flex items-center justify-start gap-4 bg-transparent p-3.5"
+                    <Link href={dynamicRoute} key={item.label} className={cn(isActive ? 'primary-gradient rounded-lg text-light-900' : 'text-dark300_light900',
+                        isMobileNav ? "justify-start" : "justify-center lg:justify-start", "flex items-center gap-4 bg-transparent p-3.5"
                     )}>
                         <Image
                             src={item.imgURL}
@@ -37,11 +42,11 @@ export default function NavLinks({ isMobileNav = false, userId }: { isMobileNav?
                 )
 
                 return isMobileNav ? (
-                    <SheetClose asChild key={item.route}>
+                    <SheetClose asChild key={dynamicRoute}>
                         {LinkComponent}
                     </SheetClose>
                 ) : (
-                    <React.Fragment key={item.route}>{LinkComponent}</React.Fragment>
+                    <React.Fragment key={dynamicRoute}>{LinkComponent}</React.Fragment>
                 )
             })}
         </>

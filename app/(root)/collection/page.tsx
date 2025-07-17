@@ -1,9 +1,8 @@
 import QuestionCard from "@/components/cards/question-card";
 import DataRender from "@/components/data-render";
-import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/local-search";
 import ROUTES from "@/constants/routes";
-import { EMPTY_COLLECTIONS, EMPTY_QUESTION } from "@/constants/states";
+import { EMPTY_COLLECTIONS } from "@/constants/states";
 import { getSavedQuestions } from "@/lib/actions/collection.actions";
 import { RouteParams } from "@/types/global";
 

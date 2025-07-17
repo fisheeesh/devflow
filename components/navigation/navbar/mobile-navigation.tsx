@@ -1,3 +1,5 @@
+import { auth } from "@/auth"
+import LogoutDialog from "@/components/logout-dialog"
 import { Button } from "@/components/ui/button"
 import {
     Sheet,
@@ -10,9 +12,6 @@ import ROUTES from "@/constants/routes"
 import Image from "next/image"
 import Link from "next/link"
 import NavLinks from "./nav-links"
-import { auth, signOut } from "@/auth"
-import { LogOut } from "lucide-react"
-import LogoutDialog from "@/components/logout-dialog"
 
 export default async function MobileNavigation() {
     const session = await auth()
@@ -36,13 +35,13 @@ export default async function MobileNavigation() {
                 </SheetClose>
                 <div className="no-scrollbar flex h-[calc(100vh-80px)] flex-col justify-between overflow-y-auto">
                     <section className="h-full gap-3 pt-8 flex flex-col">
-                        <NavLinks isMobileNav />
+                        <NavLinks isMobileNav userId={userId} />
                     </section>
 
                     <div className="flex flex-col gap-3">
                         {userId ? (
                             <SheetClose asChild>
-                                <LogoutDialog />
+                                <LogoutDialog isMobileNav />
                             </SheetClose>
                         ) : (
                             <>
