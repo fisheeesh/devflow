@@ -30,15 +30,35 @@ export async function toggleSaveQuestion(params: CollectionBaseParams): Promise<
 
         if (collection) {
             await Collection.findOneAndDelete(collection._id)
-            return { success: true, data: { saved: false } }
+        } else {
+            await Collection.create({ author: userId, question: questionId })
         }
-
-        await Collection.create({ author: userId, question: questionId })
 
         revalidatePath(ROUTES.QUESTION(questionId))
 
-        return { success: true, data: { saved: true } }
+        return { success: true, data: { saved: !!collection } }
 
+    } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export async function hasSavedQuestion(params: CollectionBaseParams): Promise<ActionResponse<{ saved: boolean }>> {
+    const validationResult = await action({ params, schema: CollectionBaseSchema, authorize: true })
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
+    }
+
+    const { questionId } = validationResult.params!
+    const userId = validationResult!.session!.user!.id
+
+    try {
+        const collection = await Collection.findOne({
+            author: userId,
+            question: questionId
+        })
+
+        return { success: true, data: { saved: !!collection } }
     } catch (error) {
         return handleError(error) as ErrorResponse
     }

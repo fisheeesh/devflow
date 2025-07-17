@@ -8,6 +8,7 @@ import UserAvatar from '@/components/user-avatar'
 import Votes from '@/components/votes/votes';
 import ROUTES from '@/constants/routes';
 import { getAnswers } from '@/lib/actions/answer.actions';
+import { hasSavedQuestion } from '@/lib/actions/collection.actions';
 import { getQuestion, incrementViews } from '@/lib/actions/question.actions';
 import { hasVoted } from '@/lib/actions/vote.actions';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
@@ -42,6 +43,8 @@ export default async function QuestionDetails({ params }: RouteParams) {
 
     const hasVotedPromise = hasVoted({ targetId: question._id, targetType: 'question' })
 
+    const hasSavedQuestionPromise = hasSavedQuestion({ questionId: question._id })
+
     const { author, createdAt, answers, views, tags, content, title } = question
 
     return (
@@ -64,7 +67,7 @@ export default async function QuestionDetails({ params }: RouteParams) {
                         </Link>
                     </div>
 
-                    <div className="flex justify-end">
+                    <div className="flex justify-end items-center gap-4">
                         <Suspense fallback={<div className='animate-pulse w-24 px-6 py-[10.5px] background-light700_dark300 rounded' />}>
                             <Votes
                                 upvotes={question.upvotes}
@@ -75,8 +78,10 @@ export default async function QuestionDetails({ params }: RouteParams) {
                             />
                         </Suspense>
 
-                        <Suspense fallback={<div className='animate-pulse w-24 px-6 py-[10.5px] background-light700_dark300 rounded' />}>
-                            <SaveQuestion questionId={question._id} />
+                        <Suspense fallback={<div className='animate-pulse w-3 px-6 py-[10.5px] background-light700_dark300 rounded' />}>
+                            <SaveQuestion
+                                questionId={question._id}
+                                hasSavedQuestionPromise={hasSavedQuestionPromise} />
                         </Suspense>
                     </div>
                 </div>
