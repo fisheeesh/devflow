@@ -69,7 +69,7 @@ export async function getAnswers(
 
     let sortCriteria = {}
 
-    switch (filter) {
+    switch (filter) { 
         case "latest":
             sortCriteria = { createdAt: -1 }
             break;

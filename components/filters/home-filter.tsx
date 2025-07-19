@@ -5,13 +5,7 @@ import { Button } from '../ui/button'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { formUrlQuery, removeKeysFromQuery } from '@/lib/url'
-
-const filters = [
-    { name: 'Newest', value: 'newest' },
-    { name: 'Popular', value: 'popular' },
-    { name: 'Unanswered', value: 'unanswered' },
-    { name: 'Recommended', value: 'recommended' },
-]
+import { HomePageFilters } from '@/constants/filter'
 
 export default function HomeFilter() {
     const searchParams = useSearchParams()
@@ -41,9 +35,9 @@ export default function HomeFilter() {
     }
 
     return (
-        <div className='mt-10 hidden flex-wrap gap-3 sm:flex'>
+        <div className='mt-10 flex flex-wrap gap-3 max-md:hidden'>
             {
-                filters.map(filter => (
+                HomePageFilters.map(filter => (
                     <Button
                         key={filter.name}
                         onClick={() => handleTypeClick(filter.value)}

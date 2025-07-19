@@ -1,8 +1,10 @@
 import QuestionCard from "@/components/cards/question-card";
 import DataRender from "@/components/data-render";
-import HomeFilter from "@/components/filters/HomeFilter";
+import CommonFilter from "@/components/filters/common-filter";
+import HomeFilter from "@/components/filters/home-filter";
 import LocalSearch from "@/components/search/local-search";
 import { Button } from "@/components/ui/button";
+import { HomePageFilters } from "@/constants/filter";
 import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getQuestions } from "@/lib/actions/question.actions";
@@ -30,12 +32,17 @@ export default async function Home({ searchParams }: RouteParams) {
         </Button>
       </section>
 
-      <section className="mt-10">
+      <section className="mt-10 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
           route={ROUTES.HOME}
           imgSrc='icons/search.svg'
           placeholder="Search for Questions Here..."
           otherClasses="flex-1"
+        />
+        <CommonFilter
+          filters={HomePageFilters}
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
+          containerClasses="hidden max-md:flex"
         />
       </section>
 
