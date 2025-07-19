@@ -34,7 +34,7 @@ export async function getAllUsers(params: PaginatedSearchParams): Promise<Action
         case "newest":
             sortCriteria = { createdAt: -1 }
             break
-        case "olders":
+        case "oldest":
             sortCriteria = { createdAt: 1 }
             break
         case "popular":

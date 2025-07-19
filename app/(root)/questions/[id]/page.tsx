@@ -29,9 +29,10 @@ import { Suspense } from 'react';
 //     await getQuestion({ questionId: id })
 // ])
 
-export default async function QuestionDetails({ params }: RouteParams) {
+export default async function QuestionDetails({ params, searchParams }: RouteParams) {
     const session = await auth()
     const { id } = await params
+    const { page, pageSize, filter } = await searchParams
 
     const { success, data: question } = await getQuestion({ questionId: id })
 
@@ -41,7 +42,12 @@ export default async function QuestionDetails({ params }: RouteParams) {
 
     if (!success || !question) return redirect('/404')
 
-    const { success: areAnswersLoaded, data: answersResult, error: answersError } = await getAnswers({ questionId: id, page: 1, pageSize: 10, filter: 'latest' })
+    const { success: areAnswersLoaded, data: answersResult, error: answersError } = await getAnswers({
+        questionId: id,
+        page: Number(page) || 1,
+        pageSize: Number(pageSize) || 10,
+        filter
+    })
 
     const hasVotedPromise = hasVoted({ targetId: question._id, targetType: 'question' })
 

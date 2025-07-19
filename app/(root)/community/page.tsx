@@ -1,11 +1,12 @@
 import UserCard from '@/components/cards/user-card'
 import DataRender from '@/components/data-render'
+import CommonFilter from '@/components/filters/common-filter'
 import LocalSearch from '@/components/search/local-search'
+import { UserFilters } from '@/constants/filter'
 import ROUTES from '@/constants/routes'
 import { EMPTY_USERS } from '@/constants/states'
 import { getAllUsers } from '@/lib/actions/user.actions'
 import { RouteParams } from '@/types/global'
-import React from 'react'
 
 export default async function CommunityPage({ searchParams }: RouteParams) {
     const { page, pageSize, query, filter } = await searchParams
@@ -20,13 +21,17 @@ export default async function CommunityPage({ searchParams }: RouteParams) {
         <div>
             <h2 className="h1-bold text-dark100_light900">All Users</h2>
 
-            <div className="mt-10">
+            <div className="mt-10 flex justify-between gap-5 max-sm:flex-col sm:items-center">
                 <LocalSearch
                     route={ROUTES.COMMUNITY}
                     iconPosition='left'
                     imgSrc='/icons/search.svg'
                     placeholder='There are some great devs here!'
                     otherClasses='flex-1'
+                />
+                <CommonFilter
+                    filters={UserFilters}
+                    otherClasses="min-h-[56px] sm:min-w-[170px]"
                 />
             </div>
 
