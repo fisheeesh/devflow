@@ -66,6 +66,7 @@ export async function hasSavedQuestion(params: CollectionBaseParams): Promise<Ac
     }
 }
 
+//* Now we are fetching collections collection that then the quesiton
 export async function getSavedQuestions(params: PaginatedSearchParams): Promise<ActionResponse<{ collection: CollectionType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema, authorize: true })
     if (validationResult instanceof Error) {
@@ -91,9 +92,22 @@ export async function getSavedQuestions(params: PaginatedSearchParams): Promise<
     }
 
     try {
+        /**
+         * * Pipeline is series of steps or stages that the data passes through, transforming as needed
+         * * It can include things like filtering, sorting or performing different calculations
+         * * We can perform lookup or unwind or match however many types in pipeline we want
+         */
         const pipeline: PipelineStage[] = [
+            //* We only wanna match the questions that were saved by the currently authenticated user
             { $match: { author: new mongoose.Types.ObjectId(userId) } },
             {
+                /**
+                 * * lookup -> where we can look into questions collection to get full question details
+                 * * from -> Like give me the information from another collection
+                 * * localField -> we are currently in collection modal so I'll say localField in collection modal will be set to the question cuz question belongs to collection
+                 * * foreignField -> finally which key will we match it with? So foreignField will be _id
+                 * * as -> and we wanna store it as a question
+                 */
                 $lookup: {
                     from: "questions",
                     localField: "question",
@@ -101,6 +115,7 @@ export async function getSavedQuestions(params: PaginatedSearchParams): Promise<
                     as: "question"
                 }
             },
+            //* We wanna unwind $question -> this allows us to get a single obj instead of an array
             { $unwind: "$question" },
             {
                 $lookup: {
@@ -137,14 +152,15 @@ export async function getSavedQuestions(params: PaginatedSearchParams): Promise<
         ])
 
         pipeline.push({ $sort: sortCriteria }, { $skip: skip }, { $limit: limit })
+        //* We basically tell it to return only the necessary fields
         pipeline.push({ $project: { question: 1, author: 1 } })
 
         const questions = await Collection.aggregate(pipeline)
 
         const isNext = totalCount?.count > skip + questions.length
 
-        return{
-            success: true, 
+        return {
+            success: true,
             data: {
                 collection: convertToPlainObject(questions),
                 isNext
