@@ -10,6 +10,10 @@ import { IUserDoc } from "./database/user.model";
 import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  pages: {
+    signIn: '/sign-in',
+    error: '/sign-in',
+  },
   providers: [
     GitHub,
     Google,
