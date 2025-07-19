@@ -7,8 +7,10 @@ import { Suspense } from 'react'
 import Preview from '../editor/preview'
 import UserAvatar from '../user-avatar'
 import Votes from '../votes/votes'
+import { auth } from '@/auth'
 
-export default function AnswerCard({ _id, author, content, createdAt, upvotes, downvotes }: Answer) {
+export default async function AnswerCard({ _id, author, content, createdAt, upvotes, downvotes }: Answer) {
+    const session = await auth()
     const hasVotedPromise = hasVoted({ targetId: _id, targetType: 'answer' })
 
     return (
@@ -39,6 +41,7 @@ export default function AnswerCard({ _id, author, content, createdAt, upvotes, d
                 <div className="flex justify-end">
                     <Suspense fallback={<div className='animate-pulse w-24 px-6 py-[10.5px] background-light700_dark300 rounded' />}>
                         <Votes
+                            userId={session?.user?.id as string}
                             targetId={_id}
                             targetType='answer'
                             upvotes={upvotes}
