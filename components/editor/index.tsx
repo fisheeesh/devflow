@@ -63,15 +63,16 @@ const Editor = forwardRef<MDXEditorMethods, Props>(
                     markdownShortcutPlugin(),
                     tablePlugin(),
                     imagePlugin(),
-                    codeBlockPlugin({ defaultCodeBlockLanguage: "" }),
+                    codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
                     codeMirrorPlugin({
                         codeBlockLanguages: {
+                            html: "HTML",
+                            css: "CSS",
                             js: "javascript",
                             ts: "typescript",
                             tsx: "TypeScript (React)",
                             jsx: "JavaScript (React)",
                             java: "Java",
-                            python: "python",
                         },
                         autoLoadLanguageSupport: true,
                         codeMirrorExtensions: theme,

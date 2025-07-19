@@ -45,7 +45,7 @@ export default async function QuestionDetails({ params, searchParams }: RoutePar
     const { success: areAnswersLoaded, data: answersResult, error: answersError } = await getAnswers({
         questionId: id,
         page: Number(page) || 1,
-        pageSize: Number(pageSize) || 10,
+        pageSize: Number(pageSize) || 2,
         filter
     })
 
@@ -141,11 +141,21 @@ export default async function QuestionDetails({ params, searchParams }: RoutePar
             </div>
 
             <section className="my-5">
-                <AllAnswers data={answersResult?.answers} success={areAnswersLoaded} error={answersError} totalAnswers={answersResult?.totalAnswers || 0} />
+                <AllAnswers
+                    isNext={answersResult?.isNext || false}
+                    page={Number(page) || 1}
+                    data={answersResult?.answers}
+                    success={areAnswersLoaded}
+                    error={answersError}
+                    totalAnswers={answersResult?.totalAnswers || 0} />
             </section>
 
             <section className="my-5">
-                <AnswerForm userId={session?.user?.id as string} questionId={question._id} questionTitle={question.title} questionContent={question.content} />
+                <AnswerForm
+                    userId={session?.user?.id as string}
+                    questionId={question._id}
+                    questionTitle={question.title}
+                    questionContent={question.content} />
             </section>
         </>
     )

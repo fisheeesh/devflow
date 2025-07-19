@@ -1,6 +1,7 @@
 import UserCard from '@/components/cards/user-card'
 import DataRender from '@/components/data-render'
 import CommonFilter from '@/components/filters/common-filter'
+import Pagination from '@/components/pagination'
 import LocalSearch from '@/components/search/local-search'
 import { UserFilters } from '@/constants/filter'
 import ROUTES from '@/constants/routes'
@@ -47,6 +48,11 @@ export default async function CommunityPage({ searchParams }: RouteParams) {
                         ))}
                     </div>
                 )}
+            />
+
+            <Pagination
+                page={page}
+                isNext={isNext || false}
             />
         </div>
     )
