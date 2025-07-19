@@ -82,13 +82,36 @@ export async function signInWithCredentials(
         const existingUser = await User.findOne({ email })
         if (!existingUser) throw new NotFoundError('User')
 
-        const existingAccount = await Account.findOne({
+        const existingAccountWithId = await Account.findOne({
+            userId: existingUser._id
+        })
+
+        const hashPassword = await bcrypt.hash(password, 10)
+
+        const existingAccountWithCredentials = await Account.findOne({
             provider: 'credentials',
             providerAccountId: email
         })
-        if (!existingAccount) throw new NotFoundError('Account')
 
-        const passwordMatch = await bcrypt.compare(password, existingAccount.password)
+        if (existingUser && existingAccountWithId && !existingAccountWithCredentials) {
+            await Account.create([{
+                userId: existingUser._id,
+                name: existingUser.name,
+                provider: 'credentials',
+                providerAccountId: email,
+                password: hashPassword
+            }])
+
+            await signIn('credentials', {
+                email, password, redirect: false
+            })
+
+            return { success: true }
+        }
+        
+        if (!existingAccountWithCredentials) throw new NotFoundError('Account')
+
+        const passwordMatch = await bcrypt.compare(password, existingAccountWithCredentials.password)
         if (!passwordMatch) throw new Error('Password does not match.')
 
         await signIn('credentials', {
