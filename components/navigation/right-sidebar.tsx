@@ -7,10 +7,13 @@ import DataRender from "../data-render"
 import { getTopTags } from "@/lib/actions/tag.actions"
 
 export default async function RightSideBar() {
-    const { success, data: hotQuestions, error } = await getHotQuestions()
-    const { success: tagSuccess, data: tags, error: tagsError } = await getTopTags()
-
-    console.log(tags)
+    const [
+        { success, data: hotQuestions, error },
+        { success: tagSuccess, data: tags, error: tagsError }
+    ] = await Promise.all([
+        getHotQuestions(),
+        getTopTags()
+    ])
 
     return (
         <section className='no-scrollbar background-light900_dark200 light-border flex flex-col gap-6 border-l p-6 shadow-light-300 dark:shadow-none max-xl:hidden w-[350px] h-full overflow-y-auto'>
@@ -60,7 +63,6 @@ export default async function RightSideBar() {
 
             <div className="mt-16">
                 <h3 className='h3-bold text-dark200_light900'>Popular Tags</h3>
-
 
                 <DataRender
                     data={tags}
