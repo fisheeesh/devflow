@@ -11,6 +11,7 @@ import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
 import { convertToPlainObject } from "../utils";
 import { AskQuestionSchema, EditQuestionSchema, GetQuestionSchema, IncrementViewsSchema, PaginatedSearchParamsSchema } from "../validations";
+import dbConnect from "../mongoose";
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
     const validationResult = await action({ params, schema: AskQuestionSchema, authorize: true })
@@ -285,6 +286,23 @@ export async function incrementViews(
 
         return { success: true, data: { views: question.views } }
 
+    } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export async function getHotQuestions(): Promise<ActionResponse<QuestionType[]>> {
+    try {
+        await dbConnect()
+
+        const questions = await Question.find()
+            .sort({ views: -1, upvotes: -1 })
+            .limit(5)
+
+        return {
+            success: true,
+            data: convertToPlainObject(questions)
+        }
     } catch (error) {
         return handleError(error) as ErrorResponse
     }
