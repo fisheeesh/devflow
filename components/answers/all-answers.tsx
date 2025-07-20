@@ -31,7 +31,7 @@ export default function AllAnswers({ data, success, error, totalAnswers, page, i
                 render={(answers) => answers.map(answer => <AnswerCard key={answer._id} {...answer} />)}
             />
 
-            {!!data && <Pagination
+            {!!data?.length && <Pagination
                 page={page}
                 isNext={isNext || false}
             />}

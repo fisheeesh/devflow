@@ -63,10 +63,10 @@ export default async function Home({ searchParams }: RouteParams) {
         )}
       />
 
-      <Pagination
+      {!!questions?.length && <Pagination
         page={page}
         isNext={isNext || false}
-      />
+      />}
     </>
   );
 

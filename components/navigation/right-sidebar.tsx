@@ -5,6 +5,7 @@ import TagCard from "../cards/tag-card"
 import { getHotQuestions } from "@/lib/actions/question.actions"
 import DataRender from "../data-render"
 import { getTopTags } from "@/lib/actions/tag.actions"
+import { cn } from "@/lib/utils"
 
 export default async function RightSideBar() {
     const [
@@ -31,19 +32,28 @@ export default async function RightSideBar() {
                     render={(hotQuestions) => (
                         <div className='mt-7 flex w-full flex-col gap-[30px]'>
                             {
-                                hotQuestions.map(({ _id, title }) => (
+                                hotQuestions.map(({ _id, title }, index) => (
                                     <Link
-                                        className="cursor-pointer flex items-center justify-between gap-7"
+                                        className="cursor-pointer flex items-start justify-between gap-7"
                                         key={_id}
-                                        href={ROUTES.QUESTION(_id)}>
-                                        <div className="flex gap-2">
-                                            <Image
-                                                src='/icons/question.svg'
-                                                alt="Question"
-                                                width={25}
-                                                height={25}
-                                                className="text-blue-50"
-                                            />
+                                        href={ROUTES.QUESTION(_id)}
+                                    >
+                                        <div className="flex gap-2 items-start">
+                                            <div className="flex items-start justify-start flex-shrink-0 mt-0.5">
+                                                <div
+                                                    style={{
+                                                        width: '25px',
+                                                        height: '25px',
+                                                        mask: 'url(/icons/question.svg) no-repeat center',
+                                                        maskSize: 'contain',
+                                                        WebkitMask: 'url(/icons/question.svg) no-repeat center',
+                                                        WebkitMaskSize: 'contain',
+                                                        background: index % 2 === 0
+                                                            ? 'linear-gradient(129deg, #ff7000 0%, #e2995f 100%)'
+                                                            : '#1DA1F2'
+                                                    }}
+                                                />
+                                            </div>
                                             <p className="body-medium text-dark500_light700 line-clamp-2">{title}</p>
                                         </div>
                                         <Image
@@ -51,9 +61,10 @@ export default async function RightSideBar() {
                                             alt="Chevron"
                                             width={20}
                                             height={20}
-                                            className="invert-colors"
+                                            className="invert-colors flex-shrink-0 mt-1"
                                         />
                                     </Link>
+
                                 ))
                             }
                         </div>

@@ -52,7 +52,7 @@ export default async function Collection({ searchParams }: RouteParams) {
                 )}
             />
 
-            {!!collection && <Pagination
+            {!!collection?.length && <Pagination
                 page={page}
                 isNext={isNext || false}
             />}
