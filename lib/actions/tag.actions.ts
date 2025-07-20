@@ -9,6 +9,7 @@ import { Question, Tag } from "@/database"
 import { convertToPlainObject } from "../utils"
 import { GetTagQuestionsParams } from "@/types/action"
 import { NotFoundError } from "../http-error"
+import dbConnect from "../mongoose"
 
 export const getTags = async (
     params: PaginatedSearchParams
@@ -127,6 +128,23 @@ export const getTagQuestions = async (
             }
         }
 
+    } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export const getTopTags = async (): Promise<ActionResponse<TagType[]>> => {
+    try {
+        await dbConnect()
+
+        const tags = await Tag.find()
+            .sort({ questions: -1 })
+            .limit(5)
+
+        return {
+            success: true,
+            data: convertToPlainObject(tags)
+        }
     } catch (error) {
         return handleError(error) as ErrorResponse
     }
