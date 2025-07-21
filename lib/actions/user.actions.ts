@@ -1,14 +1,14 @@
 'use server'
 
 import { Answer, Question, User } from "@/database";
-import { GetUserAnswersParams, GetUserParams, GetUserQuestionsParams } from "@/types/action";
-import { ActionResponse, Answer as AnswerType, ErrorResponse, PaginatedSearchParams, Question as QuestionType, User as UserType } from "@/types/global";
-import { FilterQuery } from "mongoose";
+import { GetUserAnswersParams, GetUserParams, GetUserQuestionsParams, GetUserTagsParams } from "@/types/action";
+import { ActionResponse, Answer as AnswerType, ErrorResponse, PaginatedSearchParams, Question as QuestionType, Tag as TagType, User as UserType } from "@/types/global";
+import { FilterQuery, PipelineStage, Types } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
 import { convertToPlainObject } from "../utils";
-import { GetUserAnswersSchema, GetUserQuestionsSchema, GetUserSchema, PaginatedSearchParamsSchema } from "../validations";
+import { GetUserAnswersSchema, GetUserQuestionsSchema, GetUserSchema, GetUserTagsSchema, PaginatedSearchParamsSchema } from "../validations";
 
 export async function getAllUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })
@@ -164,6 +164,53 @@ export async function getUserAnswers(params: GetUserAnswersParams): Promise<Acti
                 isNext
             }
         }
+    } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export async function getUserTags(params: GetUserTagsParams): Promise<ActionResponse<{ tags: { _id: string, name: string, count: number }[] }>> {
+    const validationResult = await action({ params, schema: GetUserTagsSchema })
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
+    }
+
+    const { userId } = validationResult.params!
+
+    try {
+        const pipeline: PipelineStage[] = [
+            { $match: { author: new Types.ObjectId(userId) } },
+            { $unwind: "$tags" },
+            { $group: { _id: "$tags", count: { $sum: 1 } } },
+            {
+                $lookup: {
+                    from: "tags",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "tagInfo"
+                }
+            },
+            { $unwind: "$tagInfo" },
+            { $sort: { count: -1 } },
+            { $limit: 10 },
+            {
+                $project: {
+                    _id: "$tagInfo._id",
+                    name: "$tagInfo.name",
+                    count: 1
+                }
+            }
+        ]
+
+        const tags = await Question.aggregate(pipeline)
+
+        return {
+            success: true,
+            data: {
+                tags: convertToPlainObject(tags)
+            }
+        }
+
     } catch (error) {
         return handleError(error) as ErrorResponse
     }
