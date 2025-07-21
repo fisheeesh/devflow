@@ -49,10 +49,10 @@ export default async function TagDetailPage({ params, searchParams }: RouteParam
                 )}
             />
 
-            <Pagination
+            {!!questions?.length && <Pagination
                 page={page}
                 isNext={isNext || false}
-            />
+            />}
         </>
     )
 }

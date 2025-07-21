@@ -5,7 +5,6 @@ import TagCard from "../cards/tag-card"
 import { getHotQuestions } from "@/lib/actions/question.actions"
 import DataRender from "../data-render"
 import { getTopTags } from "@/lib/actions/tag.actions"
-import { cn } from "@/lib/utils"
 
 export default async function RightSideBar() {
     const [

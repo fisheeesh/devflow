@@ -2,11 +2,13 @@
 
 import { ActionResponse, ErrorResponse, PaginatedSearchParams, User as UserType } from "@/types/global";
 import action from "../handlers/action";
-import { PaginatedSearchParamsSchema } from "../validations";
+import { GetUserSchema, PaginatedSearchParamsSchema } from "../validations";
 import handleError from "../handlers/error";
 import { FilterQuery } from "mongoose";
-import { User } from "@/database";
+import { Answer, Question, User } from "@/database";
 import { convertToPlainObject } from "../utils";
+import { GetUserParams } from "@/types/action";
+import { NotFoundError } from "../http-error";
 
 export async function getAllUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })
@@ -59,6 +61,38 @@ export async function getAllUsers(params: PaginatedSearchParams): Promise<Action
             data: {
                 users: convertToPlainObject(users),
                 isNext
+            }
+        }
+    } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export async function getUser(params: GetUserParams): Promise<ActionResponse<{
+    user: UserType,
+    totalQuestions: number,
+    totalAnswers: number
+}>> {
+    const validtionResult = await action({ params, schema: GetUserSchema })
+    if (validtionResult instanceof Error) {
+        return handleError(validtionResult) as ErrorResponse
+    }
+
+    const { userId } = validtionResult.params!
+
+    try {
+        const user = await User.findById(userId)
+        if (!user) throw new NotFoundError('User')
+        
+        const totalQuestions = await Question.countDocuments({ author: userId })
+        const totalAnswers = await Answer.countDocuments({ author: userId })
+
+        return {
+            success: true,
+            data: {
+                user: convertToPlainObject(user),
+                totalQuestions,
+                totalAnswers
             }
         }
     } catch (error) {
