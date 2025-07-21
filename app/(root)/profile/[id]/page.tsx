@@ -1,7 +1,7 @@
 import { auth } from '@/auth'
 import UserAvatar from '@/components/user-avatar'
 import ProfileLink from '@/components/user/profile-link'
-import { getUser } from '@/lib/actions/user.actions'
+import { getUser, getUserQuestions } from '@/lib/actions/user.actions'
 import { RouteParams } from '@/types/global'
 import { notFound } from 'next/navigation'
 
@@ -10,9 +10,14 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import Stats from '@/components/user/stats'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import DataRender from '@/components/data-render'
+import { EMPTY_QUESTION } from '@/constants/states'
+import QuestionCard from '@/components/cards/question-card'
+import Pagination from '@/components/pagination'
 
-export default async function ProfilePage({ params }: RouteParams) {
+export default async function ProfilePage({ params, searchParams }: RouteParams) {
     const { id } = await params
+    const { page, pageSize } = await searchParams
     if (!id) notFound()
 
     const loggedInUser = await auth()
@@ -26,7 +31,14 @@ export default async function ProfilePage({ params }: RouteParams) {
 
     const { user, totalQuestions, totalAnswers } = data!
 
-    const { _id, name, username, image, portfolio, location, bio, createdAt, reputation } = user
+    const {
+        success: userQuestionSuccess,
+        data: userQuestions,
+        error: userQuestionError } = await getUserQuestions({ userId: id, page: Number(page) || 1, pageSize: Number(pageSize) || 10 })
+
+    const { questions, isNext: hasMoreQuestions } = userQuestions!
+
+    const { _id, name, username, image, portfolio, location, bio, createdAt } = user
 
     return (
         <>
@@ -104,7 +116,24 @@ export default async function ProfilePage({ params }: RouteParams) {
                         <TabsTrigger value="answers" className='tab'>Answers</TabsTrigger>
                     </TabsList>
                     <TabsContent value="top-posts" className='mt-5 flex w-full flex-col gap-6'>
-                        List of questions
+                        <DataRender
+                            success={userQuestionSuccess}
+                            error={userQuestionError}
+                            data={questions}
+                            empty={EMPTY_QUESTION}
+                            render={(questions) => (
+                                <div className='flex w-full flex-col gap-6'>
+                                    {
+                                        questions.map(question => <QuestionCard question={question} key={question._id} />)
+                                    }
+                                </div>
+                            )}
+                        />
+
+                        {!!questions.length && <Pagination
+                            page={page}
+                            isNext={hasMoreQuestions}
+                        />}
                     </TabsContent>
                     <TabsContent value="answers" className='flex w-full flex-col gap-6'>
                         List of answres

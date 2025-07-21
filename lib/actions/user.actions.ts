@@ -1,14 +1,14 @@
 'use server'
 
-import { ActionResponse, ErrorResponse, PaginatedSearchParams, User as UserType } from "@/types/global";
-import action from "../handlers/action";
-import { GetUserSchema, PaginatedSearchParamsSchema } from "../validations";
-import handleError from "../handlers/error";
-import { FilterQuery } from "mongoose";
 import { Answer, Question, User } from "@/database";
-import { convertToPlainObject } from "../utils";
-import { GetUserParams } from "@/types/action";
+import { GetUserParams, GetUserQuestionsParams } from "@/types/action";
+import { ActionResponse, ErrorResponse, PaginatedSearchParams, Question as QuestionType, User as UserType } from "@/types/global";
+import { FilterQuery } from "mongoose";
+import action from "../handlers/action";
+import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
+import { convertToPlainObject } from "../utils";
+import { GetUserQuestionSchema, GetUserSchema, PaginatedSearchParamsSchema } from "../validations";
 
 export async function getAllUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })
@@ -83,7 +83,7 @@ export async function getUser(params: GetUserParams): Promise<ActionResponse<{
     try {
         const user = await User.findById(userId)
         if (!user) throw new NotFoundError('User')
-        
+
         const totalQuestions = await Question.countDocuments({ author: userId })
         const totalAnswers = await Answer.countDocuments({ author: userId })
 
@@ -93,6 +93,41 @@ export async function getUser(params: GetUserParams): Promise<ActionResponse<{
                 user: convertToPlainObject(user),
                 totalQuestions,
                 totalAnswers
+            }
+        }
+    } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export async function getUserQuestions(params: GetUserQuestionsParams): Promise<ActionResponse<{ questions: QuestionType[], isNext: boolean }>> {
+    const validationResult = await action({ params, schema: GetUserQuestionSchema })
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
+    }
+
+    const { userId, page = 1, pageSize = 10 } = validationResult.params!
+    const skip = Number(page - 1) * pageSize
+    const limit = Number(pageSize)
+
+    try {
+        const user = await User.findById(userId)
+        if (!user) throw new NotFoundError('User')
+
+        const totalQuestions = await Question.countDocuments({ author: userId })
+        const questions = await Question.find({ author: userId })
+            .populate('tags', 'name')
+            .populate('author', 'name image')
+            .skip(skip)
+            .limit(limit)
+
+        const isNext = totalQuestions > skip + questions.length
+
+        return {
+            success: true,
+            data: {
+                questions: convertToPlainObject(questions),
+                isNext
             }
         }
     } catch (error) {
