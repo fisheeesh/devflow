@@ -14,7 +14,7 @@ interface Props extends ActionResponse<Answer[]> {
 
 export default function AllAnswers({ data, success, error, totalAnswers, page, isNext }: Props) {
     return (
-        <div className="mt-11">
+        <div className="mt-10">
             <div className="flex items-center justify-between">
                 <h3 className="primary-text-gradient">{totalAnswers} Answer{totalAnswers > 1 && 's'}</h3>
                 <CommonFilter
