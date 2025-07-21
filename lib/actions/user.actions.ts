@@ -1,14 +1,14 @@
 'use server'
 
 import { Answer, Question, User } from "@/database";
-import { GetUserParams, GetUserQuestionsParams } from "@/types/action";
-import { ActionResponse, ErrorResponse, PaginatedSearchParams, Question as QuestionType, User as UserType } from "@/types/global";
+import { GetUserAnswersParams, GetUserParams, GetUserQuestionsParams } from "@/types/action";
+import { ActionResponse, Answer as AnswerType, ErrorResponse, PaginatedSearchParams, Question as QuestionType, User as UserType } from "@/types/global";
 import { FilterQuery } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
 import { convertToPlainObject } from "../utils";
-import { GetUserQuestionSchema, GetUserSchema, PaginatedSearchParamsSchema } from "../validations";
+import { GetUserAnswersSchema, GetUserQuestionsSchema, GetUserSchema, PaginatedSearchParamsSchema } from "../validations";
 
 export async function getAllUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })
@@ -101,7 +101,7 @@ export async function getUser(params: GetUserParams): Promise<ActionResponse<{
 }
 
 export async function getUserQuestions(params: GetUserQuestionsParams): Promise<ActionResponse<{ questions: QuestionType[], isNext: boolean }>> {
-    const validationResult = await action({ params, schema: GetUserQuestionSchema })
+    const validationResult = await action({ params, schema: GetUserQuestionsSchema })
     if (validationResult instanceof Error) {
         return handleError(validationResult) as ErrorResponse
     }
@@ -127,6 +127,40 @@ export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
             success: true,
             data: {
                 questions: convertToPlainObject(questions),
+                isNext
+            }
+        }
+    } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export async function getUserAnswers(params: GetUserAnswersParams): Promise<ActionResponse<{ answers: AnswerType[], isNext: boolean }>> {
+    const validationResult = await action({ params, schema: GetUserAnswersSchema })
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
+    }
+
+    const { userId, page = 1, pageSize = 10 } = validationResult.params!
+    const skip = Number(page - 1) * pageSize
+    const limit = Number(pageSize)
+
+    try {
+        const user = await User.findById(userId)
+        if (!user) throw new NotFoundError('User')
+
+        const totalAnswers = await Answer.countDocuments({ author: userId })
+        const answers = await Answer.find({ author: userId })
+            .populate("author", "_id name image")
+            .skip(skip)
+            .limit(limit)
+
+        const isNext = totalAnswers > skip + answers.length
+
+        return {
+            success: true,
+            data: {
+                answers: convertToPlainObject(answers),
                 isNext
             }
         }

@@ -1,7 +1,7 @@
 import { auth } from '@/auth'
 import UserAvatar from '@/components/user-avatar'
 import ProfileLink from '@/components/user/profile-link'
-import { getUser, getUserQuestions } from '@/lib/actions/user.actions'
+import { getUser, getUserAnswers, getUserQuestions } from '@/lib/actions/user.actions'
 import { RouteParams } from '@/types/global'
 import { notFound } from 'next/navigation'
 
@@ -11,9 +11,10 @@ import { Button } from '@/components/ui/button'
 import Stats from '@/components/user/stats'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import DataRender from '@/components/data-render'
-import { EMPTY_QUESTION } from '@/constants/states'
+import { EMPTY_ANSWERS, EMPTY_QUESTION } from '@/constants/states'
 import QuestionCard from '@/components/cards/question-card'
 import Pagination from '@/components/pagination'
+import AnswerCard from '@/components/cards/answer-card'
 
 export default async function ProfilePage({ params, searchParams }: RouteParams) {
     const { id } = await params
@@ -32,11 +33,17 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
     const { user, totalQuestions, totalAnswers } = data!
 
     const {
-        success: userQuestionSuccess,
+        success: userQuestionsSuccess,
         data: userQuestions,
-        error: userQuestionError } = await getUserQuestions({ userId: id, page: Number(page) || 1, pageSize: Number(pageSize) || 10 })
+        error: userQuestionsError } = await getUserQuestions({ userId: id, page: Number(page) || 1, pageSize: Number(pageSize) || 10 })
+    const {
+        success: userAnswersSuccess,
+        data: userAnswers,
+        error: userAnswersError } = await getUserAnswers({ userId: id, page: Number(page) || 1, pageSize: Number(pageSize) || 10 })
 
     const { questions, isNext: hasMoreQuestions } = userQuestions!
+
+    const { answers, isNext: hasMoreAnswers } = userAnswers!
 
     const { _id, name, username, image, portfolio, location, bio, createdAt } = user
 
@@ -117,8 +124,8 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                     </TabsList>
                     <TabsContent value="top-posts" className='mt-5 flex w-full flex-col gap-6'>
                         <DataRender
-                            success={userQuestionSuccess}
-                            error={userQuestionError}
+                            success={userQuestionsSuccess}
+                            error={userQuestionsError}
                             data={questions}
                             empty={EMPTY_QUESTION}
                             render={(questions) => (
@@ -135,8 +142,32 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                             isNext={hasMoreQuestions}
                         />}
                     </TabsContent>
-                    <TabsContent value="answers" className='flex w-full flex-col gap-6'>
-                        List of answres
+                    <TabsContent value="answers" className='mt-5 flex w-full flex-col gap-6'>
+                        <DataRender
+                            success={userAnswersSuccess}
+                            error={userAnswersError}
+                            data={answers}
+                            empty={EMPTY_ANSWERS}
+                            render={(answers) => (
+                                <div className='flex w-full flex-col gap-6'>
+                                    {
+                                        answers.map(answer =>
+                                            <AnswerCard
+                                                key={answer._id}
+                                                {...answer}
+                                                content={answer.content.slice(0, 27)}
+                                                containerClasses='card-wrapper rounded-[10px] px-7 py-9 sm:px-11'
+                                                showReadMore
+                                            />)
+                                    }
+                                </div>
+                            )}
+                        />
+
+                        {!!answers.length && <Pagination
+                            page={page}
+                            isNext={hasMoreAnswers}
+                        />}
                     </TabsContent>
                 </Tabs>
 

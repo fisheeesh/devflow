@@ -62,7 +62,8 @@ interface Answer {
     content: string,
     createdAt: Date,
     upvotes: number,
-    downvotes: number
+    downvotes: number,
+    question: string
 }
 
 interface User {
@@ -86,6 +87,6 @@ interface Collection {
 
 interface BadgeCounts {
     GOLD: number,
-    SILVER: number, 
+    SILVER: number,
     BRONZE: number
 }
