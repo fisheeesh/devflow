@@ -72,8 +72,10 @@ interface User {
     email: string,
     bio?: string,
     image?: string,
+    portfolio?: string,
     location?: string,
-    reputation?: number
+    reputation?: number,
+    createdAt: Date
 }
 
 interface Collection {
