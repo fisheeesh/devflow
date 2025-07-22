@@ -4,7 +4,6 @@ import ProfileLink from '@/components/user/profile-link'
 import { getUser, getUserAnswers, getUserQuestions, getUserTags } from '@/lib/actions/user.actions'
 import { RouteParams } from '@/types/global'
 import { notFound } from 'next/navigation'
-
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -139,7 +138,13 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                             render={(questions) => (
                                 <div className='flex w-full flex-col gap-6'>
                                     {
-                                        questions.map(question => <QuestionCard question={question} key={question._id} />)
+                                        questions.map(question =>
+                                            <QuestionCard
+                                                question={question}
+                                                key={question._id}
+                                                showActionBtns={loggedInUser?.user?.id === question.author._id}
+                                            />
+                                        )
                                     }
                                 </div>
                             )}
@@ -157,7 +162,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                             data={answers}
                             empty={EMPTY_ANSWERS}
                             render={(answers) => (
-                                <div className='flex w-full flex-col gap-6'>
+                                <div className='flex w-full flex-col gap-10'>
                                     {
                                         answers.map(answer =>
                                             <AnswerCard
@@ -166,6 +171,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                                                 content={answer.content.slice(0, 27)}
                                                 containerClasses='card-wrapper rounded-[10px] px-7 py-9 sm:px-11'
                                                 showReadMore
+                                                showActionBtns={loggedInUser?.user?.id === answer.author._id}
                                             />)
                                     }
                                 </div>
@@ -191,7 +197,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                                 <div className='mt-3 flex w-full flex-col gap-4'>
                                     {
                                         tags.map(tag =>
-                                            <TagCard 
+                                            <TagCard
                                                 key={tag._id}
                                                 _id={tag._id}
                                                 name={tag.name}

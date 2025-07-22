@@ -169,6 +169,12 @@ export async function getUserAnswers(params: GetUserAnswersParams): Promise<Acti
     }
 }
 
+/**
+ * * Show a list of top technologies that this user has something to do with.
+ * * Either they were posting questions in that category, or they were showing their expertise by answering some questions within that tag.
+ * * So we'll have to approach this by finding all the questions created by the users and then grouping them by their associated tags.
+ * * From there, we'll find out which tags are more commonly used in each one of these questions and then return them.
+ */
 export async function getUserTags(params: GetUserTagsParams): Promise<ActionResponse<{ tags: { _id: string, name: string, count: number }[] }>> {
     const validationResult = await action({ params, schema: GetUserTagsSchema })
     if (validationResult instanceof Error) {
