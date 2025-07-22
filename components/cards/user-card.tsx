@@ -1,5 +1,5 @@
 import { User } from '@/types/global'
-import React from 'react'
+
 import UserAvatar from '../user-avatar'
 import Link from 'next/link'
 import ROUTES from '@/constants/routes'

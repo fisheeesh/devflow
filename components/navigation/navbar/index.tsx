@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
+
 import ThemeToggle from './theme-toggle'
 import MobileNavigation from './mobile-navigation'
 import { auth } from '@/auth'

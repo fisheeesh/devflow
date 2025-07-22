@@ -1,6 +1,6 @@
 import ROUTES from '@/constants/routes'
 import Link from 'next/link'
-import React from 'react'
+
 import { Avatar, AvatarFallback } from './ui/avatar'
 import Image from 'next/image'
 import { cn, getInitials } from '@/lib/utils'
