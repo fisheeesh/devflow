@@ -3,15 +3,19 @@
 import Question, { IQuestionDoc } from "@/database/question.model";
 import TagQuestion, { ITagQuestion } from "@/database/tag-question.model";
 import Tag, { ITagDoc } from "@/database/tag.model";
-import { CreateQuestionParams, EditQuestionParams, GetQuestionParams, IncrementViewsParams } from "@/types/action";
+import { CreateQuestionParams, DeleteQuestionParams, EditQuestionParams, GetQuestionParams, IncrementViewsParams } from "@/types/action";
 import { ActionResponse, ErrorResponse, PaginatedSearchParams, Question as QuestionType } from "@/types/global";
 import mongoose, { FilterQuery } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
 import { convertToPlainObject } from "../utils";
-import { AskQuestionSchema, EditQuestionSchema, GetQuestionSchema, IncrementViewsSchema, PaginatedSearchParamsSchema } from "../validations";
+import { AskQuestionSchema, DeleteQuestionSchema, EditQuestionSchema, GetQuestionSchema, IncrementViewsSchema, PaginatedSearchParamsSchema } from "../validations";
 import dbConnect from "../mongoose";
+import { Answer, Collection, Vote } from "@/database";
+import { revalidatePath } from "next/cache";
+import ROUTES from "@/constants/routes";
+import { deleteAnswer } from "./answer.actions";
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
     const validationResult = await action({ params, schema: AskQuestionSchema, authorize: true })
@@ -305,5 +309,78 @@ export async function getHotQuestions(): Promise<ActionResponse<QuestionType[]>>
         }
     } catch (error) {
         return handleError(error) as ErrorResponse
+    }
+}
+
+export async function deleteQuestion(params: DeleteQuestionParams): Promise<ActionResponse> {
+    const validationResult = await action({ params, schema: DeleteQuestionSchema, authorize: true })
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
+    }
+
+    const { questionId } = validationResult.params!
+    const userId = validationResult!.session!.user!.id
+
+    const session = await mongoose.startSession()
+    session.startTransaction()
+
+    try {
+        //* Handle the case where the question ID doesn’t exist in the database
+        const question = await Question.findById(questionId).session(session)
+        if (!question) throw new NotFoundError("Question")
+
+        //* Ensure only the original creator can delete the question (frontend shows delete option, but backend must also verify)
+        if (question.author.toString() !== userId) {
+            throw new Error("You are not authorized to delete this question");
+        }
+
+        //* Remove the question from any user's Collection where it was saved
+        await Collection.deleteMany(
+            { question: questionId },
+            { session }
+        );
+
+        //* Delete all related documents in TagQuestion
+        await TagQuestion.deleteMany(
+            { tag: { $in: question.tags }, question: questionId },
+            { session }
+        );
+
+        //* Keep the tags, but decrement their questionCount by 1
+        await Tag.updateMany(
+            { _id: { $in: question.tags } },
+            { $inc: { questions: -1 } },
+            { session }
+        );
+
+        //* Delete all upvote/downvote documents related to this question
+        await Vote.deleteMany({ actionId: questionId, actionType: 'question' }, { session })
+
+        //* Get all answer IDs related to the question and delete their upvote/downvote relations too
+        const answers = await Answer.find({ question: questionId }).session(session)
+        if (answers.length > 0) {
+            await Answer.deleteMany({ question: questionId }, { session })
+
+            //* Delete all answers associated with the question
+            await Vote.deleteMany({
+                actionId: { $in: answers.map(a => a._id) },
+                actionType: "answer"
+            }, { session })
+        }
+
+        //* Finally, delete the question itself
+        await Question.findByIdAndDelete(questionId, { session })
+
+        await session.commitTransaction()
+
+        revalidatePath(ROUTES.PROFILE(userId as string))
+
+        return { success: true }
+
+    } catch (error) {
+        await session.abortTransaction()
+        return handleError(error) as ErrorResponse
+    } finally {
+        await session.endSession()
     }
 }

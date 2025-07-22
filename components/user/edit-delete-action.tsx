@@ -12,9 +12,13 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import ROUTES from "@/constants/routes"
+import { deleteQuestion } from "@/lib/actions/question.actions"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { useTransition } from "react"
 import { toast } from "sonner"
+import Spinner from "../spinner"
+import { deleteAnswer } from "@/lib/actions/answer.actions"
 
 interface Props {
     type: string,
@@ -23,6 +27,7 @@ interface Props {
 
 export default function EditDeleteAction({ type, itemId }: Props) {
     const router = useRouter()
+    const [isPending, startTransition] = useTransition()
 
     const handleEdit = async () => {
         router.push(ROUTES.EDIT_QUESTION(itemId))
@@ -31,18 +36,37 @@ export default function EditDeleteAction({ type, itemId }: Props) {
     const handleDelete = async () => {
         if (type === 'Question') {
             // @TODO: Call API to delete question
+            startTransition(async () => {
+                const { success } = await deleteQuestion({ questionId: itemId })
 
-            toast.success('Question deleted', {
-                description: "Your question has been deleted successfully."
+                if (!success) {
+                    toast.error('Error deleting question', {
+                        description: "Something went wrong"
+                    })
+                    return
+                }
+
+                toast.success('Question deleted', {
+                    description: "Your question has been deleted successfully."
+                })
             })
         } else if (type === 'Answer') {
             // @TODO: Call API to delete answer
+            startTransition(async () => {
+                const { success } = await deleteAnswer({ answerId: itemId })
 
-            toast.success("Answer deleted", {
-                description: "Your answer has been deleted successfully."
+                if (!success) {
+                    toast.error('Error deleting answer', {
+                        description: "Something went wrong"
+                    })
+                    return
+                }
+
+                toast.success("Answer deleted", {
+                    description: "Your answer has been deleted successfully."
+                })
             })
         }
-
     }
 
     return (
@@ -76,7 +100,11 @@ export default function EditDeleteAction({ type, itemId }: Props) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel className="btn">Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete} className="!border-primary-100 !bg-primary-500 !text-light-800">Continue</AlertDialogAction>
+                        <AlertDialogAction onClick={handleDelete} className="!border-primary-100 !bg-primary-500 !text-light-800">
+                            <Spinner isLoading={isPending} label="Deleting...">
+                                Confirm
+                            </Spinner>
+                        </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

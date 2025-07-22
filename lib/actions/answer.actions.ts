@@ -1,17 +1,17 @@
 'use server'
 
+import ROUTES from "@/constants/routes";
+import { Question, Vote } from "@/database";
 import Answer, { IAnswerDoc } from "@/database/answer.model";
-import { CreateAnswerParams, GetAnswersParams } from "@/types/action";
+import { CreateAnswerParams, DeleteAnswerParams, GetAnswersParams } from "@/types/action";
 import { ActionResponse, Answer as AnswerType, ErrorResponse } from "@/types/global";
-import { AnswerServerSchema, GetAnswersSchema } from "../validations";
+import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import mongoose from "mongoose";
-import { Question } from "@/database";
 import { NotFoundError } from "../http-error";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
 import { convertToPlainObject } from "../utils";
+import { AnswerServerSchema, DeleteAnswerSchema, GetAnswersSchema } from "../validations";
 
 export async function createAnswer(
     params: CreateAnswerParams
@@ -69,7 +69,7 @@ export async function getAnswers(
 
     let sortCriteria = {}
 
-    switch (filter) { 
+    switch (filter) {
         case "latest":
             sortCriteria = { createdAt: -1 }
             break;
@@ -98,4 +98,55 @@ export async function getAnswers(
     } catch (error) {
         return handleError(error) as ErrorResponse
     }
-}   
+}
+
+export async function deleteAnswer(params: DeleteAnswerParams): Promise<ActionResponse> {
+    const validationResult = await action({ params, schema: DeleteAnswerSchema, authorize: true })
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
+    }
+
+    const { answerId } = validationResult.params!
+    const userId = validationResult!.session!.user!.id
+
+    const session = await mongoose.startSession()
+    session.startTransaction()
+
+    try {
+        //* Check if the answer actually exists
+        const answer = await Answer.findById(answerId).session(session)
+        if (!answer) throw new NotFoundError('Answer')
+
+        //* Allow only the original author to delete it — not just any authenticated user
+        if (answer.author.toString() !== userId) {
+            throw new Error("You are not authorized to delete this answer");
+        }
+
+        //* Decrease the answer count for the associated question
+        await Question.updateOne(
+            { _id: answer.question },
+            { $inc: { answers: -1 } },
+            { new: true, session }
+        );
+
+        //* Remove all upvote/downvote documents linked to this answer
+        await Vote.deleteMany(
+            { actionId: answerId, actionType: 'answer' },
+            { session }
+        );
+
+        //* And finally, delete the answer itself
+        await Answer.deleteOne({ _id: answerId }, { session })
+
+        await session.commitTransaction()
+
+        revalidatePath(ROUTES.PROFILE(userId as string))
+
+        return { success: true }
+    } catch (error) {
+        await session.abortTransaction()
+        return handleError(error) as ErrorResponse
+    } finally {
+        await session.endSession()
+    }
+}

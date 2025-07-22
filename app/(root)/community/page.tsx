@@ -50,10 +50,10 @@ export default async function CommunityPage({ searchParams }: RouteParams) {
                 )}
             />
 
-            <Pagination
+            {!!users?.length && <Pagination
                 page={page}
                 isNext={isNext || false}
-            />
+            />}
         </div>
     )
 }

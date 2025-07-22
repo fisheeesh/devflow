@@ -37,7 +37,7 @@ export default async function AnswerCard({
 
             {showActionBtns && (
                 <div
-                    className='background-light800 flex-center absolute right-0 -top-5 size-9 rounded-full'>
+                    className='background-light800 flex-center absolute -right-2 max-sm:right-0 -top-5 size-9 rounded-full'>
                     <EditDeleteAction type='Answer' itemId={_id} />
                 </div>
             )}

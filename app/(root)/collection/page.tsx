@@ -25,7 +25,7 @@ export default async function Collection({ searchParams }: RouteParams) {
         <>
             <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
 
-            <div className=" flex justify-between gap-5 max-sm:flex-col sm:items-center">
+            <div className="mt-10 flex justify-between gap-5 max-sm:flex-col sm:items-center">
                 <LocalSearch
                     route={ROUTES.COLLECTION}
                     imgSrc='icons/search.svg'

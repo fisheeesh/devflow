@@ -20,6 +20,8 @@ export default async function TagDetailPage({ params, searchParams }: RouteParam
 
     const { tag, questions, isNext } = data || {}
 
+    console.log(error)
+
     return (
         <>
             <section className="w-full flex flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">

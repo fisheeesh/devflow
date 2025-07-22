@@ -34,7 +34,7 @@ export const EMPTY_TAGS = {
     message: "The tag cloud is empty. Add some keywords to make it rain.",
     button: {
         text: "Create Tag",
-        href: ROUTES.TAGS,
+        href: ROUTES.ASK_QUESTION,
     },
 };
 
@@ -50,7 +50,7 @@ export const EMPTY_COLLECTIONS = {
         "Looks like you haven’t created any collections yet. Start curating something extraordinary today",
     button: {
         text: "Save to Collection",
-        href: ROUTES.COLLECTION,
+        href: ROUTES.ASK_QUESTION,
     },
 };
 

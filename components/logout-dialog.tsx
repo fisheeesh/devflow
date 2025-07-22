@@ -18,9 +18,9 @@ import Spinner from "./spinner"
 import { cn } from "@/lib/utils"
 
 export default function LogoutDialog({ isMobileNav = false }: { isMobileNav?: boolean }) {
-    const [isPending, startTrnasition] = useTransition()
+    const [isPending, startTransition] = useTransition()
     const handleSignOut = () => {
-        startTrnasition(async () => await signOutUser())
+        startTransition(async () => await signOutUser())
     }
 
     return (

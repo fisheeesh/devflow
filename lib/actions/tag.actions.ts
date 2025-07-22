@@ -99,11 +99,11 @@ export const getTagQuestions = async (
         }
 
         if (query) {
-            // filterQuery.title = { $regex: query, $options: 'i' }
-            filterQuery.$or = [
-                { title: { $regex: query, $options: 'i' } },
-                { content: { $regex: query, $options: 'i' } }
-            ]
+            filterQuery.title = { $regex: query, $options: 'i' }
+            // filterQuery.$or = [
+            //     { title: { $regex: query, $options: 'i' } },
+            //     { content: { $regex: query, $options: 'i' } }
+            // ]
         }
 
         const totalQuestions = await Question.countDocuments(filterQuery)

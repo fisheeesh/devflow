@@ -51,10 +51,10 @@ export default async function TagsPage({ searchParams }: RouteParams) {
                 )}
             />
 
-            <Pagination
+            {!!tags!.length && <Pagination
                 page={page}
                 isNext={isNext || false}
-            />
+            />}
         </>
     )
 }

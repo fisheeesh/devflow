@@ -5,7 +5,7 @@ import Preview from '@/components/editor/preview';
 import AnswerForm from '@/components/forms/answer-form';
 import Metric from '@/components/metric';
 import SaveQuestion from '@/components/questions/save-question';
-import UserAvatar from '@/components/user-avatar'
+import UserAvatar from '@/components/user-avatar';
 import Votes from '@/components/votes/votes';
 import ROUTES from '@/constants/routes';
 import { getAnswers } from '@/lib/actions/answer.actions';
@@ -13,7 +13,7 @@ import { hasSavedQuestion } from '@/lib/actions/collection.actions';
 import { getQuestion, incrementViews } from '@/lib/actions/question.actions';
 import { hasVoted } from '@/lib/actions/vote.actions';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
-import { RouteParams, Tag } from '@/types/global'
+import { RouteParams, Tag } from '@/types/global';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { after } from 'next/server';
