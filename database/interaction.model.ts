@@ -1,5 +1,16 @@
 import { model, models, Schema, Types, Document } from "mongoose";
 
+export const InteractionActionEnums = [
+    "view",
+    "upvote",
+    "downvote",
+    "bookmark",
+    "post",
+    "edit",
+    "delete",
+    "search",
+] as const;
+
 export interface IInteraction {
     user: Types.ObjectId,
     action: string,
@@ -12,7 +23,7 @@ export interface IInteractionDoc extends IInteraction, Document { }
 const InteractionSchema = new Schema<IInteraction>({
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     //* It can be upvote, downvote, view, askQuestion or whatever
-    action: { type: String, required: true },
+    action: { type: String, enum: InteractionActionEnums, required: true },
     /**
      * * It can be quesitonId if user view or answer specific question
      * * It can be answerId or userId if they are viewing specific user details

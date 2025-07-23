@@ -52,7 +52,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
 
     const { tags } = userTopTags!
 
-    const { _id, name, username, image, portfolio, location, bio, createdAt } = user
+    const { _id, name, username, image, portfolio, location, bio, createdAt, reputation } = user
 
     return (
         <>
@@ -121,6 +121,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                     SILVER: 0,
                     BRONZE: 0
                 }}
+                reputationPoints={reputation || 0}
             />
 
             <section className="mt-10 flex gap-10">
