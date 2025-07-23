@@ -38,12 +38,12 @@ export async function createInteraction(params: CreateInteractionParams): Promis
         )
 
         // @TODO: Update reputation for both the performer and the content author
-        // await updateReuptation({
-        //     interaction,
-        //     session,
-        //     performerId: userId!,
-        //     authorId
-        // })
+        await updateReputation({
+            interaction,
+            session,
+            performerId: userId!,
+            authorId
+        })
 
         await session.commitTransaction()
 
@@ -61,7 +61,7 @@ export async function createInteraction(params: CreateInteractionParams): Promis
     }
 }
 
-export async function updateReuptation(params: UpdateReputationParams) {
+export async function updateReputation(params: UpdateReputationParams) {
     const { interaction, session, performerId, authorId } = params
     const { action, actionType } = interaction
 
