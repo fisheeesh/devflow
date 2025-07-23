@@ -15,7 +15,8 @@ import dbConnect from "../mongoose";
 import { Answer, Collection, Vote } from "@/database";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constants/routes";
-import { deleteAnswer } from "./answer.actions";
+import { after } from "next/server";
+import { createInteraction } from "./interaction.actions";
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
     const validationResult = await action({ params, schema: AskQuestionSchema, authorize: true })
@@ -61,6 +62,16 @@ export async function createQuestion(params: CreateQuestionParams): Promise<Acti
             { $push: { tags: { $each: tagIds } } },
             { session }
         )
+
+        //* log the interaction
+        after(async () => {
+            await createInteraction({
+                action: "post",
+                actionId: question._id.toString(),
+                actionTarget: "question",
+                authorId: userId as string,
+            });
+        });
 
         await session.commitTransaction()
 

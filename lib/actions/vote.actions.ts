@@ -1,15 +1,17 @@
 'use server'
 
+import ROUTES from "@/constants/routes";
 import { Answer, Question, Vote } from "@/database";
 import { CreateVoteParams, HasVotedParams, HasVotedResponse, UpdateVoteCountParams } from "@/types/action";
 import { ActionResponse, ErrorResponse } from "@/types/global";
 import mongoose, { ClientSession } from "mongoose";
+import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
-import { CreateVoteSchema, HasVotedSchema, UpdateVoteCountSchema } from "../validations";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
 import { UnauthorizedError } from "../http-error";
+import { CreateVoteSchema, HasVotedSchema, UpdateVoteCountSchema } from "../validations";
+import { createInteraction } from "./interaction.actions";
 
 export async function updateVoteCount(params: UpdateVoteCountParams, session?: ClientSession): Promise<ActionResponse> {
     const validationResult = await action({ params, schema: UpdateVoteCountSchema })
@@ -54,6 +56,13 @@ export async function createVote(params: CreateVoteParams): Promise<ActionRespon
     session.startTransaction()
 
     try {
+        const Model = targetType === "question" ? Question : Answer;
+
+        const contentDoc = await Model.findById(targetId).session(session);
+        if (!contentDoc) throw new Error("Content not found");
+
+        const contentAuthorId = contentDoc.author.toString();
+
         const existingVote = await Vote.findOne({
             author: userId,
             actionId: targetId,
@@ -83,6 +92,16 @@ export async function createVote(params: CreateVoteParams): Promise<ActionRespon
             )
             await updateVoteCount({ targetId, targetType, voteType, change: 1 }, session)
         }
+
+        //* log the interaction
+        after(async () => {
+            await createInteraction({
+                action: voteType,
+                actionId: targetId,
+                actionTarget: targetType,
+                authorId: contentAuthorId,
+            });
+        });
 
         await session.commitTransaction()
 
@@ -126,7 +145,7 @@ export async function hasVoted(params: HasVotedParams): Promise<ActionResponse<H
         }
 
         return {
-            success: true, 
+            success: true,
             data: {
                 hasUpvoted: vote.voteType === 'upvote',
                 hasDownvoted: vote.voteType === 'downvote'
