@@ -11,6 +11,8 @@ import { NotFoundError } from "../http-error";
 import { CollectionBaseSchema, PaginatedSearchParamsSchema } from "../validations";
 import mongoose, { PipelineStage } from "mongoose";
 import { convertToPlainObject } from "../utils";
+import { after } from "next/server";
+import { createInteraction } from "./interaction.actions";
 
 export async function toggleSaveQuestion(params: CollectionBaseParams): Promise<ActionResponse<{ saved: boolean }>> {
     const validationResult = await action({ params, schema: CollectionBaseSchema, authorize: true })
@@ -22,8 +24,10 @@ export async function toggleSaveQuestion(params: CollectionBaseParams): Promise<
     const userId = validationResult!.session!.user!.id
 
     try {
-        const question = await Question.findById(questionId)
+        const question = await Question.findById(questionId).populate("author", "_id")
         if (!question) throw new NotFoundError('Question')
+
+        console.log(question)
 
         const collection = await Collection.findOne({
             author: userId,
@@ -35,6 +39,15 @@ export async function toggleSaveQuestion(params: CollectionBaseParams): Promise<
         } else {
             await Collection.create({ author: userId, question: questionId })
         }
+
+        after(async () => {
+            await createInteraction({
+                action: 'bookmark',
+                actionId: questionId.toString(),
+                actionTarget: 'question',
+                authorId: question.author._id.toString()
+            })
+        })
 
         revalidatePath(ROUTES.QUESTION(questionId))
 

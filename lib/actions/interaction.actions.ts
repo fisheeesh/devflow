@@ -83,6 +83,10 @@ export async function updateReputation(params: UpdateReputationParams) {
         case 'delete':
             authorPoints = actionType === 'question' ? -5 : -10
             break;
+        case "bookmark":
+            authorPoints = 5
+            performerPoints = 2
+            break
     }
 
     if (performerId === authorId) {
