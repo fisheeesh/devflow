@@ -120,3 +120,10 @@ interface UpdateReputationParams {
 interface GetUserParams {
     userId: string
 }
+
+interface RecommendationParams {
+    userId: string;
+    query?: string;
+    skip: number;
+    limit: number;
+}
