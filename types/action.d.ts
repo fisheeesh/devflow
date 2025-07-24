@@ -116,3 +116,7 @@ interface UpdateReputationParams {
     performerId: string;
     authorId: string;
 }
+
+interface GetUserParams {
+    userId: string
+}

@@ -27,8 +27,6 @@ export async function toggleSaveQuestion(params: CollectionBaseParams): Promise<
         const question = await Question.findById(questionId).populate("author", "_id")
         if (!question) throw new NotFoundError('Question')
 
-        console.log(question)
-
         const collection = await Collection.findOne({
             author: userId,
             question: questionId

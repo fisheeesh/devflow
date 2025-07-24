@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { techDescriptionMap, techMap } from "./tech-map"
+import { BADGE_CRITERIA } from "@/constants"
+import { Badges } from "@/types/global"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -87,4 +89,31 @@ export const formatNumber = (number: number) => {
   } else {
     return number.toString()
   }
+}
+
+export const assignBagdes = (params: {
+  criteria: {
+    type: keyof typeof BADGE_CRITERIA,
+    count: number
+  }[]
+}) => {
+  const badgeCounts: Badges = {
+    BRONZE: 0,
+    SILVER: 0,
+    GOLD: 0
+  }
+
+  const { criteria } = params
+
+  criteria.forEach(({ type, count }) => {
+    const badgeLevels = BADGE_CRITERIA[type]
+
+    Object.keys(badgeLevels).forEach(level => {
+      if (count >= badgeLevels[level as keyof typeof badgeLevels]) {
+        badgeCounts[level as keyof Badges] += 1
+      }
+    })
+  })
+
+  return badgeCounts
 }

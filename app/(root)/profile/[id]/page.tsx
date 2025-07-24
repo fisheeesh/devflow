@@ -1,7 +1,7 @@
 import { auth } from '@/auth'
 import UserAvatar from '@/components/user-avatar'
 import ProfileLink from '@/components/user/profile-link'
-import { getUser, getUserAnswers, getUserQuestions, getUserTags } from '@/lib/actions/user.actions'
+import { getUser, getUserAnswers, getUserQuestions, getUserStats, getUserTags } from '@/lib/actions/user.actions'
 import { RouteParams } from '@/types/global'
 import { notFound } from 'next/navigation'
 import dayjs from 'dayjs'
@@ -30,7 +30,9 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
         <div className='h1-bold text-dark100_light900'>{error?.message}</div>
     )
 
-    const { user, totalQuestions, totalAnswers } = data!
+    const { user } = data!
+
+    const { data: userStats } = await getUserStats({ userId: id })
 
     const {
         success: userQuestionsSuccess,
@@ -114,14 +116,10 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
             </section>
 
             <Stats
-                totalQuestions={totalQuestions}
-                totalAnswers={totalAnswers}
-                badges={{
-                    GOLD: 0,
-                    SILVER: 0,
-                    BRONZE: 0
-                }}
-                reputationPoints={reputation || 0}
+                totalQuestions={userStats?.totalQuestions || 0}
+                totalAnswers={userStats?.totalAnswers || 0}
+                badges={userStats?.badges || { GOLD: 0, SILVER: 0, BRONZE: 0 }}
+                reputationPoints={user.reputation || 0}
             />
 
             <section className="mt-10 flex gap-10">

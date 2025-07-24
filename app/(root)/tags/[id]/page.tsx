@@ -20,8 +20,6 @@ export default async function TagDetailPage({ params, searchParams }: RouteParam
 
     const { tag, questions, isNext } = data || {}
 
-    console.log(error)
-
     return (
         <>
             <section className="w-full flex flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">
@@ -41,7 +39,15 @@ export default async function TagDetailPage({ params, searchParams }: RouteParam
                 success={success}
                 error={error}
                 data={questions}
-                empty={EMPTY_QUESTION}
+                empty={{
+                    title: "Ahh, No Questions Yet!",
+                    message:
+                        "The question board is empty. Maybe it’s waiting for your brilliant question to get things rolling",
+                    button: {
+                        text: "Ask a Question",
+                        href: '/ask-question'
+                    },
+                }}
                 render={(questions) => (
                     <div className="mt-10 flex w-full flex-col gap-6">
                         {questions.map(question => (

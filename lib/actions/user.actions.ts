@@ -2,12 +2,12 @@
 
 import { Answer, Question, User } from "@/database";
 import { GetUserAnswersParams, GetUserParams, GetUserQuestionsParams, GetUserTagsParams } from "@/types/action";
-import { ActionResponse, Answer as AnswerType, ErrorResponse, PaginatedSearchParams, Question as QuestionType, Tag as TagType, User as UserType } from "@/types/global";
+import { ActionResponse, Answer as AnswerType, Badges, ErrorResponse, PaginatedSearchParams, Question as QuestionType, User as UserType } from "@/types/global";
 import { FilterQuery, PipelineStage, Types } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
-import { convertToPlainObject } from "../utils";
+import { assignBagdes, convertToPlainObject } from "../utils";
 import { GetUserAnswersSchema, GetUserQuestionsSchema, GetUserSchema, GetUserTagsSchema, PaginatedSearchParamsSchema } from "../validations";
 
 export async function getAllUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
@@ -70,8 +70,6 @@ export async function getAllUsers(params: PaginatedSearchParams): Promise<Action
 
 export async function getUser(params: GetUserParams): Promise<ActionResponse<{
     user: UserType,
-    totalQuestions: number,
-    totalAnswers: number
 }>> {
     const validtionResult = await action({ params, schema: GetUserSchema })
     if (validtionResult instanceof Error) {
@@ -84,15 +82,10 @@ export async function getUser(params: GetUserParams): Promise<ActionResponse<{
         const user = await User.findById(userId)
         if (!user) throw new NotFoundError('User')
 
-        const totalQuestions = await Question.countDocuments({ author: userId })
-        const totalAnswers = await Answer.countDocuments({ author: userId })
-
         return {
             success: true,
             data: {
                 user: convertToPlainObject(user),
-                totalQuestions,
-                totalAnswers
             }
         }
     } catch (error) {
@@ -218,6 +211,65 @@ export async function getUserTags(params: GetUserTagsParams): Promise<ActionResp
         }
 
     } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export async function getUserStats(params: GetUserParams): Promise<ActionResponse<{
+    totalQuestions: number,
+    totalAnswers: number,
+    badges: Badges
+}>> {
+    const validationResult = await action({ params, schema: GetUserSchema })
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
+    }
+
+    const { userId } = validationResult.params!
+
+    try {
+        const [questionStats] = await Question.aggregate([
+            { $match: { author: new Types.ObjectId(userId) } },
+            {
+                $group: {
+                    _id: null,
+                    count: { $sum: 1 },
+                    upvotes: { $sum: "$upvotes" },
+                    views: { $sum: "$views" }
+                }
+            }
+        ])
+
+        const [answerStats] = await Answer.aggregate([
+            { $match: { author: new Types.ObjectId(userId) } },
+            {
+                $group: {
+                    _id: null,
+                    count: { $sum: 1 },
+                    upvotes: { $sum: "$upvotes" }
+                }
+            }
+        ])
+
+        const badges = assignBagdes({
+            criteria: [
+                { type: "QUESTION_COUNT", count: questionStats.count },
+                { type: "ANSWER_COUNT", count: answerStats.count },
+                { type: "QUESTION_UPVOTES", count: questionStats.upvotes + answerStats.upvotes },
+                { type: "TOTAL_VIEWS", count: questionStats.views }
+            ]
+        })
+
+        return {
+            success: true,
+            data: {
+                totalQuestions: questionStats?.count ?? 0,
+                totalAnswers: answerStats?.count ?? 0,
+                badges
+            }
+        }
+    }
+    catch (error) {
         return handleError(error) as ErrorResponse
     }
 }

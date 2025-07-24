@@ -85,8 +85,8 @@ interface Collection {
     question: Question
 }
 
-interface BadgeCounts {
-    GOLD: number,
-    SILVER: number,
-    BRONZE: number
+interface Badges {
+    GOLD: number;
+    SILVER: number;
+    BRONZE: number;
 }
