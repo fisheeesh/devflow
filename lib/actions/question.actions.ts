@@ -5,7 +5,7 @@ import TagQuestion, { ITagQuestion } from "@/database/tag-question.model";
 import Tag, { ITagDoc } from "@/database/tag.model";
 import { CreateQuestionParams, DeleteQuestionParams, EditQuestionParams, GetQuestionParams, IncrementViewsParams, RecommendationParams } from "@/types/action";
 import { ActionResponse, ErrorResponse, PaginatedSearchParams, Question as QuestionType } from "@/types/global";
-import mongoose, { FilterQuery, RootFilterQuery, Types } from "mongoose";
+import mongoose, { FilterQuery, Types } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
@@ -218,19 +218,19 @@ export async function getRecommendedQuestions({
     userId,
     query,
     skip,
-    limit,
+    limit
 }: RecommendationParams) {
     //* Get user's recent interactions
     const interaction = await Interaction.find({
         user: new Types.ObjectId(userId),
-        actionType: 'question',
+        actionType: "question",
         action: { $in: ['view', 'upvote', 'bookmark', 'post'] }
     })
         .sort({ createdAt: -1 })
         .limit(50)
         .lean()
 
-    const interactedQuestionIds = interaction.map((i) => i.actionId)
+    const interactedQuestionIds = interaction.map(i => i.actionId)
 
     //* Get tags from interacted questions
     const interactedQuestions = await Question.find({
@@ -245,26 +245,21 @@ export async function getRecommendedQuestions({
      * * Output: [1,2,3,4]
      */
     //* Get unique tags
-    const allTags = interactedQuestions.flatMap((q) =>
+    const allTags = interactedQuestions.flatMap(q =>
         q.tags.map((tag: Types.ObjectId) => tag.toString())
     )
 
     //* Remove duplicates
     const uniqueTagIds = [...new Set(allTags)]
 
-    // const recommendedQuery: FilterQuery<typeof Question> = {
-    //     //* exclude interacted questions
-    //     _id: { $nin: interactedQuestionIds },
-    //     //* exclude the user's own questions
-    //     author: { $ne: new Types.ObjectId(userId) },
-    //     //* include questions with any of the unique tags
-    //     tags: { $in: uniqueTagIds.map(id => new Types.ObjectId(id)) }
-    // }
     const recommendedQuery: FilterQuery<typeof Question> = {
+        //* exclude interacted questions
         _id: { $nin: interactedQuestionIds },
+        //* exclude the user's own questions
         author: { $ne: new Types.ObjectId(userId) },
-        tags: { $in: uniqueTagIds.map((id: string) => new Types.ObjectId(id)) },
-    };
+        //* include questions with any of the unique tags
+        tags: { $in: uniqueTagIds.map((id: string) => new Types.ObjectId(id)) }
+    }
 
     if (query) {
         recommendedQuery.$or = [
@@ -276,8 +271,8 @@ export async function getRecommendedQuestions({
     const total = await Question.countDocuments(recommendedQuery)
     const questions = await Question.find(recommendedQuery)
         .populate("tags", "name")
-        .populate("author", "name image")
-        .sort({ upvots: -1, views: -1 }) //* prioritizing engagement
+        .populate("author", "_id name image")
+        .sort({ upvotes: -1, views: -1 }) //* prioritizing engagement
         .skip(skip)
         .limit(limit)
         .lean()
