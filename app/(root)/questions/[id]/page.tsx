@@ -14,6 +14,7 @@ import { getQuestion, incrementViews } from '@/lib/actions/question.actions';
 import { hasVoted } from '@/lib/actions/vote.actions';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 import { RouteParams, Tag } from '@/types/global';
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { after } from 'next/server';
@@ -28,6 +29,31 @@ import { Suspense } from 'react';
 //     await incrementViews({ questionId: id }),
 //     await getQuestion({ questionId: id })
 // ])
+
+export async function generateMetadata({
+    params
+}: RouteParams): Promise<Metadata> {
+    const { id } = await params
+
+    const { success, data: question } = await getQuestion({ questionId: id })
+
+    if (!success || !question) {
+        return {
+            title: 'Question not found',
+            description: 'This question does not exist'
+        }
+    }
+
+    return {
+        title: question.title,
+        description: question.content.slice(0, 100),
+        twitter: {
+            card: "summary_large_image",
+            title: question.title,
+            description: question.content.slice(0, 100),
+        }
+    }
+}
 
 export default async function QuestionDetails({ params, searchParams }: RouteParams) {
     const session = await auth()
