@@ -120,3 +120,9 @@ interface UserLocation {
     countryCode: string;
     city: string
 }
+
+interface GlobalSearchedItem {
+    id: string;
+    type: "question" | "answer" | "user" | "tag";
+    title: string;
+}

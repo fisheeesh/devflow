@@ -5,6 +5,7 @@ import ThemeToggle from './theme-toggle'
 import MobileNavigation from './mobile-navigation'
 import { auth } from '@/auth'
 import UserAvatar from '@/components/user-avatar'
+import GlobalSearch from '@/components/search/global-search'
 
 export default async function Navbar() {
     const session = await auth()
@@ -17,7 +18,7 @@ export default async function Navbar() {
                     Dev<span className='text-primary-500'>Flow</span>
                 </p>
             </Link>
-            <p>Global Search</p>
+            <GlobalSearch />
             <div className='flex-between gap-5'>
                 <ThemeToggle />
 

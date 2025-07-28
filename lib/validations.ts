@@ -201,3 +201,8 @@ export const CreateInteractionSchema = z.object({
     actionId: z.string().min(1, { message: "Action ID is required." }),
     authorId: z.string().min(1, { message: "Author ID is required." })
 })
+
+export const GlobalSearchSchema = z.object({
+    query: z.string().min(1, { message: "Query is required." }),
+    type: z.string().nullable().optional()
+})
