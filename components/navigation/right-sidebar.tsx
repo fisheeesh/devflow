@@ -16,7 +16,7 @@ export default async function RightSideBar() {
     ])
 
     return (
-        <section className='no-scrollbar background-light900_dark200 light-border flex flex-col gap-6 border-l p-6 shadow-light-300 dark:shadow-none max-xl:hidden w-[350px] h-full overflow-y-auto'>
+        <section className='no-scrollbar background-light900_dark200 light-border flex flex-col gap-6 border-l pt-10 p-4 shadow-light-300 dark:shadow-none max-xl:hidden w-[350px] h-full overflow-y-auto'>
             <div>
                 <h3 className='h3-bold text-dark200_light900'>Top Questions</h3>
 

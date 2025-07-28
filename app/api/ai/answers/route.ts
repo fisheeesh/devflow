@@ -6,6 +6,9 @@ import { groq } from '@ai-sdk/groq'
 import { generateText } from 'ai'
 import { NextResponse } from 'next/server'
 
+export const maxDuration = 5
+export const runtime = "edge";
+
 export async function POST(req: Request) {
     const { question, content, userAnswer } = await req.json()
 
