@@ -20,6 +20,16 @@ const nextConfig: NextConfig = {
         hostname: "avatars.githubusercontent.com",
         port: ''
       },
+      {
+        protocol: 'https',
+        hostname: "encrypted-tbn0.gstatic.com",
+        port: ''
+      },
+      {
+        protocol: 'https',
+        hostname: "flagsapi.com",
+        port: ''
+      },
     ]
   }
 };
