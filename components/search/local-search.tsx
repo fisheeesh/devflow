@@ -47,7 +47,7 @@ const LocalSearch = ({
                 className="cursor-pointer"
             />}
             <Input
-                type="text"
+                type="search"
                 placeholder={placeholder}
                 onChange={(e) => {
                     setInputValue(e.target.value);

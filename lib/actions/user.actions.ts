@@ -254,8 +254,8 @@ export async function getUserStats(params: GetUserParams): Promise<ActionRespons
         const badges = assignBagdes({
             criteria: [
                 { type: "QUESTION_COUNT", count: questionStats.count },
-                { type: "ANSWER_COUNT", count: answerStats.count },
-                { type: "QUESTION_UPVOTES", count: questionStats.upvotes + answerStats.upvotes },
+                { type: 'ANSWER_COUNT', count: answerStats.count },
+                { type: 'QUESTION_UPVOTES', count: questionStats.upvotes + answerStats.upvotes },
                 { type: "TOTAL_VIEWS", count: questionStats.views }
             ]
         })
@@ -268,8 +268,8 @@ export async function getUserStats(params: GetUserParams): Promise<ActionRespons
                 badges
             }
         }
-    }
-    catch (error) {
+
+    } catch (error) {
         return handleError(error) as ErrorResponse
     }
 }

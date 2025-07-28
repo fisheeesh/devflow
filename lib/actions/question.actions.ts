@@ -18,6 +18,7 @@ import ROUTES from "@/constants/routes";
 import { after } from "next/server";
 import { createInteraction } from "./interaction.actions";
 import { auth } from "@/auth";
+import { cache } from "react";
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<QuestionType>> {
     const validationResult = await action({ params, schema: AskQuestionSchema, authorize: true })
@@ -191,7 +192,7 @@ export async function editQuestion(
     }
 }
 
-export async function getQuestion(params: GetQuestionParams): Promise<ActionResponse<QuestionType>> {
+export const getQuestion = cache(async function getQuestion(params: GetQuestionParams): Promise<ActionResponse<QuestionType>> {
     const validationResult = await action({ params, schema: GetQuestionSchema })
 
     if (validationResult instanceof Error) {
@@ -212,7 +213,7 @@ export async function getQuestion(params: GetQuestionParams): Promise<ActionResp
     catch (error) {
         return handleError(error) as ErrorResponse
     }
-}
+})
 
 export async function getRecommendedQuestions({
     userId,
