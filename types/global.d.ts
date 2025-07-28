@@ -90,3 +90,33 @@ interface Badges {
     SILVER: number;
     BRONZE: number;
 }
+
+interface Job {
+    id?: string;
+    job_id?: string;
+    employer_name?: string;
+    employer_logo?: string | undefined;
+    employer_website?: string;
+    job_employment_type?: string;
+    job_title?: string;
+    job_description?: string;
+    job_apply_link?: string;
+    job_city?: string;
+    job_state?: string;
+    job_country?: string;
+    job_max_salary?: string;
+    job_min_salary?: string
+}
+
+interface Country {
+    name: string;
+    flag: string;
+    iso2: string
+    iso3: string;
+}
+
+interface UserLocation {
+    country: string;
+    countryCode: string;
+    city: string
+}
