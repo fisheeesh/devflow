@@ -15,6 +15,7 @@ import QuestionCard from '@/components/cards/question-card'
 import Pagination from '@/components/pagination'
 import AnswerCard from '@/components/cards/answer-card'
 import TagCard from '@/components/cards/tag-card'
+import UserAnswerCard from '@/components/cards/user-answer-card'
 
 export default async function ProfilePage({ params, searchParams }: RouteParams) {
     const { id } = await params
@@ -93,7 +94,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
 
                         {
                             bio && (
-                                <p className='paragraph-regular text-dark400_light800'>{bio}</p>
+                                <p className='paragraph-regular text-dark400_light800 mt-10'>{bio}</p>
                             )
                         }
                     </div>
@@ -163,11 +164,10 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                                 <div className='flex w-full flex-col gap-10'>
                                     {
                                         answers.map(answer =>
-                                            <AnswerCard
+                                            <UserAnswerCard
                                                 key={answer._id}
                                                 {...answer}
                                                 content={answer.content.slice(0, 27)}
-                                                containerClasses='card-wrapper rounded-[10px] px-7 py-9 sm:px-11'
                                                 showReadMore
                                                 showActionBtns={loggedInUser?.user?.id === answer.author._id}
                                             />)
@@ -183,7 +183,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                     </TabsContent>
                 </Tabs>
 
-                <div className="flex w-full min-w-[250px] flex-1 flex-col max-lg:hidden">
+                <div className="flex w-full min-w-[250px] flex-1 flex-col max-[1400px]:hidden">
                     <h3 className='h3-bold text-dark200_light900'>Top Tags</h3>
                     <div className="mt-7 flex- flex-col gap-4">
                         <DataRender
