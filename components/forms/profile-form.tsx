@@ -75,7 +75,7 @@ export default function ProfileForm({ user }: Props) {
                         name="name"
                         render={({ field }: { field: ControllerRenderProps<z.infer<typeof EditProfileFormSchema>, "name"> }) => (
                             <FormItem className="flex flex-col w-full">
-                                <FormLabel className="paragraph-medium text-dark400_light700">Name <span className="text-red-600">*</span></FormLabel>
+                                <FormLabel className="paragraph-medium text-dark400_light700">Name <span className="text-primary-500">*</span></FormLabel>
                                 <FormControl>
                                     <Input
                                         className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
@@ -92,7 +92,7 @@ export default function ProfileForm({ user }: Props) {
                         name="username"
                         render={({ field }: { field: ControllerRenderProps<z.infer<typeof EditProfileFormSchema>, "username"> }) => (
                             <FormItem className="flex flex-col w-full">
-                                <FormLabel className="paragraph-medium text-dark400_light700">Username <span className="text-red-600">*</span></FormLabel>
+                                <FormLabel className="paragraph-medium text-dark400_light700">Username <span className="text-primary-500">*</span></FormLabel>
                                 <FormControl>
                                     <Input
                                         className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
@@ -126,7 +126,7 @@ export default function ProfileForm({ user }: Props) {
                         name="location"
                         render={({ field }: { field: ControllerRenderProps<z.infer<typeof EditProfileFormSchema>, "location"> }) => (
                             <FormItem className="flex flex-col w-full">
-                                <FormLabel className="paragraph-medium text-dark400_light700">Location <span className="text-red-600">*</span></FormLabel>
+                                <FormLabel className="paragraph-medium text-dark400_light700">Location <span className="text-primary-500">*</span></FormLabel>
                                 <FormControl>
                                     <Input
                                         className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[56px] border"
@@ -143,7 +143,7 @@ export default function ProfileForm({ user }: Props) {
                         name="bio"
                         render={({ field }: { field: ControllerRenderProps<z.infer<typeof EditProfileFormSchema>, "bio"> }) => (
                             <FormItem className="flex flex-col w-full">
-                                <FormLabel className="paragraph-medium text-dark400_light700">Bio <span className="text-red-600">*</span></FormLabel>
+                                <FormLabel className="paragraph-medium text-dark400_light700">Bio <span className="text-primary-500">*</span></FormLabel>
                                 <FormControl>
                                     <Textarea
                                         className="resize-none paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 min-h-[120px] no-focus border"
