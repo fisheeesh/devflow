@@ -206,3 +206,29 @@ export const GlobalSearchSchema = z.object({
     query: z.string().min(1, { message: "Query is required." }),
     type: z.string().nullable().optional()
 })
+
+export const EditProfileFormSchema = z.object({
+    name: z
+        .string()
+        .min(3, {
+            message: "Name must be at least 3 characters.",
+        })
+        .max(130, { message: "Name mustn't be longer than 130 characters." }),
+    username: z
+        .string()
+        .min(2, { message: "Username must be at least 2 characters." })
+        .max(100, {
+            message: "Username mustn't be longer than 100 characters.",
+        }),
+    portfolio: z
+        .string()
+        .url({ message: "Please provide a valid URL." })
+        .optional()
+        .or(z.literal("")),
+    location: z.string().min(2, {
+        message: "Please provide a proper location (at least 2 characters).",
+    }),
+    bio: z.string().min(3, {
+        message: "Bio must be at least 3 characters.",
+    }),
+});

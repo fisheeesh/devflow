@@ -1,14 +1,17 @@
 'use server'
 
 import { Answer, Question, User } from "@/database";
-import { GetUserAnswersParams, GetUserParams, GetUserQuestionsParams, GetUserTagsParams } from "@/types/action";
+import { EditProfileParams, GetUserAnswersParams, GetUserParams, GetUserQuestionsParams, GetUserTagsParams } from "@/types/action";
 import { ActionResponse, Answer as AnswerType, Badges, ErrorResponse, PaginatedSearchParams, Question as QuestionType, User as UserType } from "@/types/global";
 import { FilterQuery, PipelineStage, Types } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
 import { assignBagdes, convertToPlainObject } from "../utils";
-import { GetUserAnswersSchema, GetUserQuestionsSchema, GetUserSchema, GetUserTagsSchema, PaginatedSearchParamsSchema } from "../validations";
+import { EditProfileFormSchema, GetUserAnswersSchema, GetUserQuestionsSchema, GetUserSchema, GetUserTagsSchema, PaginatedSearchParamsSchema } from "../validations";
+import { revalidatePath } from "next/cache";
+import ROUTES from "@/constants/routes";
+import { redirect } from "next/navigation";
 
 export async function getAllUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })
@@ -201,7 +204,7 @@ export async function getUserTags(params: GetUserTagsParams): Promise<ActionResp
             }
         ]
 
-        const tags = await Question.aggregate(pipeline)
+        const tags = await Question.aggregate(pipeline).limit(10)
 
         return {
             success: true,
@@ -269,6 +272,37 @@ export async function getUserStats(params: GetUserParams): Promise<ActionRespons
             }
         }
 
+    } catch (error) {
+        return handleError(error) as ErrorResponse
+    }
+}
+
+export async function editProfile(params: EditProfileParams): Promise<ActionResponse<{ user: UserType }>> {
+    const validationResult = await action({ params, schema: EditProfileFormSchema, authorize: true })
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
+    }
+
+    const { name, username, portfolio, location, bio } = validationResult.params!
+    const userId = validationResult!.session!.user!.id
+    if (!userId) throw new NotFoundError('User')
+
+    try {
+        const user = await User.findByIdAndUpdate(
+            userId,
+            params,
+            { new: true }
+        )
+        if (!user) throw new Error('Something went wrong!.')
+
+        revalidatePath(ROUTES.PROFILE(userId))
+
+        return {
+            success: true,
+            data: {
+                user: convertToPlainObject(user)
+            }
+        }
     } catch (error) {
         return handleError(error) as ErrorResponse
     }

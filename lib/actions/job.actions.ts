@@ -30,8 +30,6 @@ export async function fetchCountries() {
 export async function fetchJobs(filter: JobFilterParams) {
     const { query, page, location } = filter
 
-    console.log(query)
-
     const res = await fetch(`https://jsearch.p.rapidapi.com/search?query=${query}&page=${page}&country=${location}`, {
         method: 'GET',
         headers: {

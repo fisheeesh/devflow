@@ -138,3 +138,11 @@ interface GlobalSearchParams {
     query: string;
     type: string | null;
 }
+
+interface EditProfileParams {
+    name: string
+    username: string
+    portfolio?: string
+    location: string
+    bio: string
+}
