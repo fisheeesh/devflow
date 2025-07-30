@@ -37,11 +37,11 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
     const {
         success: userQuestionsSuccess,
         data: userQuestions,
-        error: userQuestionsError } = await getUserQuestions({ userId: id, page: Number(page) || 1, pageSize: Number(pageSize) || 10 })
+        error: userQuestionsError } = await getUserQuestions({ userId: id, page: Number(page) || 1, pageSize: Number(pageSize) || 3 })
     const {
         success: userAnswersSuccess,
         data: userAnswers,
-        error: userAnswersError } = await getUserAnswers({ userId: id, page: Number(page) || 1, pageSize: Number(pageSize) || 10 })
+        error: userAnswersError } = await getUserAnswers({ userId: id, page: Number(page) || 1, pageSize: Number(pageSize) || 3 })
 
     const {
         success: userTopTagsSuccess,
@@ -82,12 +82,11 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                             {
                                 location && <ProfileLink
                                     imgUrl="/icons/location.svg"
-                                    title="Portfolio"
+                                    title={location}
                                 />
                             }
                             <ProfileLink
                                 imgUrl="/icons/calendar.svg"
-                                href={portfolio}
                                 title={dayjs(createdAt).format('MMMM YYYY')}
                             />
                         </div>
@@ -106,8 +105,8 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                             <Link
                                 href='/profile/edit'
                             >
-                                <Button className='paragraph-medium btn-secondary text-dark300_light900 min-h-12 minw-44 px-4 py-3'>
-                                    Edit
+                                <Button className='paragraph-medium btn-secondary text-dark300_light900 min-h-12 minw-44 px-8 py-3'>
+                                    Edit Profile
                                 </Button>
                             </Link>
                         )
@@ -119,7 +118,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                 totalQuestions={userStats?.totalQuestions || 0}
                 totalAnswers={userStats?.totalAnswers || 0}
                 badges={userStats?.badges || { GOLD: 0, SILVER: 0, BRONZE: 0 }}
-                reputationPoints={user.reputation || 0}
+                reputationPoints={reputation || 0}
             />
 
             <section className="mt-10 flex gap-10">
