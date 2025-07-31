@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useQueryState } from "nuqs";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useDebounce } from "@/hooks/useDebounce";
 

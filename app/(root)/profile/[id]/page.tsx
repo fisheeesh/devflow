@@ -13,7 +13,6 @@ import DataRender from '@/components/data-render'
 import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from '@/constants/states'
 import QuestionCard from '@/components/cards/question-card'
 import Pagination from '@/components/pagination'
-import AnswerCard from '@/components/cards/answer-card'
 import TagCard from '@/components/cards/tag-card'
 import UserAnswerCard from '@/components/cards/user-answer-card'
 

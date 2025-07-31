@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Button } from '../ui/button'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { cn } from '@/lib/utils'

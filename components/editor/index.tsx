@@ -31,7 +31,7 @@ import {
 } from "@mdxeditor/editor";
 import { basicDark } from "cm6-theme-basic-dark";
 import { useTheme } from "next-themes";
-import React, { forwardRef, Ref } from "react";
+import { forwardRef, Ref } from "react";
 
 import "@mdxeditor/editor/style.css";
 import "./dark-editor.css";
