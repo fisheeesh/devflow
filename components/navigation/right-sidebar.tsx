@@ -71,7 +71,7 @@ export default async function RightSideBar() {
                 />
             </div>
 
-            <div className="mt-16">
+            <div className="mt-12">
                 <h3 className='h3-bold text-dark200_light900'>Popular Tags</h3>
 
                 <DataRender

@@ -3,7 +3,6 @@
 import { Answer, Question, Tag, User } from "@/database";
 import { GlobalSearchParams } from "@/types/action";
 import { ErrorResponse } from "@/types/global";
-import { Error } from "mongoose";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { GlobalSearchSchema } from "../validations";
@@ -16,7 +15,7 @@ export async function globalSearch(params: GlobalSearchParams) {
             return handleError(validationResult) as ErrorResponse
         }
 
-        const { query, type } = params
+        const { query, type } = validationResult.params!
         const regexQuery = { $regex: query, $options: 'i' }
 
         const results = []
@@ -32,12 +31,12 @@ export async function globalSearch(params: GlobalSearchParams) {
         if (!typeLower || !SearchableTypes.includes(typeLower)) {
             //* If no type is specified, search in all models
             for (const { model, searchField, type } of modelsAndTypes) {
-                const queryResult = await model.find({
+                const queryResults = await model.find({
                     [searchField]: regexQuery
                 }).limit(2)
 
                 results.push(
-                    ...queryResult.map(item => ({
+                    ...queryResults.map(item => ({
                         title: type === 'answer' ? `Answer containing "${query}"` : item[searchField],
                         type,
                         id: type === 'answer' ? item.question : item._id

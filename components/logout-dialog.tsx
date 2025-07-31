@@ -46,6 +46,7 @@ export default function LogoutDialog({ isMobileNav = false }: { isMobileNav?: bo
                         <Button disabled={isPending} type="button" variant="outline">Cancel</Button>
                     </DialogClose>
                     <Button
+                        className="cursor-pointer"
                         variant='destructive'
                         onClick={handleSignOut}
                         disabled={isPending}
