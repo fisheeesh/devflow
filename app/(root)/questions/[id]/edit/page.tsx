@@ -18,8 +18,11 @@ export default async function EditQuestionPage({ params }: RouteParams) {
     if (question?.author._id.toString() !== session?.user?.id) redirect(ROUTES.QUESTION(id))
 
     return (
-        <main>
-            <QuestionForm question={question} isEdit />
-        </main>
+        <>
+            <h1 className='h1-bold text-dark100_light900'>Edit question</h1>
+            <div className="mt-10">
+                <QuestionForm question={question} isEdit />
+            </div>
+        </>
     )
 }

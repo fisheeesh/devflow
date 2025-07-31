@@ -15,6 +15,7 @@ import QuestionCard from '@/components/cards/question-card'
 import Pagination from '@/components/pagination'
 import TagCard from '@/components/cards/tag-card'
 import UserAnswerCard from '@/components/cards/user-answer-card'
+import AnswerCard from '@/components/cards/answer-card'
 
 export default async function ProfilePage({ params, searchParams }: RouteParams) {
     const { id } = await params
@@ -69,7 +70,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                     />
                     <div className='mt-3'>
                         <h2 className='h2-bold text-dark100_light900'>{name}</h2>
-                        <p className="paragraph-regular text-dark200_light800">@{username}</p>
+                        <p className="paragraph-regular text-light-500">@{username}</p>
 
                         <div className="mt-5 flex flex-wrap items-center justify-start gap-5">
                             {
@@ -105,7 +106,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                             <Link
                                 href='/profile/edit'
                             >
-                                <Button className='paragraph-medium btn-secondary text-dark300_light900 min-h-12 minw-44 px-8 py-3'>
+                                <Button className='paragraph-medium cursor-pointer btn-secondary text-dark300_light900 min-h-12 minw-44 px-8 py-3'>
                                     Edit Profile
                                 </Button>
                             </Link>
@@ -163,7 +164,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                                 <div className='flex w-full flex-col gap-10'>
                                     {
                                         answers.map(answer =>
-                                            <UserAnswerCard
+                                            <AnswerCard
                                                 key={answer._id}
                                                 {...answer}
                                                 content={answer.content.slice(0, 27)}
