@@ -1,15 +1,13 @@
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import ROUTES from '@/constants/routes'
-import Link from 'next/link'
 
 export default function Loading() {
     return (
-        <section>
+        <>
             <section className="w-full flex flex-col-reverse sm:flex-row justify-between gap-4 sm:items-center">
                 <h1 className="h1-bold text-dark100_light900">All Questions</h1>
-                <Button asChild className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
-                    <Link href={ROUTES.ASK_QUESTION}>Ask a Question</Link>
+                <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
+                    Ask a Question
                 </Button>
             </section>
 
@@ -33,6 +31,6 @@ export default function Loading() {
                     />
                 ))}
             </div>
-        </section>
+        </>
     )
 }

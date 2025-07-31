@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/question-card";
 import DataRender from "@/components/data-render";
 import CommonFilter from "@/components/filters/common-filter";
@@ -8,8 +9,13 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_COLLECTIONS } from "@/constants/states";
 import { getSavedQuestions } from "@/lib/actions/collection.actions";
 import { RouteParams } from "@/types/global";
+import { redirect } from "next/navigation";
 
 export default async function Collection({ searchParams }: RouteParams) {
+    const session = await auth()
+
+    if(!session) redirect(ROUTES.SIGN_IN)
+
     const { page, pageSize, query, filter } = await searchParams
 
     const { success, data, error } = await getSavedQuestions({
