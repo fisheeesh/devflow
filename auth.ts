@@ -10,14 +10,24 @@ import { IUserDoc } from "./database/user.model";
 import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.NEXT_AUTH_SECRET,
   pages: {
     signIn: '/sign-in',
     error: '/sign-in',
+  },
+  session: {
+    strategy: 'jwt' as const,
+    //* It will last 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   providers: [
     GitHub,
     Google,
     Credentials({
+      credentials: {
+        email: { type: 'email' },
+        password: { type: 'password' }
+      },
       async authorize(credentials) {
         const validatedFields = SignInSchema.safeParse(credentials)
 

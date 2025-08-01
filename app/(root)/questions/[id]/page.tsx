@@ -55,15 +55,15 @@ export async function generateMetadata({
     }
 }
 
-export async function generateStaticParams() {
-    const { data, success } = await getQuestions({})
+// export async function generateStaticParams() {
+//     const { data, success } = await getQuestions({})
 
-    if (!success || !data) return []
+//     if (!success || !data) return []
 
-    return data.questions.map(question => ({
-        id: question._id
-    }))
-}
+//     return data.questions.map(question => ({
+//         id: question._id
+//     }))
+// }
 
 export default async function QuestionDetails({ params, searchParams }: RouteParams) {
     const session = await auth()

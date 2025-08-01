@@ -28,15 +28,15 @@ export async function generateMetadata({
     }
 }
 
-export async function generateStaticParams() {
-    const { data, success } = await getTags({})
+// export async function generateStaticParams() {
+//     const { data, success } = await getTags({})
 
-    if (!success || !data) return []
+//     if (!success || !data) return []
 
-    return data.tags.map(tag => ({
-        id: tag._id,
-    }))
-}
+//     return data.tags.map(tag => ({
+//         id: tag._id,
+//     }))
+// }
 
 export default async function TagDetailPage({ params, searchParams }: RouteParams) {
     const { id } = await params
