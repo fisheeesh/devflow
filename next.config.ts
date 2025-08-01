@@ -2,10 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  experimental: {
-    serverComponentsExternalPackages: ['mongoose'],
-  },
-  output: undefined,
   serverExternalPackages: ['pino', 'pino-pretty'],
   eslint: {
     ignoreDuringBuilds: true
