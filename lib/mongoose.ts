@@ -1,9 +1,9 @@
-/* eslint-disable no-var */
+
 //$ To establish MongoDB and Mongoose connection
 import mongoose, { Mongoose } from 'mongoose';
 import logger from './logger';
 
-import '@/database'
+import '@/database';
 
 const MONGODB_URI = process.env.MONGODB_URI as string
 
