@@ -10,6 +10,7 @@ import { convertToPlainObject } from "../utils"
 import { GetTagQuestionsParams } from "@/types/action"
 import { NotFoundError } from "../http-error"
 import dbConnect from "../mongoose"
+import { cache } from "react"
 
 export const getTags = async (
     params: PaginatedSearchParams
@@ -77,7 +78,7 @@ export const getTags = async (
     }
 }
 
-export const getTagQuestions = async (
+export const getTagQuestions = cache(async (
     params: GetTagQuestionsParams
 ): Promise<ActionResponse<{ tag: TagType, questions: QuestionType[], isNext: boolean }>> => {
     const validationResult = await action({ params, schema: GetTagQuestionsSchema })
@@ -131,7 +132,7 @@ export const getTagQuestions = async (
     } catch (error) {
         return handleError(error) as ErrorResponse
     }
-}
+})
 
 export const getTopTags = async (): Promise<ActionResponse<TagType[]>> => {
     try {
