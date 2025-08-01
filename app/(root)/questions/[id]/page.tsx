@@ -10,7 +10,7 @@ import Votes from '@/components/votes/votes';
 import ROUTES from '@/constants/routes';
 import { getAnswers } from '@/lib/actions/answer.actions';
 import { hasSavedQuestion } from '@/lib/actions/collection.actions';
-import { getQuestion, incrementViews } from '@/lib/actions/question.actions';
+import { getQuestion, getQuestions, incrementViews } from '@/lib/actions/question.actions';
 import { hasVoted } from '@/lib/actions/vote.actions';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 import { RouteParams, Tag } from '@/types/global';
@@ -53,6 +53,16 @@ export async function generateMetadata({
             description: question.content.slice(0, 100),
         }
     }
+}
+
+export async function generateStaticParams() {
+    const { data, success } = await getQuestions({})
+
+    if (!success || !data) return []
+
+    return data.questions.map(question => ({
+        id: question._id
+    }))
 }
 
 export default async function QuestionDetails({ params, searchParams }: RouteParams) {

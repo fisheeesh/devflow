@@ -3,7 +3,7 @@ import DataRender from '@/components/data-render'
 import Pagination from '@/components/pagination'
 import LocalSearch from '@/components/search/local-search'
 import ROUTES from '@/constants/routes'
-import { getTagQuestions } from '@/lib/actions/tag.actions'
+import { getTagQuestions, getTags } from '@/lib/actions/tag.actions'
 import { RouteParams } from '@/types/global'
 import { Metadata } from 'next'
 
@@ -26,6 +26,16 @@ export async function generateMetadata({
     return {
         title: question.tag.name,
     }
+}
+
+export async function generateStaticParams() {
+    const { data, success } = await getTags({})
+
+    if (!success || !data) return []
+
+    return data.tags.map(tag => ({
+        id: tag._id,
+    }))
 }
 
 export default async function TagDetailPage({ params, searchParams }: RouteParams) {
