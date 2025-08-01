@@ -10,16 +10,25 @@ import { IUserDoc } from "./database/user.model";
 import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  secret: process.env.NEXT_AUTH_SECRET,
-  debug: process.env.NODE_ENV === 'development',
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/sign-in',
     error: '/sign-in',
   },
   providers: [
-    GitHub,
-    Google,
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID!,
+      clientSecret: process.env.AUTH_GITHUB_SECRET!,
+    }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+    }),
     Credentials({
+      credentials: {
+        email: { type: 'email' },
+        password: { type: 'password' }
+      },
       async authorize(credentials) {
         const validatedFields = SignInSchema.safeParse(credentials)
 
