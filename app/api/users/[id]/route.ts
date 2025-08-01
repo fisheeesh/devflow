@@ -6,8 +6,8 @@ import { UserSchema } from "@/lib/validations"
 import { APIErrorResponse } from "@/types/global"
 import { NextResponse } from "next/server"
 
-export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
+export async function GET(_: Request, { params }: { params: { id: string } }) {
+    const { id } = params
     if (!id) throw new NotFoundError('User')
 
     try {
@@ -22,8 +22,8 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
     }
 }
 
-export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
+export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+    const { id } = params
     if (!id) throw new NotFoundError('User')
 
     try {
@@ -39,8 +39,8 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
     }
 }
 
-export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
+    const { id } = params
     if (!id) throw new NotFoundError('User')
 
     try {

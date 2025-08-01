@@ -3,8 +3,8 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
-import Account from "./database/account.model";
-import User from "./database/user.model";
+import { IAccountDoc } from "./database/account.model";
+import { IUserDoc } from "./database/user.model";
 import { api } from "./lib/api";
 import { SignInSchema } from "./lib/validations";
 import { ActionResponse } from "./types/global";
@@ -25,19 +25,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (validatedFields.success) {
           const { email, password } = validatedFields.data
 
-          // const { data: existingAccount } = await api.accounts.getByProvider(
-          //   email
-          // ) as ActionResponse<IAccountDoc>
-
-          const existingAccount = await Account.findOne({ providerAccountId: email })
+          const { data: existingAccount } = await api.accounts.getByProvider(
+            email
+          ) as ActionResponse<IAccountDoc>
 
           if (!existingAccount) return null
 
-          // const { data: existingUser } = (await api.users.getById(
-          //   existingAccount.userId.toString()
-          // )) as ActionResponse<IUserDoc>
-
-          const existingUser = await User.findById(existingAccount.userId)
+          const { data: existingUser } = (await api.users.getById(
+            existingAccount.userId.toString()
+          )) as ActionResponse<IUserDoc>
 
           if (!existingUser) return null
 
@@ -63,19 +59,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async jwt({ token, account }) {
       if (account) {
-        // const { data: existingAccount, success } = (await api.accounts.getByProvider(
-        //   account.type === 'credentials'
-        //     ? token.email!
-        //     : account.providerAccountId
-        // )) as ActionResponse<IAccountDoc>
-
-        const existingAccount = await Account.findOne({
-          providerAccountId: account.type === 'credentials'
+        const { data: existingAccount, success } = (await api.accounts.getByProvider(
+          account.type === 'credentials'
             ? token.email!
             : account.providerAccountId
-        })
+        )) as ActionResponse<IAccountDoc>
 
-        if (!existingAccount) return token
+        if (!success || !existingAccount) return token
 
         const userId = existingAccount.userId
 

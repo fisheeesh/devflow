@@ -6,8 +6,8 @@ import { AccountSchema } from "@/lib/validations"
 import { APIErrorResponse } from "@/types/global"
 import { NextResponse } from "next/server"
 
-export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
+export async function GET(_: Request, { params }: { params: { id: string } }) {
+    const { id } = params
     if (!id) throw new NotFoundError('Account')
 
     try {
@@ -22,8 +22,8 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
     }
 }
 
-export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
+    const { id } = params
     if (!id) throw new NotFoundError('Account')
 
     try {
@@ -43,8 +43,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
 }
 
-export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+    const { id } = params
     if (!id) throw new NotFoundError('Account')
 
     try {
