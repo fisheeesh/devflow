@@ -10,7 +10,7 @@ import Votes from '@/components/votes/votes';
 import ROUTES from '@/constants/routes';
 import { getAnswers } from '@/lib/actions/answer.actions';
 import { hasSavedQuestion } from '@/lib/actions/collection.actions';
-import { getQuestion, getQuestions, incrementViews } from '@/lib/actions/question.actions';
+import { getQuestion, incrementViews } from '@/lib/actions/question.actions';
 import { hasVoted } from '@/lib/actions/vote.actions';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 import { RouteParams, Tag } from '@/types/global';
@@ -30,29 +30,33 @@ import { Suspense } from 'react';
 //     await getQuestion({ questionId: id })
 // ])
 
-export async function generateMetadata({
-    params
-}: RouteParams): Promise<Metadata> {
-    const { id } = await params
+// export async function generateMetadata({
+//     params
+// }: RouteParams): Promise<Metadata> {
+//     const { id } = await params
 
-    const { success, data: question } = await getQuestion({ questionId: id })
+//     const { success, data: question } = await getQuestion({ questionId: id })
 
-    if (!success || !question) {
-        return {
-            title: 'Question not found',
-            description: 'This question does not exist'
-        }
-    }
+//     if (!success || !question) {
+//         return {
+//             title: 'Question not found',
+//             description: 'This question does not exist'
+//         }
+//     }
 
-    return {
-        title: question.title,
-        description: question.content.slice(0, 100),
-        twitter: {
-            card: "summary_large_image",
-            title: question.title,
-            description: question.content.slice(0, 100),
-        }
-    }
+//     return {
+//         title: question.title,
+//         description: question.content.slice(0, 100),
+//         twitter: {
+//             card: "summary_large_image",
+//             title: question.title,
+//             description: question.content.slice(0, 100),
+//         }
+//     }
+// }
+
+export const metadata: Metadata = {
+    title: 'Question',
 }
 
 // export async function generateStaticParams() {
