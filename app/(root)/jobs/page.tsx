@@ -3,6 +3,11 @@ import JobsFilter from "@/components/filters/jobs-filter";
 import Pagination from "@/components/pagination";
 import { fetchCountries, fetchJobs, fetchLocation } from "@/lib/actions/job.actions";
 import { Job, RouteParams } from "@/types/global";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Jobs",
+}
 
 export default async function FindJobsPage({ searchParams }: RouteParams) {
     const { query, location, page } = await searchParams;

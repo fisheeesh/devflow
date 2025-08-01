@@ -1,5 +1,9 @@
 // AgHOAi1qMEYTCKQ8
 
+export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME || 'DevFlow'
+export const APP_DESCRIPTION = process.env.NEXT_PUBLIC_APP_DESCRIPTION || 'A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.'
+export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
+
 export const sidebarLinks = [
     {
         imgURL: "/icons/home.svg",

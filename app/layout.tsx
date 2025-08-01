@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from "@/constants";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,9 +21,12 @@ const spaceGrotest = SpaceGrotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Dev Overflow",
-  description:
-    "A community-driven platform for asking and answering programming questions. Get help, share knowledge, and collaborate with developers from around the world. Explore topics in web development, mobile app development, algorithms, data structures, and more.",
+  title: {
+    template: `%s | ${APP_NAME}`,
+    default: APP_NAME,
+  },
+  description: `${APP_DESCRIPTION}`,
+  metadataBase: new URL(SERVER_URL),
   icons: {
     icon: "/images/site-logo.svg",
   },

@@ -1,6 +1,11 @@
 import { auth } from '@/auth'
 import QuestionForm from '@/components/forms/question-form'
+import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
+
+export const metadata: Metadata = {
+    title: "Ask a Question",
+}
 
 export default async function AskQuestionPage() {
     const session = await auth()

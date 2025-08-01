@@ -3,9 +3,13 @@ import DataRender from '@/components/data-render'
 import Pagination from '@/components/pagination'
 import LocalSearch from '@/components/search/local-search'
 import ROUTES from '@/constants/routes'
-import { EMPTY_QUESTION } from '@/constants/states'
 import { getTagQuestions } from '@/lib/actions/tag.actions'
 import { RouteParams } from '@/types/global'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: "Tag",
+}
 
 export default async function TagDetailPage({ params, searchParams }: RouteParams) {
     const { id } = await params

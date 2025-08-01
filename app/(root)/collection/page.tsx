@@ -9,12 +9,17 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_COLLECTIONS } from "@/constants/states";
 import { getSavedQuestions } from "@/lib/actions/collection.actions";
 import { RouteParams } from "@/types/global";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+    title: "My Collection",
+}
 
 export default async function Collection({ searchParams }: RouteParams) {
     const session = await auth()
 
-    if(!session) redirect(ROUTES.SIGN_IN)
+    if (!session) redirect(ROUTES.SIGN_IN)
 
     const { page, pageSize, query, filter } = await searchParams
 

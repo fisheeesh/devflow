@@ -14,8 +14,12 @@ import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from '@/constants/states'
 import QuestionCard from '@/components/cards/question-card'
 import Pagination from '@/components/pagination'
 import TagCard from '@/components/cards/tag-card'
-import UserAnswerCard from '@/components/cards/user-answer-card'
 import AnswerCard from '@/components/cards/answer-card'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: "My Profile",
+}
 
 export default async function ProfilePage({ params, searchParams }: RouteParams) {
     const { id } = await params

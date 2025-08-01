@@ -3,7 +3,12 @@ import QuestionForm from '@/components/forms/question-form'
 import ROUTES from '@/constants/routes'
 import { getQuestion } from '@/lib/actions/question.actions'
 import { RouteParams } from '@/types/global'
+import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
+
+export const metadata: Metadata = {
+    title: "Edit Question",
+}
 
 export default async function EditQuestionPage({ params }: RouteParams) {
     const { id } = await params

@@ -8,6 +8,11 @@ import ROUTES from '@/constants/routes'
 import { EMPTY_USERS } from '@/constants/states'
 import { getAllUsers } from '@/lib/actions/user.actions'
 import { RouteParams } from '@/types/global'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: "Community",
+}
 
 export default async function CommunityPage({ searchParams }: RouteParams) {
     const { page, pageSize, query, filter } = await searchParams

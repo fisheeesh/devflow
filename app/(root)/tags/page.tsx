@@ -8,6 +8,11 @@ import ROUTES from '@/constants/routes'
 import { EMPTY_TAGS } from '@/constants/states'
 import { getTags } from '@/lib/actions/tag.actions'
 import { RouteParams } from '@/types/global'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: "Tags",
+}
 
 export default async function TagsPage({ searchParams }: RouteParams) {
     const { page, pageSize, query, filter } = await searchParams

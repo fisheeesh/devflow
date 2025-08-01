@@ -3,7 +3,12 @@ import ProfileForm from "@/components/forms/profile-form"
 import ROUTES from "@/constants/routes"
 import { getUser } from "@/lib/actions/user.actions"
 import { User } from "@/types/global"
+import { Metadata } from "next"
 import { redirect } from "next/navigation"
+
+export const metadata: Metadata = {
+    title: "Edit Profile",
+}
 
 export default async function ProfileEditPage() {
     const session = await auth()

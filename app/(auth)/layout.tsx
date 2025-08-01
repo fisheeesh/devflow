@@ -1,10 +1,15 @@
 import { auth } from '@/auth'
 import SocialAuthForm from '@/components/forms/social-auth-form'
 import ROUTES from '@/constants/routes'
+import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
+
+export const metadata : Metadata = {
+    title: "Auth"
+}
 
 export default async function AuthLayout({ children }: { children: ReactNode }) {
     const session = await auth()
