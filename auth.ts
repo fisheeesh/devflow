@@ -1,16 +1,17 @@
-import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { IAccountDoc } from "./database/account.model";
-import { IUserDoc } from "./database/user.model";
 import { api } from "./lib/api";
 import { SignInSchema } from "./lib/validations";
 import { ActionResponse } from "./types/global";
+import { IUserDoc } from "./database/user.model";
+import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.NEXT_AUTH_SECRET,
+  debug: process.env.NODE_ENV === 'development',
   pages: {
     signIn: '/sign-in',
     error: '/sign-in',
@@ -19,46 +20,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     GitHub,
     Google,
     Credentials({
-      credentials: {
-        email: {},
-        password: {},
-      },
       async authorize(credentials) {
         const validatedFields = SignInSchema.safeParse(credentials)
 
         if (validatedFields.success) {
           const { email, password } = validatedFields.data
 
-          try {
-            const { data: existingAccount } = await api.accounts.getByProvider(email) as ActionResponse<IAccountDoc>
+          const { data: existingAccount } = await api.accounts.getByProvider(
+            email
+          ) as ActionResponse<IAccountDoc>
 
-            if (!existingAccount) {
-              console.log('No account found for:', email)
-              return null
+          if (!existingAccount) return null
+
+          const { data: existingUser } = (await api.users.getById(
+            existingAccount.userId.toString()
+          )) as ActionResponse<IUserDoc>
+
+          if (!existingUser) return null
+
+          const isValidPassword = await bcrypt.compare(password, existingAccount.password!)
+
+          if (isValidPassword) {
+            return {
+              id: existingUser.id,
+              name: existingUser.name,
+              email: existingUser.email,
+              image: existingUser.image
             }
-
-            const { data: existingUser } = await api.users.getById(
-              existingAccount.userId.toString()
-            ) as ActionResponse<IUserDoc>
-
-            if (!existingUser) {
-              console.log('No user found for account:', existingAccount.userId)
-              return null
-            }
-
-            const isValidPassword = await bcrypt.compare(password, existingAccount.password!)
-
-            if (isValidPassword) {
-              return {
-                id: existingUser.id,
-                name: existingUser.name,
-                email: existingUser.email,
-                image: existingUser.image
-              }
-            }
-          } catch (error) {
-            console.error('Auth error:', error)
-            return null
           }
         }
         return null

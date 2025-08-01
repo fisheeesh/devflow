@@ -30,44 +30,30 @@ import { Suspense } from 'react';
 //     await getQuestion({ questionId: id })
 // ])
 
-// export async function generateMetadata({
-//     params
-// }: RouteParams): Promise<Metadata> {
-//     const { id } = await params
+export async function generateMetadata({
+    params
+}: RouteParams): Promise<Metadata> {
+    const { id } = await params
 
-//     const { success, data: question } = await getQuestion({ questionId: id })
+    const { success, data: question } = await getQuestion({ questionId: id })
 
-//     if (!success || !question) {
-//         return {
-//             title: 'Question not found',
-//             description: 'This question does not exist'
-//         }
-//     }
+    if (!success || !question) {
+        return {
+            title: 'Question not found',
+            description: 'This question does not exist'
+        }
+    }
 
-//     return {
-//         title: question.title,
-//         description: question.content.slice(0, 100),
-//         twitter: {
-//             card: "summary_large_image",
-//             title: question.title,
-//             description: question.content.slice(0, 100),
-//         }
-//     }
-// }
-
-export const metadata: Metadata = {
-    title: 'Question',
+    return {
+        title: question.title,
+        description: question.content.slice(0, 100),
+        twitter: {
+            card: "summary_large_image",
+            title: question.title,
+            description: question.content.slice(0, 100),
+        }
+    }
 }
-
-// export async function generateStaticParams() {
-//     const { data, success } = await getQuestions({})
-
-//     if (!success || !data) return []
-
-//     return data.questions.map(question => ({
-//         id: question._id
-//     }))
-// }
 
 export default async function QuestionDetails({ params, searchParams }: RouteParams) {
     const session = await auth()
