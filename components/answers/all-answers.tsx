@@ -15,7 +15,7 @@ interface Props extends ActionResponse<Answer[]> {
 export default function AllAnswers({ data, success, error, totalAnswers, page, isNext }: Props) {
     return (
         <div className="mt-10">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between relative z-10 mb-6">
                 <h3 className="primary-text-gradient">{totalAnswers} Answer{totalAnswers > 1 && 's'}</h3>
                 <CommonFilter
                     filters={AnswerFilters}
@@ -23,13 +23,15 @@ export default function AllAnswers({ data, success, error, totalAnswers, page, i
                 />
             </div>
 
-            <DataRender
-                data={data}
-                error={error}
-                success={success}
-                empty={EMPTY_ANSWERS}
-                render={(answers) => answers.map(answer => <AnswerCard key={answer._id} {...answer} />)}
-            />
+            <div className="relative z-0">
+                <DataRender
+                    data={data}
+                    error={error}
+                    success={success}
+                    empty={EMPTY_ANSWERS}
+                    render={(answers) => answers.map(answer => <AnswerCard key={answer._id} {...answer} />)}
+                />
+            </div>
 
             {!!data?.length && <Pagination
                 page={page}
