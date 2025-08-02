@@ -1,24 +1,39 @@
 import { auth } from '@/auth'
+import AnswerCard from '@/components/cards/answer-card'
+import QuestionCard from '@/components/cards/question-card'
+import TagCard from '@/components/cards/tag-card'
+import DataRender from '@/components/data-render'
+import Pagination from '@/components/pagination'
+import { Button } from '@/components/ui/button'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import UserAvatar from '@/components/user-avatar'
 import ProfileLink from '@/components/user/profile-link'
+import Stats from '@/components/user/stats'
+import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from '@/constants/states'
 import { getUser, getUserAnswers, getUserQuestions, getUserStats, getUserTags } from '@/lib/actions/user.actions'
 import { RouteParams } from '@/types/global'
-import { notFound } from 'next/navigation'
 import dayjs from 'dayjs'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import Stats from '@/components/user/stats'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import DataRender from '@/components/data-render'
-import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from '@/constants/states'
-import QuestionCard from '@/components/cards/question-card'
-import Pagination from '@/components/pagination'
-import TagCard from '@/components/cards/tag-card'
-import AnswerCard from '@/components/cards/answer-card'
 import { Metadata } from 'next'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
-export const metadata: Metadata = {
-    title: "My Profile",
+export const generateMetadata = async ({ params }: RouteParams): Promise<Metadata> => {
+    const { id } = await params
+    const session = await auth()
+
+    const { success, data } = await getUser({ userId: id })
+
+    if (!success || !data) {
+        return {
+            title: 'User not found',
+            description: 'This user does not exist'
+        }
+    }
+
+    return {
+        title: data.user._id === session?.user?.id ? 'My Profile' : data.user.name,
+        description: data.user.bio
+    }
 }
 
 export default async function ProfilePage({ params, searchParams }: RouteParams) {

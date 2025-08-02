@@ -12,6 +12,7 @@ import { EditProfileFormSchema, GetUserAnswersSchema, GetUserQuestionsSchema, Ge
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constants/routes";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 
 export async function getAllUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })
@@ -71,9 +72,9 @@ export async function getAllUsers(params: PaginatedSearchParams): Promise<Action
     }
 }
 
-export async function getUser(params: GetUserParams): Promise<ActionResponse<{
+export const getUser = cache(async (params: GetUserParams): Promise<ActionResponse<{
     user: UserType,
-}>> {
+}>> => {
     const validtionResult = await action({ params, schema: GetUserSchema })
     if (validtionResult instanceof Error) {
         return handleError(validtionResult) as ErrorResponse
@@ -94,7 +95,7 @@ export async function getUser(params: GetUserParams): Promise<ActionResponse<{
     } catch (error) {
         return handleError(error) as ErrorResponse
     }
-}
+})
 
 export async function getUserQuestions(params: GetUserQuestionsParams): Promise<ActionResponse<{ questions: QuestionType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: GetUserQuestionsSchema })
