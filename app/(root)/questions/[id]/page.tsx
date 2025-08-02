@@ -10,7 +10,7 @@ import Votes from '@/components/votes/votes';
 import ROUTES from '@/constants/routes';
 import { getAnswers } from '@/lib/actions/answer.actions';
 import { hasSavedQuestion } from '@/lib/actions/collection.actions';
-import { getQuestion, getQuestions, incrementViews } from '@/lib/actions/question.actions';
+import { getQuestion, incrementViews } from '@/lib/actions/question.actions';
 import { hasVoted } from '@/lib/actions/vote.actions';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 import { RouteParams, Tag } from '@/types/global';
@@ -30,6 +30,9 @@ import { Suspense } from 'react';
 //     await getQuestion({ questionId: id })
 // ])
 
+//* ISR: Revalidate every hour
+export const revalidate = 3600
+
 export async function generateMetadata({
     params
 }: RouteParams): Promise<Metadata> {
@@ -44,25 +47,23 @@ export async function generateMetadata({
         }
     }
 
+    const description = question.content.slice(0, 160)
+
     return {
         title: question.title,
-        description: question.content.slice(0, 100),
+        description,
+        openGraph: {
+            title: question.title,
+            description,
+            type: 'article',
+            authors: [question.author.name],
+        },
         twitter: {
             card: "summary_large_image",
             title: question.title,
-            description: question.content.slice(0, 100),
+            description,
         }
     }
-}
-
-export async function generateStaticParams() {
-    const { data, success } = await getQuestions({})
-
-    if (!success || !data) return []
-
-    return data.questions.map((question) => ({
-        id: question._id.toString()
-    }))
 }
 
 export default async function QuestionDetails({ params, searchParams }: RouteParams) {
@@ -78,16 +79,20 @@ export default async function QuestionDetails({ params, searchParams }: RoutePar
 
     if (!success || !question) return redirect('/404')
 
-    const { success: areAnswersLoaded, data: answersResult, error: answersError } = await getAnswers({
-        questionId: id,
-        page: Number(page) || 1,
-        pageSize: Number(pageSize) || 2,
-        filter
-    })
-
-    const hasVotedPromise = hasVoted({ targetId: question._id, targetType: 'question' })
-
-    const hasSavedQuestionPromise = hasSavedQuestion({ questionId: question._id })
+    const [
+        { success: areAnswersLoaded, data: answersResult, error: answersError },
+        hasVotedPromise,
+        hasSavedQuestionPromise
+    ] = await Promise.all([
+        getAnswers({
+            questionId: id,
+            page: Number(page) || 1,
+            pageSize: Number(pageSize) || 5,
+            filter
+        }),
+        hasVoted({ targetId: question._id, targetType: 'question' }),
+        hasSavedQuestion({ questionId: question._id })
+    ])
 
     const { author, createdAt, answers, views, tags, content, title } = question
 
@@ -119,7 +124,7 @@ export default async function QuestionDetails({ params, searchParams }: RoutePar
                                 downvotes={question.downvotes}
                                 targetId={question._id}
                                 targetType="question"
-                                hasVotedPromise={hasVotedPromise}
+                                hasVotedPromise={Promise.resolve(hasVotedPromise)}
                             />
                         </Suspense>
 
@@ -127,7 +132,7 @@ export default async function QuestionDetails({ params, searchParams }: RoutePar
                             <SaveQuestion
                                 userId={session?.user?.id as string}
                                 questionId={question._id}
-                                hasSavedQuestionPromise={hasSavedQuestionPromise} />
+                                hasSavedQuestionPromise={Promise.resolve(hasSavedQuestionPromise)} />
                         </Suspense>
                     </div>
                 </div>

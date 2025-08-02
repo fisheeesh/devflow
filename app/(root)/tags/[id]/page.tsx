@@ -7,6 +7,9 @@ import { getTagQuestions, getTags } from '@/lib/actions/tag.actions'
 import { RouteParams } from '@/types/global'
 import { Metadata } from 'next'
 
+//* ISR: Revalidate every hour
+export const revalidate = 3600
+
 export async function generateMetadata({
     params
 }: RouteParams): Promise<Metadata> {
@@ -23,17 +26,8 @@ export async function generateMetadata({
 
     return {
         title: data.tag.name,
+        description: `Browse questions tagged with ${data.tag.name}. Find answers and discussions related to ${data.tag.name}.`
     }
-}
-
-export async function generateStaticParams() {
-    const { success, data } = await getTags({})
-
-    if (!success || !data) return []
-
-    return data.tags.map((tag) => ({
-        id: tag._id.toString()
-    }))
 }
 
 export default async function TagDetailPage({ params, searchParams }: RouteParams) {
