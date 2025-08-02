@@ -21,7 +21,7 @@ function isError(error: unknown): error is Error {
 
 export async function fetchHandler<T>(url: string, options: FetchOptions = {}): Promise<ActionResponse<T>> {
     const {
-        timeout = 60000,
+        timeout = 20000,
         headers: customHeaders = {},
         ...restOptions
     } = options

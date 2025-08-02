@@ -148,7 +148,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
 
             <section className="mt-10 flex gap-10">
                 <Tabs defaultValue="top-posts" className="flex-[2]">
-                    <TabsList className="p-1 min-h-[42px] background-light800_dark400 relative z-10">
+                    <TabsList className="p-1 min-h-[42px] bg-light-800 dark:bg-dark-400 relative z-10">
                         <TabsTrigger value="top-posts" className="tab">
                             Top Posts
                         </TabsTrigger>
