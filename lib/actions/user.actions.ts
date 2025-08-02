@@ -283,7 +283,7 @@ export async function editProfile(params: EditProfileParams): Promise<ActionResp
         return handleError(validationResult) as ErrorResponse
     }
 
-    const { name, username, portfolio, location, bio } = validationResult.params!
+    // const { name, username, portfolio, location, bio } = validationResult.params!
     const userId = validationResult!.session!.user!.id
     if (!userId) throw new NotFoundError('User')
 

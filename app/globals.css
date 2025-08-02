@@ -337,7 +337,7 @@
 }
 
 @utility tab {
-  @apply min-h-full! dark:bg-dark-400! cursor-pointer bg-light-800! text-light-500! dark:data-[state=active]:bg-dark-300! data-[state=active]:bg-primary-100! data-[state=active]:text-primary-500!;
+  @apply bg-light-800! data-[state=active]:bg-primary-100! dark:data-[state=active]:bg-dark-300! dark:bg-dark-400! w-full! text-light-500! data-[state=active]:text-primary-500! cursor-pointer! pointer-events-auto!;
 }
 
 @layer base {

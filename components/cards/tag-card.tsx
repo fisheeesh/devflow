@@ -64,7 +64,7 @@ export default function TagCard({
         <Link href={ROUTES.TAG(_id)} className='shadow-light100_darknone'>
             <article className='background-light900_dark200 light-border flex w-full flex-col rounded-2xl border px-6 py-8 sm:w-[225px]'>
                 <div className='flex items-center justify-between gap-3'>
-                    <div className='g-light-800 dark:bg-dark-400 w-fit rounded-sm px-3.5 py-1.5'>
+                    <div className='bg-light-800 dark:bg-dark-400 w-fit rounded-sm px-3.5 py-1.5'>
                         <p className="text-sm font-semibold text-dark300_light900">{name}</p>
                     </div>
                     <i className={cn(iconClass, 'text-2xl')} aria-hidden="true" />

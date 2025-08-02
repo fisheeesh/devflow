@@ -17,7 +17,7 @@ const JobLocation = ({
     job_state,
 }: JobLocationProps) => {
     return (
-        <div className="g-light-800 dark:bg-dark-400 flex items-center justify-end gap-2 rounded-2xl px-3 py-1.5">
+        <div className="bg-light-800 dark:bg-dark-400 flex items-center justify-end gap-2 rounded-2xl px-3 py-1.5">
             {(job_country && job_city && job_state) ? (
                 <>
                     <Image
@@ -68,7 +68,7 @@ const JobCard = ({ job }: { job: Job }) => {
                 {employer_logo ? (
                     <Link
                         href={employer_website ?? "/jobs"}
-                        className="g-light-800 dark:bg-dark-400 relative size-16 rounded-xl"
+                        className="bg-light-800 dark:bg-dark-400 relative size-16 rounded-xl"
                     >
                         <Image
                             src={employer_logo}

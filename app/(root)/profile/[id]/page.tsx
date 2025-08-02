@@ -128,63 +128,71 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
 
             <section className="mt-10 flex gap-10">
                 <Tabs defaultValue="top-posts" className="flex-[2]">
-                    <TabsList className='bg-light-800 dark:bg-dark-400 min-h-[42px] p-1'>
-                        <TabsTrigger value="top-posts" className='tab'>Top Posts</TabsTrigger>
-                        <TabsTrigger value="answers" className='tab'>Answers</TabsTrigger>
+                    <TabsList className="p-1 min-h-[42px] background-light800_dark400 relative z-10">
+                        <TabsTrigger value="top-posts" className="tab">
+                            Top Posts
+                        </TabsTrigger>
+                        <TabsTrigger value="answers" className="tab">
+                            Answers
+                        </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="top-posts" className='mt-5 flex w-full flex-col gap-6'>
-                        <DataRender
-                            success={userQuestionsSuccess}
-                            error={userQuestionsError}
-                            data={questions}
-                            empty={EMPTY_QUESTION}
-                            render={(questions) => (
-                                <div className='flex w-full flex-col gap-6'>
-                                    {
-                                        questions.map(question =>
-                                            <QuestionCard
-                                                question={question}
-                                                key={question._id}
-                                                showActionBtns={loggedInUser?.user?.id === question.author._id}
-                                            />
-                                        )
-                                    }
-                                </div>
-                            )}
-                        />
 
-                        {!!questions.length && <Pagination
-                            page={page}
-                            isNext={hasMoreQuestions}
-                        />}
-                    </TabsContent>
-                    <TabsContent value="answers" className='mt-5 flex w-full flex-col gap-6'>
-                        <DataRender
-                            success={userAnswersSuccess}
-                            error={userAnswersError}
-                            data={answers}
-                            empty={EMPTY_ANSWERS}
-                            render={(answers) => (
-                                <div className='flex w-full flex-col gap-10'>
-                                    {
-                                        answers.map(answer =>
-                                            <AnswerCard
-                                                key={answer._id}
-                                                {...answer}
-                                                content={answer.content.slice(0, 27)}
-                                                showReadMore
-                                                showActionBtns={loggedInUser?.user?.id === answer.author._id}
-                                            />)
-                                    }
-                                </div>
-                            )}
-                        />
+                    <div className="mt-5">
+                        <TabsContent value="top-posts" className='flex w-full flex-col gap-6'>
+                            <DataRender
+                                success={userQuestionsSuccess}
+                                error={userQuestionsError}
+                                data={questions}
+                                empty={EMPTY_QUESTION}
+                                render={(questions) => (
+                                    <div className='flex w-full flex-col gap-6'>
+                                        {
+                                            questions.map(question =>
+                                                <QuestionCard
+                                                    question={question}
+                                                    key={question._id}
+                                                    showActionBtns={loggedInUser?.user?.id === question.author._id}
+                                                />
+                                            )
+                                        }
+                                    </div>
+                                )}
+                            />
 
-                        {!!answers.length && <Pagination
-                            page={page}
-                            isNext={hasMoreAnswers}
-                        />}
-                    </TabsContent>
+                            {!!questions.length && <Pagination
+                                page={page}
+                                isNext={hasMoreQuestions}
+                            />}
+                        </TabsContent>
+
+                        <TabsContent value="answers" className='flex w-full flex-col gap-6'>
+                            <DataRender
+                                success={userAnswersSuccess}
+                                error={userAnswersError}
+                                data={answers}
+                                empty={EMPTY_ANSWERS}
+                                render={(answers) => (
+                                    <div className='flex w-full flex-col gap-10'>
+                                        {
+                                            answers.map(answer =>
+                                                <AnswerCard
+                                                    key={answer._id}
+                                                    {...answer}
+                                                    content={answer.content.slice(0, 27)}
+                                                    showReadMore
+                                                    showActionBtns={loggedInUser?.user?.id === answer.author._id}
+                                                />)
+                                        }
+                                    </div>
+                                )}
+                            />
+
+                            {!!answers.length && <Pagination
+                                page={page}
+                                isNext={hasMoreAnswers}
+                            />}
+                        </TabsContent>
+                    </div>
                 </Tabs>
 
                 <div className="flex w-full min-w-[250px] flex-1 flex-col max-[1400px]:hidden">
