@@ -39,7 +39,6 @@ interface Params {
 }
 
 export default function QuestionForm({ question, isEdit = false }: Params) {
-    console.log('hi')
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
     const editorRef = useRef<MDXEditorMethods>(null)

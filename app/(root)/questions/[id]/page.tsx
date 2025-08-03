@@ -20,16 +20,6 @@ import { redirect } from 'next/navigation';
 import { after } from 'next/server';
 import { Suspense } from 'react';
 
-// /**
-//  * * We can only do parallel req if a req does not depend on another
-//  * ? It can still lead to challenges like slower reqs, blocking rendering,
-//  * ? increased server load, error handling and complexity or race conditions
-//  */
-// const [_, { success, data: question }] = await Promise.all([
-//     await incrementViews({ questionId: id }),
-//     await getQuestion({ questionId: id })
-// ])
-
 //* ISR: Revalidate every hour
 export const revalidate = 3600
 
@@ -98,7 +88,6 @@ export default async function QuestionDetails({ params, searchParams }: RoutePar
 
     return (
         <>
-            {/* <View questionId={id} /> */}
             <div className='flex-start w-full flex-col'>
                 <div className="flex w-full flex-col-reverse justify-between">
                     <div className="flex items-center justify-start gap-1">

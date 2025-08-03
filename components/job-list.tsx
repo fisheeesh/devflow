@@ -2,6 +2,7 @@ import { fetchJobs } from '@/lib/actions/job.actions';
 import { Job, UserLocation } from '@/types/global';
 import JobCard from './cards/job-card';
 import Pagination from './pagination';
+import CatLottie from './cat';
 
 interface Props {
     query: string
@@ -27,9 +28,9 @@ export default async function JobList({ query, location, page, userLocation }: P
                         ?.filter((job: Job) => job.job_title)
                         .map((job: Job) => <JobCard key={job.job_id} job={job} />)
                 ) : (
-                    <div className="paragraph-regular text-dark200_light800 w-full text-center">
-                        Oops! We couldn&apos;t find any jobs at the moment. Please try again
-                        later
+                    <div className="paragraph-regular text-dark200_light800 w-full text-center flex flex-col items-center justify-center">
+                        <CatLottie />
+                        Oops! No jobs found. Try adjusting your search or check back later.
                     </div>
                 )}
             </section>

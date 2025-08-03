@@ -28,17 +28,21 @@ export async function fetchCountries() {
 }
 
 export async function fetchJobs(filter: JobFilterParams) {
-    const { query, page, location } = filter
+    try {
+        const { query, page, location } = filter
 
-    const res = await fetch(`https://jsearch.p.rapidapi.com/search?query=${query}&page=${page}&country=${location}`, {
-        method: 'GET',
-        headers: {
-            "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY ?? "",
-            "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
-        }
-    })
+        const res = await fetch(`https://jsearch.p.rapidapi.com/search?query=${query}&page=${page}&country=${location}`, {
+            method: 'GET',
+            headers: {
+                "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY ?? "",
+                "X-RapidAPI-Host": "jsearch.p.rapidapi.com",
+            }
+        })
 
-    const result = await res.json()
+        const result = await res.json()
 
-    return result.data
+        return result.data
+    } catch (error) {
+        console.log(error)
+    }
 }

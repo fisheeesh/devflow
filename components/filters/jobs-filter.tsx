@@ -38,7 +38,7 @@ export default function JobsFilter({ countriesList, defaultCountry }: Props) {
             />
 
             <Select onValueChange={(value) => handleUpdateParams(value)} defaultValue={defaultCountry || undefined}>
-                <SelectTrigger className="body-regular no-focus light-border background-light800_dark300 text-dark500_light700 line-clamp-1 flex min-h-[56px] items-center gap-3 border p-4 sm:max-w-[210px]">
+                <SelectTrigger className="body-regular w-full no-focus light-border background-light800_dark300 text-dark500_light700 line-clamp-1 flex min-h-[56px] items-center gap-3 border p-4 sm:max-w-[210px]">
                     <Image
                         src="/icons/carbon-location.svg"
                         alt="location"
@@ -50,7 +50,7 @@ export default function JobsFilter({ countriesList, defaultCountry }: Props) {
                     </div>
                 </SelectTrigger>
 
-                <SelectContent className="body-semibold max-h-[350px] max-w-[250px] background-light900_dark200">
+                <SelectContent className="body-semibold w-full max-h-[350px] sm:max-w-[250px] background-light900_dark200">
                     <SelectGroup>
                         {countriesList ? (
                             countriesList.map((country: Country) => (

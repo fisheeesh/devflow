@@ -9,14 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import UserAvatar from '@/components/user-avatar'
 import ProfileLink from '@/components/user/profile-link'
 import Stats from '@/components/user/stats'
-import ROUTES from '@/constants/routes'
 import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from '@/constants/states'
 import { getUser, getUserAnswers, getUserQuestions, getUserStats, getUserTags } from '@/lib/actions/user.actions'
 import { RouteParams } from '@/types/global'
 import dayjs from 'dayjs'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 export const generateMetadata = async ({ params }: RouteParams): Promise<Metadata> => {
     const { id } = await params
@@ -38,10 +37,6 @@ export const generateMetadata = async ({ params }: RouteParams): Promise<Metadat
 }
 
 export default async function ProfilePage({ params, searchParams }: RouteParams) {
-    const session = await auth()
-
-    if (!session) return redirect(ROUTES.HOME)
-
     const { id } = await params
     const { page, pageSize } = await searchParams
     if (!id) notFound()

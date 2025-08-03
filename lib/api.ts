@@ -40,7 +40,6 @@ export const api = {
         delete: (id: string) => fetchHandler(`${API_BASE_URL}/users/${id}`, {
             method: "DELETE"
         }),
-        getUserLocation: () => fetchHandler('http://ip-api.com/json')
     },
     accounts: {
         getAll: () => fetchHandler(`${API_BASE_URL}/accounts`),
@@ -67,10 +66,6 @@ export const api = {
                 method: "POST",
                 body: JSON.stringify({ question, content, userAnswer })
             })
-    },
-    countries: {
-        // getAllCountires: () => fetchHandler('https://restcountries.com/v2/all?fields=name,flag')
-        getAllCountires: () => fetchHandler('https://countriesnow.space/api/v0.1/countries/flag/images')
     },
     jobs: {
         searchJob: ({ query, country }: Job) => fetchHandler(`https://jsearch.p.rapidapi.com/search?query=${query}&country=${country}`, {
