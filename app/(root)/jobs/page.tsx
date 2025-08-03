@@ -1,26 +1,19 @@
-import JobCard from "@/components/cards/job-card";
 import JobsFilter from "@/components/filters/jobs-filter";
-import Pagination from "@/components/pagination";
-import { fetchCountries, fetchJobs, fetchLocation } from "@/lib/actions/job.actions";
-import { Job, RouteParams } from "@/types/global";
+import JobList from "@/components/job-list";
+import PlaceHolder from "@/components/placeholder";
+import { fetchCountries, fetchLocation } from "@/lib/actions/job.actions";
+import { RouteParams } from "@/types/global";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
     title: "Jobs",
 }
 
 export default async function FindJobsPage({ searchParams }: RouteParams) {
-    const { query, location, page } = await searchParams;
+    const { query, page, location } = await searchParams
     const userLocation = await fetchLocation();
-
-    const jobs = await fetchJobs({
-        query: location ? "jobs" : (query ? query : `Software Engineer in ${userLocation?.city}`),
-        page: page ?? 1,
-        location: location ?? userLocation?.countryCode
-    });
-
     const countries = await fetchCountries();
-    const parsedPage = parseInt(page ?? 1);
 
     return (
         <div>
@@ -29,23 +22,9 @@ export default async function FindJobsPage({ searchParams }: RouteParams) {
             <div className="flex">
                 <JobsFilter countriesList={countries} defaultCountry={userLocation?.countryCode} />
             </div>
-            <section className="light-border mb-9 mt-11 flex flex-col gap-9 border-b pb-9">
-                {jobs?.length > 0 ? (
-                    jobs
-                        ?.filter((job: Job) => job.job_title)
-                        .map((job: Job) => <JobCard key={job.job_id} job={job} />)
-                ) : (
-                    <div className="paragraph-regular text-dark200_light800 w-full text-center">
-                        Oops! We couldn&apos;t find any jobs at the moment. Please try again
-                        later
-                    </div>
-                )}
-            </section>
-
-            {jobs?.length > 0 && (
-                <Pagination page={parsedPage} isNext={jobs?.length === 10} />
-            )}
-
+            <Suspense fallback={<PlaceHolder />} key={`${query}-${page}-${location}`}>
+                <JobList query={query} location={location} page={page} userLocation={userLocation} />
+            </Suspense>
         </div>
     )
 }
