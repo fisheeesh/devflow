@@ -77,7 +77,7 @@
 }
 
 /* Make toolbar content not wrap */
-.mdxeditor-toolbar > div {
+.mdxeditor-toolbar>div {
     display: inline-flex !important;
     flex-wrap: nowrap !important;
     align-items: center;
@@ -159,14 +159,14 @@
 }
 
 /* Language selector dropdown */
-.mdxeditor [data-editor-type="codeblock"] + * [data-radix-select-content],
-.cm-editor + [data-radix-select-content] {
+.mdxeditor [data-editor-type="codeblock"]+* [data-radix-select-content],
+.cm-editor+[data-radix-select-content] {
     z-index: 9999 !important;
 }
 
 /* CodeMirror language change dropdown */
-.mdxeditor-toolbar button[title*="language"] + [data-radix-select-content],
-.mdxeditor-toolbar [data-testid*="change_code_mirror_language"] + [data-radix-select-content] {
+.mdxeditor-toolbar button[title*="language"]+[data-radix-select-content],
+.mdxeditor-toolbar [data-testid*="change_code_mirror_language"]+[data-radix-select-content] {
     z-index: 9999 !important;
 }
 
@@ -189,7 +189,7 @@
     z-index: 10;
 }
 
-.mdxeditor [data-radix-select-trigger][data-state="open"] + [data-radix-select-content] {
+.mdxeditor [data-radix-select-trigger][data-state="open"]+[data-radix-select-content] {
     z-index: 9999 !important;
 }
 
@@ -200,4 +200,135 @@
 
 .mdxeditor [data-radix-dialog-content] {
     z-index: 9999 !important;
+}
+
+/* SCROLLABLE DROPDOWN FIXES - This is the main fix for your issue */
+
+/* All select content dropdowns - make them scrollable with fixed height */
+[data-radix-select-content] {
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    z-index: 9999 !important;
+}
+
+/* Specific targeting for MDXEditor dropdowns */
+.mdxeditor [data-radix-select-content],
+.mdxeditor-toolbar [data-radix-select-content] {
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    z-index: 9999 !important;
+    position: relative;
+}
+
+/* Language dropdown viewport styling */
+[data-radix-select-viewport] {
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+/* Custom scrollbar for dropdown */
+[data-radix-select-content]::-webkit-scrollbar,
+[data-radix-select-viewport]::-webkit-scrollbar {
+    width: 6px;
+}
+
+[data-radix-select-content]::-webkit-scrollbar-track,
+[data-radix-select-viewport]::-webkit-scrollbar-track {
+    background: var(--baseBg, #f1f1f1);
+}
+
+[data-radix-select-content]::-webkit-scrollbar-thumb,
+[data-radix-select-viewport]::-webkit-scrollbar-thumb {
+    background: var(--baseBorder, #c1c1c1);
+    border-radius: 3px;
+}
+
+[data-radix-select-content]::-webkit-scrollbar-thumb:hover,
+[data-radix-select-viewport]::-webkit-scrollbar-thumb:hover {
+    background: var(--baseBorderHover, #a8a8a8);
+}
+
+/* Ensure dropdown items are properly styled and clickable */
+[data-radix-select-item] {
+    padding: 8px 12px !important;
+    cursor: pointer !important;
+    min-height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Additional utilities from your original CSS */
+@utility markdown {
+    @apply !max-w-full prose prose-p:my-2 prose-ol:my-0 prose-ul:my-0 dark:prose-p:text-light-700 dark:prose-ol:text-light-700 dark:prose-ul:text-light-500 dark:prose-strong:text-white dark:prose-headings:text-white prose-headings:text-dark-400 prose-h1:text-dark-300 prose-h2:text-dark-300 prose-p:text-dark-500 prose-ul:text-dark-500 prose-ol:text-dark-500;
+}
+
+@utility markdown-editor {
+    @apply prose !max-w-full prose-p:m-0 dark:prose-headings:text-white prose-headings:text-dark-400 prose-p:text-dark-500 dark:prose-p:text-light-700 prose-ul:text-dark-500 dark:prose-ul:text-light-700 prose-ol:text-dark-500 dark:prose-ol:text-light-700 dark:prose-strong:text-white prose-blockquote:text-dark-500 dark:prose-blockquote:text-light-700;
+}
+
+.mdxeditor-toolbar {
+    background: #ffffff !important;
+}
+
+.dark .mdxeditor-toolbar {
+    background: #151821 !important;
+}
+
+.dark .mdxeditor-toolbar button svg {
+    color: #858ead !important;
+}
+
+.dark .mdxeditor-toolbar button:hover svg {
+    color: #000 !important;
+}
+
+.dark .mdxeditor-toolbar [role="separator"] {
+    border-color: #555 !important;
+}
+
+.markdown a {
+    color: #1da1f2;
+}
+
+.markdown a,
+code {
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+
+    padding: 2px;
+    color: #ff7000 !important;
+}
+
+.markdown pre {
+    display: grid;
+    width: 100%;
+}
+
+.markdown pre code {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+
+    color: inherit !important;
+}
+
+[data-lexical-editor="true"] {
+    height: 350px !important;
+    overflow-y: auto !important;
 }

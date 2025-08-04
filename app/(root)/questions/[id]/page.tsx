@@ -77,7 +77,7 @@ export default async function QuestionDetails({ params, searchParams }: RoutePar
         getAnswers({
             questionId: id,
             page: Number(page) || 1,
-            pageSize: Number(pageSize) || 5,
+            pageSize: Number(pageSize) || 3,
             filter
         }),
         hasVoted({ targetId: question._id, targetType: 'question' }),
