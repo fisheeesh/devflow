@@ -29,7 +29,7 @@ A modern Q&A platform built with **Next.js 15**, **React 19**, and integrated **
 
 ## ⚔️ Challenges
 
-One of the core challenges in building DevFlow was designing a scalable and flexible MongoDB schema and choosing between **an array of references** and creating **multiple collections** to manage complex relationships between users, questions, answers, tags, and activity logs. Integrating AI assistance via Groq while maintaining performance and response speed required careful architectural decisions. Implementing an advanced global search system with efficient filtering, sorting, and tag-based recommendation system also lead fewer late night problems. Balancing feature-rich functionality with optimal performance, SEO, and clean user experience was a constant challenge.
+One of the core challenges in building DevFlow was designing a scalable and flexible MongoDB schema and choosing between **an array of references** and creating **multiple collections** to manage complex relationships between users, questions, answers, tags, and activity logs. Integrating AI assistance via Groq while maintaining performance and response speed required careful architectural decisions. Implementing an advanced global search system with efficient filtering, sorting, and tag-based recommendation system also lead to late night grinds. Balancing feature-rich functionality with optimal performance, SEO, and clean user experience was a constant challenge.
 
 ## 🧠 Lessons Learned
 
