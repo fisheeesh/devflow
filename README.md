@@ -1,6 +1,7 @@
 # DevFlow
 
 ![User Interface](./public/images/preview_dark.webp)
+![User Interface](./public/images/preview_light.webp)
 
 ## 📚 Table of Contents
 
