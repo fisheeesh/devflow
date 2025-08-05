@@ -2,6 +2,8 @@
 
 ![User Interface](./public/images/preview_light.webp)
 ![User Interface](./public/images/preview_dark.webp)
+
+## Lighthouse Test
 ![User Interface](./public/images/metric.png)
 
 ## 📚 Table of Contents
