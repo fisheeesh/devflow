@@ -12,10 +12,10 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { signOutUser } from "@/lib/actions/auth.actions"
+import { cn } from "@/lib/utils"
 import { LogOut } from "lucide-react"
 import { useTransition } from "react"
 import Spinner from "./spinner"
-import { cn } from "@/lib/utils"
 
 export default function LogoutDialog({ isMobileNav = false }: { isMobileNav?: boolean }) {
     const [isPending, startTransition] = useTransition()
@@ -43,7 +43,7 @@ export default function LogoutDialog({ isMobileNav = false }: { isMobileNav?: bo
                 </DialogHeader>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button disabled={isPending} type="button" variant="outline">Cancel</Button>
+                        <Button disabled={isPending} type="button" variant="outline" className="cursor-pointer">Cancel</Button>
                     </DialogClose>
                     <Button
                         className="cursor-pointer"

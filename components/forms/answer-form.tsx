@@ -156,7 +156,7 @@ const AnswerForm = ({ questionId, questionTitle, questionContent, userId }: Prop
                     />
 
                     <div className="flex justify-end">
-                        <Button disabled={isWorking} type="submit" className="primary-gradient w-fit text-white">
+                        <Button disabled={isWorking} type="submit" className="primary-gradient w-fit text-white cursor-pointer">
                             <Spinner isLoading={isWorking} label="Posting...">Post Answer</Spinner>
                         </Button>
                     </div>

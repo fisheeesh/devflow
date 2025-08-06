@@ -34,7 +34,7 @@ export default function Pagination({ page = 1, isNext, containerClasses = "" }: 
             {Number(page) > 1 && (
                 <Button
                     onClick={() => handleNavigation('prev')}
-                    className="light-border-2 btn flex-center min-h-[36px] gap-2 border">
+                    className="light-border-2 btn flex-center min-h-[36px] cursor-pointer gap-2 border">
                     <p className="body-medium text-dark200_light800">Prev</p>
                 </Button>
             )}
@@ -45,7 +45,7 @@ export default function Pagination({ page = 1, isNext, containerClasses = "" }: 
             {isNext && (
                 <Button
                     onClick={() => handleNavigation('next')}
-                    className="light-border-2 btn flex-center min-h-[36px] gap-2 border">
+                    className="light-border-2 btn flex-center min-h-[36px] cursor-pointer gap-2 border">
                     <p className="body-medium text-dark200_light800">Next</p>
                 </Button>
             )}

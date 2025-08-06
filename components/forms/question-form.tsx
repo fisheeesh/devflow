@@ -217,7 +217,7 @@ export default function QuestionForm({ question, isEdit = false }: Params) {
                     />
 
                     <div className='mt-10 flex justify-end'>
-                        <Button disabled={isWorking} type='submit' className='primary-gradient py-3 min-h-[46px] text-light-900 w-fit'>
+                        <Button disabled={isWorking} type='submit' className='primary-gradient cursor-pointer py-3 min-h-[46px] text-light-900 w-fit'>
                             <Spinner label='Submitting...' isLoading={isWorking}>
                                 {isEdit ? 'Edit' : 'Ask A Question'}
                                 <span className="sr-only">{isEdit ? 'Edit' : 'Ask A Question'}</span>

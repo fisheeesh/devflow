@@ -26,14 +26,14 @@ export default function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" className="cursor-pointer">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" fill="#ff7000" stroke="#ff7000" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" fill="#ff7000" stroke="#ff7000" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="background-light900_dark200">
-        <DropdownMenuItem onClick={() => setTheme("light")} className="font-bold flex items-center gap-3 hover:background-light900_dark300">
+        <DropdownMenuItem onClick={() => setTheme("light")} className="font-bold flex items-center cursor-pointer gap-3 hover:background-light900_dark300">
           <Image
             src='/icons/sun.svg'
             alt='sun'
@@ -46,7 +46,7 @@ export default function ThemeToggle() {
           />
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")} className="font-bold flex items-center gap-3 hover:background-light900_dark300">
+        <DropdownMenuItem onClick={() => setTheme("dark")} className="font-bold flex items-center cursor-pointer gap-3 hover:background-light900_dark300">
           <Image
             src='/icons/moon.svg'
             alt='moon'
@@ -59,7 +59,7 @@ export default function ThemeToggle() {
           />
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")} className="font-bold flex items-center gap-3 hover:background-light900_dark300">
+        <DropdownMenuItem onClick={() => setTheme("system")} className="font-bold flex items-center cursor-pointer gap-3 hover:background-light900_dark300">
           <Image
             src='/icons/computer.svg'
             alt='computer'

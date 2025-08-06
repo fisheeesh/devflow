@@ -411,45 +411,6 @@
   border-color: #555 !important;
 }
 
-.markdown a {
-  color: #1da1f2;
-}
-
-.markdown a,
-code {
-  /* These are technically the same, but use both */
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  -ms-word-break: break-all;
-  /* This is the dangerous one in WebKit, as it breaks things wherever */
-  word-break: break-all;
-  /* Instead use this non-standard one: */
-  word-break: break-word;
-
-  /* Adds a hyphen where the word breaks, if supported (No Blink) */
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-
-  padding: 2px;
-  color: #ff7000 !important;
-}
-
-.markdown pre {
-  display: grid;
-  width: 100%;
-}
-
-.markdown pre code {
-  width: 100%;
-  display: block;
-  overflow-x: auto;
-
-  color: inherit !important;
-}
-
 [data-lexical-editor="true"] {
   height: 350px !important;
   overflow-y: auto !important;

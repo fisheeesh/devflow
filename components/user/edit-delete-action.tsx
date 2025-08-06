@@ -99,8 +99,8 @@ export default function EditDeleteAction({ type, itemId }: Props) {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel className="btn">Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete} className="!border-primary-100 !bg-primary-500 !text-light-800">
+                        <AlertDialogCancel className="btn cursor-pointer">Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete} className="!border-primary-100 !bg-primary-500 cursor-pointer !text-light-800">
                             <Spinner isLoading={isPending} label="Deleting...">
                                 Confirm
                             </Spinner>

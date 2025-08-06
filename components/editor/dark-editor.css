@@ -202,11 +202,11 @@
     z-index: 9999 !important;
 }
 
-/* SCROLLABLE DROPDOWN FIXES - This is the main fix for your issue */
+/* SCROLLABLE DROPDOWN FIXES - Fixed height with scrolling */
 
 /* All select content dropdowns - make them scrollable with fixed height */
 [data-radix-select-content] {
-    max-height: 200px !important;
+    max-height: 300px !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     z-index: 9999 !important;
@@ -215,7 +215,7 @@
 /* Specific targeting for MDXEditor dropdowns */
 .mdxeditor [data-radix-select-content],
 .mdxeditor-toolbar [data-radix-select-content] {
-    max-height: 200px !important;
+    max-height: 300px !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     z-index: 9999 !important;
@@ -224,9 +224,28 @@
 
 /* Language dropdown viewport styling */
 [data-radix-select-viewport] {
-    max-height: 200px !important;
+    max-height: 300px !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
+}
+
+/* Dark mode dropdown background */
+.dark [data-radix-select-content],
+.dark .mdxeditor [data-radix-select-content],
+.dark .mdxeditor-toolbar [data-radix-select-content] {
+    background: #0f1117 !important;
+    border: 1px solid var(--baseBorder, #333) !important;
+}
+
+/* Dark mode dropdown items */
+.dark [data-radix-select-item] {
+    background: #0f1117 !important;
+    color: var(--baseText, #fff) !important;
+}
+
+.dark [data-radix-select-item]:hover,
+.dark [data-radix-select-item][data-highlighted] {
+    background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Custom scrollbar for dropdown */
@@ -240,15 +259,31 @@
     background: var(--baseBg, #f1f1f1);
 }
 
+.dark [data-radix-select-content]::-webkit-scrollbar-track,
+.dark [data-radix-select-viewport]::-webkit-scrollbar-track {
+    background: #0f1117;
+}
+
 [data-radix-select-content]::-webkit-scrollbar-thumb,
 [data-radix-select-viewport]::-webkit-scrollbar-thumb {
     background: var(--baseBorder, #c1c1c1);
     border-radius: 3px;
 }
 
+.dark [data-radix-select-content]::-webkit-scrollbar-thumb,
+.dark [data-radix-select-viewport]::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+}
+
 [data-radix-select-content]::-webkit-scrollbar-thumb:hover,
 [data-radix-select-viewport]::-webkit-scrollbar-thumb:hover {
     background: var(--baseBorderHover, #a8a8a8);
+}
+
+.dark [data-radix-select-content]::-webkit-scrollbar-thumb:hover,
+.dark [data-radix-select-viewport]::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 /* Ensure dropdown items are properly styled and clickable */
@@ -260,7 +295,7 @@
     align-items: center !important;
 }
 
-/* Additional utilities from your original CSS */
+/* Additional utilities from your CSS */
 @utility markdown {
     @apply !max-w-full prose prose-p:my-2 prose-ol:my-0 prose-ul:my-0 dark:prose-p:text-light-700 dark:prose-ol:text-light-700 dark:prose-ul:text-light-500 dark:prose-strong:text-white dark:prose-headings:text-white prose-headings:text-dark-400 prose-h1:text-dark-300 prose-h2:text-dark-300 prose-p:text-dark-500 prose-ul:text-dark-500 prose-ol:text-dark-500;
 }
@@ -331,4 +366,11 @@ code {
 [data-lexical-editor="true"] {
     height: 350px !important;
     overflow-y: auto !important;
+}
+
+/* NESTED CODE BLOCKS: Only apply grid to visible code blocks */
+[data-bright-mode="dark"]:not(html.light [data-bright-mode="dark"]),
+[data-bright-mode="light"]:not(:not(html.light [data-bright-mode="light"])) {
+    display: grid !important;
+    width: 100% !important;
 }

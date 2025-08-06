@@ -159,7 +159,7 @@ export default function ProfileForm({ user }: Props) {
                         <Button
                             type="submit"
                             disabled={isWorking}
-                            className='primary-gradient text-light-900 w-fit'
+                            className='primary-gradient text-light-900 w-fit cursor-pointer'
                         >
                             <Spinner label="Submitting..." isLoading={isWorking}>
                                 Submit
