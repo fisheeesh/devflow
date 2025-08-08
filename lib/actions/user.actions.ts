@@ -1,18 +1,17 @@
 'use server'
 
+import ROUTES from "@/constants/routes";
 import { Answer, Question, User } from "@/database";
 import { EditProfileParams, GetUserAnswersParams, GetUserParams, GetUserQuestionsParams, GetUserTagsParams } from "@/types/action";
 import { ActionResponse, Answer as AnswerType, Badges, ErrorResponse, PaginatedSearchParams, Question as QuestionType, User as UserType } from "@/types/global";
 import { FilterQuery, PipelineStage, Types } from "mongoose";
+import { revalidatePath } from "next/cache";
+import { cache } from "react";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { NotFoundError } from "../http-error";
 import { assignBagdes, convertToPlainObject } from "../utils";
 import { EditProfileFormSchema, GetUserAnswersSchema, GetUserQuestionsSchema, GetUserSchema, GetUserTagsSchema, PaginatedSearchParamsSchema } from "../validations";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
-import { redirect } from "next/navigation";
-import { cache } from "react";
 
 export async function getAllUsers(params: PaginatedSearchParams): Promise<ActionResponse<{ users: UserType[], isNext: boolean }>> {
     const validationResult = await action({ params, schema: PaginatedSearchParamsSchema })

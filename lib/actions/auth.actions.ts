@@ -94,13 +94,13 @@ export async function signInWithCredentials(
         })
 
         if (existingUser && existingAccountWithId && !existingAccountWithCredentials) {
-            await Account.create([{
+            await Account.create({
                 userId: existingUser._id,
                 name: existingUser.name,
                 provider: 'credentials',
                 providerAccountId: email,
                 password: hashPassword
-            }])
+            })
 
             await signIn('credentials', {
                 email, password, redirect: false
@@ -108,7 +108,7 @@ export async function signInWithCredentials(
 
             return { success: true }
         }
-        
+
         if (!existingAccountWithCredentials) throw new NotFoundError('Account')
 
         const passwordMatch = await bcrypt.compare(password, existingAccountWithCredentials.password)
