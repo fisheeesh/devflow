@@ -394,7 +394,7 @@ export async function getHotQuestions(): Promise<ActionResponse<QuestionType[]>>
 
         const questions = await Question.find()
             .sort({ views: -1, upvotes: -1 })
-            .limit(5)
+            .limit(6)
 
         return {
             success: true,

@@ -193,7 +193,7 @@ export default async function ProfilePage({ params, searchParams }: RouteParams)
                                                 <AnswerCard
                                                     key={answer._id}
                                                     {...answer}
-                                                    content={answer.content.slice(0, 27)}
+                                                    content={answer.content.slice(0, 100)}
                                                     showReadMore
                                                     showActionBtns={loggedInUser?.user?.id === answer.author._id}
                                                 />)

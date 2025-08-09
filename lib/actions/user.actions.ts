@@ -114,6 +114,7 @@ export async function getUserQuestions(params: GetUserQuestionsParams): Promise<
         const questions = await Question.find({ author: userId })
             .populate('tags', 'name')
             .populate('author', 'name image')
+            .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
 
@@ -147,6 +148,7 @@ export async function getUserAnswers(params: GetUserAnswersParams): Promise<Acti
 
         const totalAnswers = await Answer.countDocuments({ author: userId })
         const answers = await Answer.find({ author: userId })
+            .sort({ createdAt: -1 })
             .populate("author", "_id name image")
             .skip(skip)
             .limit(limit)

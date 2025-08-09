@@ -337,7 +337,7 @@
 }
 
 @utility tab {
-  @apply bg-light-800! data-[state=active]:bg-primary-100! dark:data-[state=active]:bg-dark-300! dark:bg-dark-400! w-full! text-light-500! data-[state=active]:text-primary-500! cursor-pointer! pointer-events-auto!;
+  @apply min-h-full! cursor-pointer dark:bg-dark-400! bg-light-800! text-light-500! dark:data-[state=active]:bg-dark-300! data-[state=active]:bg-primary-100! data-[state=active]:text-primary-500!;
 }
 
 @layer base {
@@ -402,13 +402,55 @@
 .dark .mdxeditor-toolbar button svg {
   color: #858ead !important;
 }
+.dark .mdxeditor-toolbar button:hover{
+  background-color: #a2a2a2 !important;
+}
 
 .dark .mdxeditor-toolbar button:hover svg {
-  color: #000 !important;
+  color: #ffffff !important;
 }
 
 .dark .mdxeditor-toolbar [role="separator"] {
   border-color: #555 !important;
+}
+
+.markdown a {
+  color: #1da1f2;
+}
+
+.markdown a,
+code {
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+
+  padding: 2px;
+  color: #ff7000 !important;
+}
+
+.markdown pre {
+  display: grid;
+  width: 100%;
+}
+
+.markdown pre code {
+  width: 100%;
+  display: block;
+  overflow-x: auto;
+
+  color: inherit !important;
 }
 
 [data-lexical-editor="true"] {
