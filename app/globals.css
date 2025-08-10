@@ -588,3 +588,22 @@ code {
     @apply bg-background text-foreground;
   }
 }
+
+::selection {
+    background-color: #000000;
+    color: white;
+}
+
+.dark ::selection {
+    background-color: #ff7000;
+    color: white;
+}
+
+.dark ::-moz-selection {
+    background-color: #000000;
+    color: white;
+}
+::-moz-selection {
+    background-color: #ff7000;
+    color: white;
+}

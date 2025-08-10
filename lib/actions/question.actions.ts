@@ -299,7 +299,6 @@ export async function getQuestions(params: PaginatedSearchParams): Promise<Actio
     let sortCriteria = {}
 
     try {
-
         if (filter === "recommended") {
             const session = await auth();
             const userId = session?.user?.id;
