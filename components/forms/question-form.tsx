@@ -94,36 +94,48 @@ export default function QuestionForm({ question, isEdit = false }: Params) {
     const handleOnSubmit: SubmitHandler<z.infer<typeof AskQuestionSchema>> = (data) => {
         startTransition(async () => {
             if (isEdit && question) {
-                const res = await editQuestion({ questionId: question._id, ...data })
+                try {
+                    const res = await editQuestion({ questionId: question._id, ...data })
+
+                    if (res.success) {
+                        toast.success('Success', {
+                            description: 'Question updated successfully'
+                        })
+
+                        if (res.data) router.push(ROUTES.QUESTION(String(res.data._id)))
+
+                    } else {
+                        toast.error(`Error ${res.status}`, {
+                            description: res.error?.message || 'Something went wrong'
+                        })
+                    }
+
+                    return
+                } catch (error) {
+                    toast.error('Connection Error', {
+                        description: 'Unable to connect to the database. Please try again.'
+                    })
+                }
+            }
+
+            try {
+                const res = await createQuestion(data)
 
                 if (res.success) {
                     toast.success('Success', {
-                        description: 'Question updated successfully'
+                        description: 'Question created successfully'
                     })
 
-                    if (res.data) router.push(ROUTES.QUESTION(String(res.data._id)))
+                    if (res.data) router.push(ROUTES.QUESTION(res.data._id))
 
                 } else {
                     toast.error(`Error ${res.status}`, {
                         description: res.error?.message || 'Something went wrong'
                     })
                 }
-
-                return
-            }
-
-            const res = await createQuestion(data)
-
-            if (res.success) {
-                toast.success('Success', {
-                    description: 'Question created successfully'
-                })
-
-                if (res.data) router.push(ROUTES.QUESTION(res.data._id))
-
-            } else {
-                toast.error(`Error ${res.status}`, {
-                    description: res.error?.message || 'Something went wrong'
+            } catch (error) {
+                toast.error('Connection Error', {
+                    description: 'Unable to connect to the database. Please try again.'
                 })
             }
         })

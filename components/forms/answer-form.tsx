@@ -49,22 +49,26 @@ const AnswerForm = ({ questionId, questionTitle, questionContent, userId }: Prop
     const onSubmit: SubmitHandler<z.infer<typeof AnswerScheama>> = (data) => {
         //@TODO: submit answer
         startTransaction(async () => {
-            const res = await createAnswer({ questionId, ...data })
+            try {
+                const res = await createAnswer({ questionId, ...data })
 
-            if (res.success) {
-                form.reset()
-
-                toast.success('Success', {
-                    description: "Your answer has been posted successfully.",
-                })
-
-                if (editorRef.current) {
-                    editorRef.current.setMarkdown('')
+                if (res.success) {
+                    form.reset()
+                    toast.success('Success', {
+                        description: "Your answer has been posted successfully.",
+                    })
+                    if (editorRef.current) {
+                        editorRef.current.setMarkdown('')
+                    }
+                } else {
+                    const errorMessage = res?.error?.message || 'An unexpected error occurred'
+                    toast.error(`Error ${res.status}`, {
+                        description: errorMessage
+                    })
                 }
-
-            } else {
-                toast.error(`Error ${res.status}`, {
-                    description: res?.error?.message
+            } catch (error) {
+                toast.error('Connection Error', {
+                    description: 'Unable to connect to the database. Please try again.'
                 })
             }
         })
