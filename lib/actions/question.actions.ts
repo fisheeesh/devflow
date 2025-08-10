@@ -265,7 +265,6 @@ export async function getRecommendedQuestions({
     if (query) {
         recommendedQuery.$or = [
             { title: { $regex: query, $options: 'i' } },
-            { content: { $regex: query, $options: 'i' } }
         ]
     }
 
@@ -319,10 +318,6 @@ export async function getQuestions(params: PaginatedSearchParams): Promise<Actio
 
         if (query) {
             filterQuery.title = { $regex: query, $options: 'i' }
-            // filterQuery.$or = [
-            //     { title: { $regex: query, $options: 'i' } },
-            //     { content: { $regex: query, $options: 'i' } }
-            // ]
         }
 
         switch (filter) {
@@ -462,6 +457,15 @@ export async function deleteQuestion(params: DeleteQuestionParams): Promise<Acti
 
         //* Finally, delete the question itself
         await Question.findByIdAndDelete(questionId, { session })
+
+        after(async () =>
+            await createInteraction({
+                action: "delete",
+                actionId: questionId.toString(),
+                actionTarget: 'question',
+                authorId: userId as string
+            })
+        )
 
         await session.commitTransaction()
 

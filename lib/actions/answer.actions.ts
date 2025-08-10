@@ -150,6 +150,15 @@ export async function deleteAnswer(params: DeleteAnswerParams): Promise<ActionRe
         //* And finally, delete the answer itself
         await Answer.deleteOne({ _id: answerId }, { session })
 
+        after(async () =>
+            await createInteraction({
+                action: "delete",
+                actionId: answerId.toString(),
+                actionTarget: 'answer',
+                authorId: userId as string
+            })
+        )
+
         await session.commitTransaction()
 
         revalidatePath(ROUTES.PROFILE(userId as string))

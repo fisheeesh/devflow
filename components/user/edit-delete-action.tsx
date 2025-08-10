@@ -29,11 +29,11 @@ export default function EditDeleteAction({ type, itemId }: Props) {
     const router = useRouter()
     const [isPending, startTransition] = useTransition()
 
-    const handleEdit = async () => {
+    const handleEdit = () => {
         router.push(ROUTES.EDIT_QUESTION(itemId))
     }
 
-    const handleDelete = async () => {
+    const handleDelete = () => {
         if (type === 'Question') {
             // @TODO: Call API to delete question
             startTransition(async () => {

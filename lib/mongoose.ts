@@ -43,23 +43,21 @@ const dbConnect = async (): Promise<Mongoose> => {
     }
 
     if (!cached.promise) {
-        cached.promise = mongoose
-            .connect(MONGODB_URI, {
-                dbName: 'devflow'
-            })
-            .then(res => {
-                logger.info("Connected to MongoDB")
-                return res
-            })
-            .catch(err => {
-                logger.error("Error connecting to MongoDB", err)
-                throw err
-            })
+        cached.promise = mongoose.connect(MONGODB_URI, {
+            dbName: "devflow",
+        }).then((mongooseInstance) => {
+            logger.info("Connected to MongoDB");
+            return mongooseInstance;
+        }).catch((err) => {
+            // ! reset so next request retries
+            cached.promise = null;
+            logger.error("Error connecting to MongoDB", err);
+            throw err;
+        });
     }
 
-    cached.conn = await cached.promise
-
-    return cached.conn
+    cached.conn = await cached.promise;
+    return cached.conn;
 }
 
 export default dbConnect
