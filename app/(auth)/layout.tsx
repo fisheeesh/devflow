@@ -7,14 +7,14 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
 
-export const metadata : Metadata = {
+export const metadata: Metadata = {
     title: "Auth"
 }
 
 export default async function AuthLayout({ children }: { children: ReactNode }) {
     const session = await auth()
 
-    if(session) return redirect(ROUTES.HOME)
+    if (session) return redirect(ROUTES.HOME)
 
     return (
         <main className='flex min-h-screen justify-center items-center bg-auth-light dark:bg-auth-dark bg-cover bg-center bg-no-repeat px-4 py-10'>

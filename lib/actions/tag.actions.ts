@@ -111,6 +111,7 @@ export const getTagQuestions = cache(async (
                 { path: 'author', select: 'name image' },
                 { path: 'tags', select: 'name' }
             ])
+            .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
 
@@ -136,7 +137,7 @@ export const getTopTags = async (): Promise<ActionResponse<TagType[]>> => {
 
         const tags = await Tag.find()
             .sort({ questions: -1 })
-            .limit(5)
+            .limit(6)
 
         return {
             success: true,
