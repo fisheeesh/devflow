@@ -66,7 +66,7 @@ const Editor = forwardRef<MDXEditorMethods, Props>(
                     codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
                     codeMirrorPlugin({
                         codeBlockLanguages: {
-                            txt: "Plain Text",
+                            "": "Plain Text",
                             js: "JavaScript",
                             ts: "TypeScript",
                             jsx: "JSX",

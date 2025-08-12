@@ -74,12 +74,12 @@ export async function getAllUsers(params: PaginatedSearchParams): Promise<Action
 export const getUser = cache(async (params: GetUserParams): Promise<ActionResponse<{
     user: UserType,
 }>> => {
-    const validtionResult = await action({ params, schema: GetUserSchema })
-    if (validtionResult instanceof Error) {
-        return handleError(validtionResult) as ErrorResponse
+    const validationResult = await action({ params, schema: GetUserSchema })
+    if (validationResult instanceof Error) {
+        return handleError(validationResult) as ErrorResponse
     }
 
-    const { userId } = validtionResult.params!
+    const { userId } = validationResult.params!
 
     try {
         const user = await User.findById(userId)

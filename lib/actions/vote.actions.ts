@@ -94,14 +94,27 @@ export async function createVote(params: CreateVoteParams): Promise<ActionRespon
         }
 
         //* log the interaction
-        after(async () => {
-            await createInteraction({
-                action: voteType,
-                actionId: targetId,
-                actionTarget: targetType,
-                authorId: contentAuthorId,
+        if (!existingVote) {
+            after(async () => {
+                await createInteraction({
+                    action: voteType,
+                    actionId: targetId,
+                    actionTarget: targetType,
+                    authorId: contentAuthorId,
+                });
             });
-        });
+        }
+
+        if(existingVote && existingVote.voteType !== voteType) {
+            after(async () => {
+                await createInteraction({
+                    action: voteType,
+                    actionId: targetId,
+                    actionTarget: targetType,
+                    authorId: contentAuthorId,
+                });
+            });
+        }
 
         await session.commitTransaction()
 

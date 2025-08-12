@@ -179,6 +179,15 @@ export async function editQuestion(
             await TagQuestion.insertMany(newTagDocuments, { session });
         }
 
+        after(async () => {
+            await createInteraction({
+                action: "edit",
+                actionId: question._id.toString(),
+                actionTarget: "question",
+                authorId: userId as string,
+            });
+        });
+
         //* Save the updated question
         await question.save({ session });
         await session.commitTransaction();

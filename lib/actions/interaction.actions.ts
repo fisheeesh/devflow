@@ -70,23 +70,26 @@ export async function updateReputation(params: UpdateReputationParams) {
 
     switch (action) {
         case 'upvote':
-            performerPoints = 2
-            authorPoints = 5
+            performerPoints = actionType === 'question' ? 10 : 5
+            authorPoints = actionType === 'question' ? 20 : 10
             break;
         case 'downvote':
-            performerPoints = -1
-            authorPoints = -2
+            performerPoints = actionType === 'question' ? -5 : -2
+            authorPoints = actionType === 'question' ? -10 : -5
             break;
         case 'post':
-            authorPoints = actionType === 'question' ? 5 : 10
+            authorPoints = actionType === 'question' ? 50 : 25
             break;
         case 'delete':
-            authorPoints = actionType === 'question' ? -5 : -10
+            authorPoints = actionType === 'question' ? -50 : -25
             break;
         case "bookmark":
-            authorPoints = 5
-            performerPoints = 2
+            authorPoints = 20
+            performerPoints = 10
             break
+        case "edit":
+            authorPoints = 10
+            break;
     }
 
     if (performerId === authorId) {

@@ -38,14 +38,16 @@ export async function toggleSaveQuestion(params: CollectionBaseParams): Promise<
             await Collection.create({ author: userId, question: questionId })
         }
 
-        after(async () => {
-            await createInteraction({
-                action: 'bookmark',
-                actionId: questionId.toString(),
-                actionTarget: 'question',
-                authorId: question.author._id.toString()
+        if (!collection) {
+            after(async () => {
+                await createInteraction({
+                    action: 'bookmark',
+                    actionId: questionId.toString(),
+                    actionTarget: 'question',
+                    authorId: question.author._id.toString()
+                })
             })
-        })
+        }
 
         revalidatePath(ROUTES.QUESTION(questionId))
 
@@ -149,12 +151,7 @@ export async function getSavedQuestions(params: PaginatedSearchParams): Promise<
 
         if (query) {
             pipeline.push({
-                $match: {
-                    $or: [
-                        { "question.title": { $regex: query, $options: 'i' } },
-                        { "question.content": { $regex: query, $options: 'i' } }
-                    ]
-                }
+                $match: { "question.title": { $regex: query, $options: 'i' } },
             })
         }
 
